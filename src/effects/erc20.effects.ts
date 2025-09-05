@@ -1,4 +1,4 @@
-import { erc20Abi, withCache } from "viem";
+import { erc20Abi } from "viem";
 import { experimental_createEffect, S } from "envio";
 import { getViemClient } from "../lib/viem";
 import { chainIdSchema } from "../lib/chain";
@@ -31,39 +31,37 @@ export const getTokenMetadata = experimental_createEffect(
 
         const cacheKey = `${chainId}-${tokenAddress.toLowerCase()}`;
 
-        return withCache(async () => {
-            const client = getViemClient(chainId);
-            let results: [number, string, string];
+        const client = getViemClient(chainId);
+        let results: [number, string, string];
 
-            // Try standard ERC20 interface first (most common)
-            const erc20 = { address: tokenAddress as `0x${string}`, abi: erc20Abi } as const;
-            results = await client.multicall({
-                allowFailure: false,
-                contracts: [
-                    {
-                        ...erc20,
-                        functionName: "decimals",
-                    },
-                    {
-                        ...erc20,
-                        functionName: "name",
-                    },
-                    {
-                        ...erc20,
-                        functionName: "symbol",
-                    },
-                ],
-            });
+        // Try standard ERC20 interface first (most common)
+        const erc20 = { address: tokenAddress as `0x${string}`, abi: erc20Abi } as const;
+        results = await client.multicall({
+            allowFailure: false,
+            contracts: [
+                {
+                    ...erc20,
+                    functionName: "decimals",
+                },
+                {
+                    ...erc20,
+                    functionName: "name",
+                },
+                {
+                    ...erc20,
+                    functionName: "symbol",
+                },
+            ],
+        });
 
-            const [decimals, name, symbol] = results;
+        const [decimals, name, symbol] = results;
 
-            context.log.info(`Got token details for ${tokenAddress}: ${name} (${symbol}) with ${decimals} decimals`);
+        context.log.info(`Got token details for ${tokenAddress}: ${name} (${symbol}) with ${decimals} decimals`);
 
-            return {
-                name,
-                symbol,
-                decimals,
-            };
-        }, { cacheKey });
+        return {
+            name,
+            symbol,
+            decimals,
+        };
     }
 );

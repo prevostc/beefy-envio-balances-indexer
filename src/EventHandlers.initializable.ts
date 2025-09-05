@@ -5,3 +5,4 @@ Initializable.Initialized.contractRegister(async ({ event, context }) => {
 
   context.addERC20Token(tokenAddress);
 });
+

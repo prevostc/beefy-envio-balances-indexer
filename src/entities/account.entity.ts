@@ -1,6 +1,5 @@
 
 import { HandlerContext } from "generated";
-import { ChainId } from "../lib/chain";
 import { Account_t } from "generated/src/db/Entities.gen";
 import { Hex } from "viem";
 
