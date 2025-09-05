@@ -1,7 +1,8 @@
 import { getViemClient } from "../lib/viem";
 import { ChainId } from "../lib/chain";
+import { HandlerContext } from "generated";
 
-export const getDetectClassicVaultOrStrategy = async ({ contractAddress, chainId, blockNumber }: { contractAddress: `0x${string}`, chainId: ChainId, blockNumber: number }) => {
+export const getDetectClassicVaultOrStrategy = async ({ contractAddress, chainId, blockNumber, log }: { contractAddress: `0x${string}`, chainId: ChainId, blockNumber: number, log: HandlerContext["log"] }) => {
     const client = getViemClient(chainId);
 
     // Try standard Erc20 interface first (most common)
@@ -42,6 +43,7 @@ export const getDetectClassicVaultOrStrategy = async ({ contractAddress, chainId
         blockNumber: BigInt(blockNumber),
     });
 
+    log.info("vault or strategy", { vault, strategy });
 
     return {
         isVault: vault.status === "success",

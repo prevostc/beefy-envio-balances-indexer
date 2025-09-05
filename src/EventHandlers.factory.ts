@@ -4,8 +4,7 @@ import { getDetectClassicVaultOrStrategy } from "./effects/factory.effects";
 ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, context }) => {
   const proxyAddress = event.params._0.toLowerCase();
 
-
-  const { isVault, isStrategy } = await getDetectClassicVaultOrStrategy({ contractAddress: proxyAddress as `0x${string}`, chainId: 8453, blockNumber: event.block.number });
+  const { isVault, isStrategy } = await getDetectClassicVaultOrStrategy({ log: context.log, contractAddress: proxyAddress as `0x${string}`, chainId: 8453, blockNumber: event.block.number });
 
   if (isVault) {
     context.addToken(proxyAddress);

@@ -25,12 +25,12 @@ Token.Transfer.handler(async ({ event, context }) => {
     return
   }
 
-  const [token, , , senderBalance, receiverBalance] = await Promise.all([
-    getOrCreateToken({ context, chainId, tokenAddress, blockNumber: event.block.number }),
+  const [, , senderBalance, receiverBalance, token] = await Promise.all([
     getOrCreateAccount({ context, accountAddress: senderAddress }),
     getOrCreateAccount({ context, accountAddress: receiverAddress }),
     getOrCreateTokenBalanceEntity({ context, tokenAddress, accountAddress: senderAddress }),
     getOrCreateTokenBalanceEntity({ context, tokenAddress, accountAddress: receiverAddress }),
+    getOrCreateToken({ context, chainId, tokenAddress, blockNumber: event.block.number }),
   ]);
 
   const value = interpretAsDecimal(rawTransferAmount, token.decimals)
