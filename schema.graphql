@@ -6,10 +6,10 @@ type Account {
   id: ID!
 
   """Balances of the account"""
-  balances: [ERC20TokenBalance!]! @derivedFrom(field: "account")
+  balances: [TokenBalance!]! @derivedFrom(field: "account")
 
   """Historical snapshots of the account balances to retrieve balance at specific points in time"""
-  snapshots: [ERC20BalanceSnapshot!]! @derivedFrom(field: "account")
+  snapshots: [TokenBalanceSnapshot!]! @derivedFrom(field: "account")
 }
 
 """
@@ -33,7 +33,7 @@ type Contract {
 A token is a representation of a fungible asset on the blockchain
 as specified by the ERC20 standard.
 """
-type ERC20Token {
+type Token {
   """token address"""
   id: ID!
 
@@ -63,22 +63,22 @@ type ERC20Token {
   ### references
 
   """The token balances of the token"""
-  balances: [ERC20TokenBalance!]! @derivedFrom(field: "token")
+  balances: [TokenBalance!]! @derivedFrom(field: "token")
   """Historical snapshots of the token balance to retrieve balance at specific points in time"""
-  snapshots: [ERC20BalanceSnapshot!]! @derivedFrom(field: "token")
+  snapshots: [TokenBalanceSnapshot!]! @derivedFrom(field: "token")
 }
 
 """
 A token balance represents the amount of a specific token that an account holds
 """
-type ERC20TokenBalance {
+type TokenBalance {
   """Account address + Token address"""
   id: ID!
 
   """The account that holds the token balance"""
   account: Account! @index
   """The token that the account holds"""
-  token: ERC20Token! @index
+  token: Token! @index
 
   """
   Amount: the amount of the token this account holds.
@@ -89,7 +89,7 @@ type ERC20TokenBalance {
   ### references
 
   """Historical snapshots of the token balance to retrieve balance at specific points in time"""
-  snapshots: [ERC20BalanceSnapshot!]! @derivedFrom(field: "tokenBalance")
+  snapshots: [TokenBalanceSnapshot!]! @derivedFrom(field: "tokenBalance")
 }
 
 
@@ -98,16 +98,16 @@ A balance snapshot entity to track account balances at specific points in time.
 This enables time-travel queries since HyperIndex doesn't support them natively.
 One entry is created per transfer event per account.
 """
-type ERC20BalanceSnapshot {
+type TokenBalanceSnapshot {
   """Unique ID: chainId-token-account-blockNumber"""
   id: ID!
 
   """Token balance reference"""
-  tokenBalance: ERC20TokenBalance! @index
+  tokenBalance: TokenBalance! @index
   """Account ID reference"""
   account: Account!
   """Token ID reference"""
-  token: ERC20Token!
+  token: Token!
 
   """Block number of this snapshot"""
   blockNumber: BigInt! @index

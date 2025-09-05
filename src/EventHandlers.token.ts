@@ -1,9 +1,9 @@
-import { BigDecimal, ERC20Token, ERC20TokenBalance, HandlerContext } from "generated";
-import { getOrCreateERC20Token } from "./entities/erc20.entity";
+import { BigDecimal, Token, TokenBalance, HandlerContext } from "generated";
+import { getOrCreateToken } from "./entities/token.entity";
 import { toChainId } from "./lib/chain";
 import { config } from "./lib/config";
 import { toHex } from "viem";
-import { getOrCreateERC20TokenBalanceEntity } from "./entities/balance.entity";
+import { getOrCreateTokenBalanceEntity } from "./entities/balance.entity";
 import { BIG_ZERO, interpretAsDecimal } from "./lib/decimal";
 import { getOrCreateAccount } from "./entities/account.entity";
 
@@ -13,7 +13,7 @@ const ignoredAddresses = [
   config.MINT_ADDRESS,
 ]
 
-ERC20Token.Transfer.handler(async ({ event, context }) => {
+Token.Transfer.handler(async ({ event, context }) => {
   const chainId = toChainId(event.chainId)
   const tokenAddress = toHex(event.srcAddress)
   const senderAddress = toHex(event.params._0)
@@ -26,11 +26,11 @@ ERC20Token.Transfer.handler(async ({ event, context }) => {
   }
 
   const [token, , , senderBalance, receiverBalance] = await Promise.all([
-    getOrCreateERC20Token({ context, chainId, tokenAddress }),
+    getOrCreateToken({ context, chainId, tokenAddress }),
     getOrCreateAccount({ context, accountAddress: senderAddress }),
     getOrCreateAccount({ context, accountAddress: receiverAddress }),
-    getOrCreateERC20TokenBalanceEntity({ context, tokenAddress, accountAddress: senderAddress }),
-    getOrCreateERC20TokenBalanceEntity({ context, tokenAddress, accountAddress: receiverAddress }),
+    getOrCreateTokenBalanceEntity({ context, tokenAddress, accountAddress: senderAddress }),
+    getOrCreateTokenBalanceEntity({ context, tokenAddress, accountAddress: receiverAddress }),
   ]);
 
   const value = interpretAsDecimal(rawTransferAmount, token.decimals)
@@ -59,7 +59,7 @@ ERC20Token.Transfer.handler(async ({ event, context }) => {
     totalSupplyChange = totalSupplyChange.minus(value)
   }
 
-  context.ERC20Token.set({
+  context.Token.set({
     ...token,
     holderCount: token.holderCount + holderCountChange,
     totalSupply: token.totalSupply.plus(totalSupplyChange),
@@ -67,11 +67,11 @@ ERC20Token.Transfer.handler(async ({ event, context }) => {
 });
 
 
-const updateAccountBalance = async ({ context, balance, amountDiff }: { context: HandlerContext, balance: ERC20TokenBalance, amountDiff: BigDecimal }) => {
+const updateAccountBalance = async ({ context, balance, amountDiff }: { context: HandlerContext, balance: TokenBalance, amountDiff: BigDecimal }) => {
   const before = balance.amount
   const after = balance.amount.plus(amountDiff)
 
-  context.ERC20TokenBalance.set({
+  context.TokenBalance.set({
     ...balance,
     amount: after,
   })

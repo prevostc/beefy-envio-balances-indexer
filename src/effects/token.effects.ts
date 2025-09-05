@@ -34,7 +34,7 @@ export const getTokenMetadata = experimental_createEffect(
         const client = getViemClient(chainId);
         let results: [number, string, string];
 
-        // Try standard ERC20 interface first (most common)
+        // Try standard Erc20 interface first (most common)
         const erc20 = { address: tokenAddress as `0x${string}`, abi: erc20Abi } as const;
         results = await client.multicall({
             allowFailure: false,

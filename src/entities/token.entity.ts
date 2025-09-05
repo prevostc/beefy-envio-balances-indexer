@@ -1,13 +1,13 @@
 
-import { getTokenMetadata } from "../effects/erc20.effects"
+import { getTokenMetadata } from "../effects/token.effects"
 import { BigDecimal, HandlerContext } from "generated";
 import { ChainId } from "../lib/chain";
-import { ERC20Token_t } from "generated/src/db/Entities.gen";
+import { Token_t } from "generated/src/db/Entities.gen";
 import { Hex } from "viem";
 
 
-export const getOrCreateERC20Token = async ({ context, chainId, tokenAddress }: { context: HandlerContext, chainId: ChainId, tokenAddress: Hex }): Promise<ERC20Token_t> => {
-    const maybeExistingToken = await context.ERC20Token.get(tokenAddress);
+export const getOrCreateToken = async ({ context, chainId, tokenAddress }: { context: HandlerContext, chainId: ChainId, tokenAddress: Hex }): Promise<Token_t> => {
+    const maybeExistingToken = await context.Token.get(tokenAddress);
     if (maybeExistingToken) {
         return maybeExistingToken;
     }
@@ -17,7 +17,7 @@ export const getOrCreateERC20Token = async ({ context, chainId, tokenAddress }: 
         chainId: chainId,
     });
 
-    return await context.ERC20Token.getOrCreate({
+    return await context.Token.getOrCreate({
         id: tokenAddress,
 
         contract_id: tokenAddress,
