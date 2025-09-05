@@ -1,0 +1,21 @@
+[
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "rewardPoolName",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "proxy",
+                "type": "address"
+            }
+        ],
+        "name": "ProxyCreated",
+        "type": "event"
+    }
+]

@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=./node_modules/envio/evm.schema.json
+name: beefy-balance-indexer
+description: Beefy Finance Balance Indexer - Tracks ERC20 balances across multiple networks
+unordered_multichain_mode: true
+preload_handlers: true
+
+contracts:
+  # factories
+  - name: ContractFactory
+    abi_file_path: abis/beefy/ContractFactory.json
+    handler: src/EventHandlers.factory.ts
+    events:
+      - event: "ProxyCreated(address)"
+      - event: "BoostDeployed(address)"
+      - event: "ContractDeployed(bytes32,address)"
+  - name: Initializable
+    abi_file_path: abis/beefy/Initializable.json
+    handler: src/EventHandlers.initializable.ts
+    events:
+      - event: "Initialized(uint8)"
+  - name: ERC20Token
+    abi_file_path: abis/IERC20/IERC20.json
+    handler: src/EventHandlers.erc20.ts
+    events:
+      - event: "Transfer(address,address,uint256)"
+
+networks:
+  - id: 8453 # base
+    start_block: 2181945
+    contracts:
+      # factories
+      - name: ContractFactory # CLMManagerFactory
+        address: 
+          - 0x7bC78990AC1ef0754CFdE935B2D84E9acF13ed29
+      - name: ContractFactory # CLMStrategyFactory
+        address: 
+          - 0x9476284d81121613DA5DF5C72f50853a455448F1
+      - name: ContractFactory # RewardPoolFactory
+        address: 
+          - 0x13F518Aa15CA3296E51CEAFB44A8D86660E97B3a
+      - name: ContractFactory # BeefyClassicVaultFactory
+        address: 
+          - 0xBC4a342B0c057501E081484A2d24e576E854F823
+      - name: ContractFactory # BeefyClassicBoostFactory
+        address: 
+          - 0x9a313205f50e1192da6d71d1e32dad3487230c55
+      # individual products created without factory
+      - name: Initializable # ClassicVault
+        address: 
+          - 0x62e5b9934dcb87618cfc74b222305d16c997e8c1
+          - 0xc55E93C62874D8100dBd2DfE307EDc1036ad5434

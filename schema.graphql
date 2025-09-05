@@ -1,0 +1,119 @@
+"""
+An holder account. Can be a user or a contract
+"""
+type Account {
+  """Account address"""
+  id: ID!
+
+  """Balances of the account"""
+  balances: [ERC20TokenBalance!]! @derivedFrom(field: "account")
+
+  """Historical snapshots of the account balances to retrieve balance at specific points in time"""
+  snapshots: [ERC20BalanceSnapshot!]! @derivedFrom(field: "account")
+}
+
+"""
+A debug entity to track how we discover contracts and avoid double counting
+"""
+type Contract {
+  """The contract address"""
+  id: ID!
+
+  """The name of the contract"""
+  name: String!
+  """The block number when the contract was created"""
+  creationBlock: BigInt!
+  """The timestamp when the contract was created"""
+  creationTimestamp: Timestamp!
+  """The transaction hash when the contract was created"""
+  creationTransactionHash: String!
+}
+
+"""
+A token is a representation of a fungible asset on the blockchain
+as specified by the ERC20 standard.
+"""
+type ERC20Token {
+  """token address"""
+  id: ID!
+
+  # metadata
+
+  """The contract infos that the token is associated with"""
+  contract: Contract!
+
+  """Is virtual token, we create virtual tokens for the indexer to track non-ERC20 tokens like Beefy Boosts"""
+  isVirtual: Boolean!
+
+  """The token symbol"""
+  symbol: String
+  """The token name"""
+  name: String
+  """The number of decimals the token uses"""
+  decimals: Int!
+
+  ### metrics
+
+  """The total supply of the token"""
+  totalSupply: BigDecimal! @config(precision: 100, scale: 24)
+
+  """How many holders this token has. With balance > 0"""
+  holderCount: Int!
+
+  ### references
+
+  """The token balances of the token"""
+  balances: [ERC20TokenBalance!]! @derivedFrom(field: "token")
+  """Historical snapshots of the token balance to retrieve balance at specific points in time"""
+  snapshots: [ERC20BalanceSnapshot!]! @derivedFrom(field: "token")
+}
+
+"""
+A token balance represents the amount of a specific token that an account holds
+"""
+type ERC20TokenBalance {
+  """Account address + Token address"""
+  id: ID!
+
+  """The account that holds the token balance"""
+  account: Account! @index
+  """The token that the account holds"""
+  token: ERC20Token! @index
+
+  """
+  Amount: the amount of the token this account holds.
+  This amount is what is available on chain.
+  """
+  amount: BigDecimal! @config(precision: 100, scale: 24)
+
+  ### references
+
+  """Historical snapshots of the token balance to retrieve balance at specific points in time"""
+  snapshots: [ERC20BalanceSnapshot!]! @derivedFrom(field: "tokenBalance")
+}
+
+
+"""
+A balance snapshot entity to track account balances at specific points in time.
+This enables time-travel queries since HyperIndex doesn't support them natively.
+One entry is created per transfer event per account.
+"""
+type ERC20BalanceSnapshot {
+  """Unique ID: chainId-token-account-blockNumber"""
+  id: ID!
+
+  """Token balance reference"""
+  tokenBalance: ERC20TokenBalance! @index
+  """Account ID reference"""
+  account: Account!
+  """Token ID reference"""
+  token: ERC20Token!
+
+  """Block number of this snapshot"""
+  blockNumber: BigInt! @index
+  """Timestamp of this snapshot"""
+  blockTimestamp: Timestamp! @index
+
+  """Balance amount at the end of the block"""
+  balance: BigDecimal! @config(precision: 100, scale: 24)
+}
