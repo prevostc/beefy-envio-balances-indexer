@@ -4,39 +4,30 @@ import { getViemClient } from "../lib/viem";
 import { chainIdSchema } from "../lib/chain";
 import { hexSchema } from "../lib/hex";
 
-
-// Use Sury library to define the schema
-const tokenMetadataSchema = S.schema({
-    name: S.string,
-    symbol: S.string,
-    decimals: S.number,
-});
-
-// Infer the type from the schema
-type TokenMetadata = S.Infer<typeof tokenMetadataSchema>;
-
 export const getTokenMetadata = experimental_createEffect(
     {
         name: "getTokenMetadata",
         input: {
             tokenAddress: hexSchema,
             chainId: chainIdSchema,
+            blockNumber: S.number,
         },
-        output: tokenMetadataSchema,
+        output: S.schema({
+            name: S.string,
+            symbol: S.string,
+            decimals: S.number,
+        }),
         // Enable caching to avoid duplicated calls
         cache: true,
     },
     async ({ input, context }) => {
-        const { tokenAddress, chainId } = input;
-
-        const cacheKey = `${chainId}-${tokenAddress.toLowerCase()}`;
+        const { tokenAddress, chainId, blockNumber } = input;
 
         const client = getViemClient(chainId);
-        let results: [number, string, string];
 
         // Try standard Erc20 interface first (most common)
         const erc20 = { address: tokenAddress as `0x${string}`, abi: erc20Abi } as const;
-        results = await client.multicall({
+        const [decimals, name, symbol] = await client.multicall({
             allowFailure: false,
             contracts: [
                 {
@@ -52,9 +43,8 @@ export const getTokenMetadata = experimental_createEffect(
                     functionName: "symbol",
                 },
             ],
+            blockNumber: BigInt(blockNumber),
         });
-
-        const [decimals, name, symbol] = results;
 
         context.log.info(`Got token details for ${tokenAddress}: ${name} (${symbol}) with ${decimals} decimals`);
 

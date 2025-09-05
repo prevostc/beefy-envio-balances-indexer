@@ -26,7 +26,7 @@ Token.Transfer.handler(async ({ event, context }) => {
   }
 
   const [token, , , senderBalance, receiverBalance] = await Promise.all([
-    getOrCreateToken({ context, chainId, tokenAddress }),
+    getOrCreateToken({ context, chainId, tokenAddress, blockNumber: event.block.number }),
     getOrCreateAccount({ context, accountAddress: senderAddress }),
     getOrCreateAccount({ context, accountAddress: receiverAddress }),
     getOrCreateTokenBalanceEntity({ context, tokenAddress, accountAddress: senderAddress }),
@@ -34,10 +34,6 @@ Token.Transfer.handler(async ({ event, context }) => {
   ]);
 
   const value = interpretAsDecimal(rawTransferAmount, token.decimals)
-
-  if (context.isPreload) {
-    return;
-  }
 
   let holderCountChange = 0;
   let totalSupplyChange = BIG_ZERO;

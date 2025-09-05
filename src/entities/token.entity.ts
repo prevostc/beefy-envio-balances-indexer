@@ -6,7 +6,7 @@ import { Token_t } from "generated/src/db/Entities.gen";
 import { Hex } from "viem";
 
 
-export const getOrCreateToken = async ({ context, chainId, tokenAddress }: { context: HandlerContext, chainId: ChainId, tokenAddress: Hex }): Promise<Token_t> => {
+export const getOrCreateToken = async ({ context, chainId, tokenAddress, blockNumber }: { context: HandlerContext, chainId: ChainId, tokenAddress: Hex, blockNumber: number }): Promise<Token_t> => {
     const maybeExistingToken = await context.Token.get(tokenAddress);
     if (maybeExistingToken) {
         return maybeExistingToken;
@@ -15,6 +15,7 @@ export const getOrCreateToken = async ({ context, chainId, tokenAddress }: { con
     const tokenMetadata = await context.effect(getTokenMetadata, {
         tokenAddress: tokenAddress,
         chainId: chainId,
+        blockNumber: blockNumber,
     });
 
     return await context.Token.getOrCreate({

@@ -1,25 +1,49 @@
-import { ContractFactory } from "generated";
+import { ClassicBoostFactory, ClassicVaultFactory, CLMManagerFactory, ContractFactory, RewardPoolFactory } from "generated";
+import { getDetectClassicVaultOrStrategy } from "./effects/factory.effects";
 
-ContractFactory.ProxyCreated.contractRegister(async ({ event, context }) => {
+ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, context }) => {
   const proxyAddress = event.params._0.toLowerCase();
 
-  context.log.info("ProxyCreated", { proxyAddress });
 
-  context.addToken(proxyAddress);
+  const { isVault, isStrategy } = await getDetectClassicVaultOrStrategy({ contractAddress: proxyAddress as `0x${string}`, chainId: 8453, blockNumber: event.block.number });
+
+  if (isVault) {
+    context.addToken(proxyAddress);
+    context.log.info("Vault detected, adding to context", { proxyAddress });
+  } else if (isStrategy) {
+    context.log.info("Strategy detected, ignoring", { proxyAddress });
+  }
 });
 
-ContractFactory.BoostDeployed.contractRegister(async ({ event, context }) => {
+ClassicBoostFactory.BoostCreated.contractRegister(async ({ event, context }) => {
   const boostAddress = event.params._0.toLowerCase();
 
-  context.log.info("BoostDeployed", { boostAddress });
-
   context.addToken(boostAddress);
+
+  context.log.info("BoostDeployed", { boostAddress });
+});
+
+RewardPoolFactory.RewardPoolCreated.contractRegister(async ({ event, context }) => {
+  const contractAddress = event.params._0.toLowerCase();
+
+  context.addToken(contractAddress);
+
+  context.log.info("RewardPoolCreated", { contractAddress });
+});
+
+CLMManagerFactory.CLMManagerCreated.contractRegister(async ({ event, context }) => {
+  const contractAddress = event.params._0.toLowerCase();
+
+  context.addToken(contractAddress);
+
+  context.log.info("CLMManagerCreated", { contractAddress });
 });
 
 ContractFactory.ContractDeployed.contractRegister(async ({ event, context }) => {
-  const contractAddress = event.params._1.toLowerCase();
-
-  context.log.info("ContractDeployed", { contractAddress });
+  const contractAddress = event.params._0.toLowerCase();
 
   context.addToken(contractAddress);
+
+  context.log.info("ContractDeployed", { contractAddress });
 });
+
