@@ -13,7 +13,7 @@ export const config = S.parseOrThrow({
     BURN_ADDRESS: '0x000000000000000000000000000000000000dead',
     MINT_ADDRESS: '0x0000000000000000000000000000000000000000',
     RPC_URL: {
-        1: process.env.ETHEREUM_RPC_URL ?? null,
-        8453: process.env.BASE_RPC_URL ?? null,
-    } satisfies Record<ChainId, string | null>,
+        1: process.env.ETHEREUM_RPC_URL ?? 'https://eth.drpc.org',
+        8453: process.env.BASE_RPC_URL ?? 'https://mainnet.base.org',
+    } satisfies Record<ChainId, string>,
 }, configSchema);
