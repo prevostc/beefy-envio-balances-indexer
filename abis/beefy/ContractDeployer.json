@@ -2,8 +2,18 @@
   {
     "anonymous": false,
     "inputs": [
-      { "indexed": true, "internalType": "bytes32", "name": "salt", "type": "bytes32" },
-      { "indexed": false, "internalType": "address", "name": "deploymentAddress", "type": "address" }
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "salt",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "deploymentAddress",
+        "type": "address"
+      }
     ],
     "name": "ContractDeployed",
     "type": "event"
@@ -11,8 +21,18 @@
   {
     "anonymous": false,
     "inputs": [
-      { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
-      { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "OwnershipTransferred",
     "type": "event"
@@ -33,7 +53,13 @@
       { "internalType": "bytes", "name": "_bytecode", "type": "bytes" }
     ],
     "name": "deploy",
-    "outputs": [{ "internalType": "address", "name": "deploymentAddress", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "deploymentAddress",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -54,7 +80,13 @@
     "stateMutability": "view",
     "type": "function"
   },
-  { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
   {
     "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
     "name": "transferOwnership",

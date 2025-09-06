@@ -1,12 +1,18 @@
+import { BigDecimal, type HandlerContext } from 'generated';
+import type { Token_t } from 'generated/src/db/Entities.gen';
+import type { Hex } from 'viem';
+import { getTokenMetadata } from '../effects/token.effects';
+import type { ChainId } from '../lib/chain';
 
-import { getTokenMetadata } from "../effects/token.effects"
-import { BigDecimal, HandlerContext } from "generated";
-import { ChainId } from "../lib/chain";
-import { Token_t } from "generated/src/db/Entities.gen";
-import { Hex } from "viem";
-
-
-export const getOrCreateToken = async ({ context, chainId, tokenAddress }: { context: HandlerContext, chainId: ChainId, tokenAddress: Hex }): Promise<Token_t> => {
+export const getOrCreateToken = async ({
+    context,
+    chainId,
+    tokenAddress,
+}: {
+    context: HandlerContext;
+    chainId: ChainId;
+    tokenAddress: Hex;
+}): Promise<Token_t> => {
     const maybeExistingToken = await context.Token.get(tokenAddress);
     if (maybeExistingToken) {
         return maybeExistingToken;

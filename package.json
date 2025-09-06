@@ -10,13 +10,20 @@
     "dev": "envio dev",
     "start": "envio start",
     "stop": "envio stop",
-    "test": "pnpm mocha"
+    "format": "biome check --write --unsafe",
+    "format:safe": "biome check --write",
+    "test": "pnpm run test:unit && pnpm run test:lint && pnpm run test:ts",
+    "test:unit": "pnpm mocha",
+    "test:lint": "biome ci",
+    "test:ts": "tsc --noEmit"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.3",
     "@types/chai": "^4.3.11",
     "@types/mocha": "10.0.6",
     "@types/node": "20.8.8",
     "chai": "4.3.10",
+    "lefthook": "^1.12.3",
     "mocha": "10.2.0",
     "ts-mocha": "^10.0.0",
     "typescript": "5.2.2"

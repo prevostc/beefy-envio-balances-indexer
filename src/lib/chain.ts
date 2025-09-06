@@ -1,4 +1,4 @@
-import { S } from "envio";
+import { S } from 'envio';
 
 export const chainIdSchema = S.union([S.schema(1), S.schema(56), S.schema(8453)]);
 export type ChainId = S.Infer<typeof chainIdSchema>;

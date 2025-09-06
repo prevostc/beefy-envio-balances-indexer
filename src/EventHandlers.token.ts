@@ -1,98 +1,142 @@
-import { BigDecimal, Token, HandlerContext, Token_Transfer_event } from "generated";
-import { getOrCreateToken } from "./entities/token.entity";
-import { toChainId, ChainId } from "./lib/chain";
-import { config } from "./lib/config";
-import { Hex } from "viem";
-import { getOrCreateTokenBalanceEntity, getOrCreateTokenBalanceSnapshotEntity } from "./entities/balance.entity";
-import { BIG_ZERO, interpretAsDecimal } from "./lib/decimal";
+import { type BigDecimal, type HandlerContext, Token, type Token_Transfer_event } from 'generated';
+import type { Hex } from 'viem';
+import { getOrCreateTokenBalanceEntity, getOrCreateTokenBalanceSnapshotEntity } from './entities/balance.entity';
+import { getOrCreateToken } from './entities/token.entity';
+import { type ChainId, toChainId } from './lib/chain';
+import { config } from './lib/config';
+import { BIG_ZERO, interpretAsDecimal } from './lib/decimal';
 
-const ignoredAddresses = [
-  config.ADDRESS_ZERO,
-  config.BURN_ADDRESS,
-  config.MINT_ADDRESS,
-]
+const ignoredAddresses = [config.ADDRESS_ZERO, config.BURN_ADDRESS, config.MINT_ADDRESS];
 
 Token.Transfer.handler(async ({ event, context }) => {
-  const chainId = toChainId(event.chainId)
-  const tokenAddress = event.srcAddress.toString().toLowerCase() as Hex
-  const senderAddress = event.params.from.toString().toLowerCase() as Hex
-  const receiverAddress = event.params.to.toString().toLowerCase() as Hex
-  const rawTransferAmount = event.params.value
+    const chainId = toChainId(event.chainId);
+    const tokenAddress = event.srcAddress.toString().toLowerCase() as Hex;
+    const senderAddress = event.params.from.toString().toLowerCase() as Hex;
+    const receiverAddress = event.params.to.toString().toLowerCase() as Hex;
+    const rawTransferAmount = event.params.value;
 
-  if (rawTransferAmount === 0n) {
-    context.log.debug("Ignoring transfer with zero value")
-    return
-  }
+    if (rawTransferAmount === 0n) {
+        context.log.debug('Ignoring transfer with zero value');
+        return;
+    }
 
-  const [senderBalance, receiverBalance, token] = await Promise.all([
-    getOrCreateTokenBalanceEntity({ context, tokenAddress, accountAddress: senderAddress, chainId }),
-    getOrCreateTokenBalanceEntity({ context, tokenAddress, accountAddress: receiverAddress, chainId }),
-    getOrCreateToken({ context, chainId, tokenAddress }),
-  ]);
+    const [_senderBalance, _receiverBalance, token] = await Promise.all([
+        getOrCreateTokenBalanceEntity({
+            context,
+            tokenAddress,
+            accountAddress: senderAddress,
+            chainId,
+        }),
+        getOrCreateTokenBalanceEntity({
+            context,
+            tokenAddress,
+            accountAddress: receiverAddress,
+            chainId,
+        }),
+        getOrCreateToken({ context, chainId, tokenAddress }),
+    ]);
 
-  const value = interpretAsDecimal(rawTransferAmount, token.decimals)
+    const value = interpretAsDecimal(rawTransferAmount, token.decimals);
 
-  let holderCountChange = 0;
-  let totalSupplyChange = BIG_ZERO;
+    let holderCountChange = 0;
+    let totalSupplyChange = BIG_ZERO;
 
-  if (!ignoredAddresses.includes(senderAddress)) {
-    const diff = await updateAccountBalance({ context, amountDiff: value.negated(), accountAddress: senderAddress, tokenAddress, event, chainId })
-    holderCountChange += diff.holderCountChange
-  }
+    if (!ignoredAddresses.includes(senderAddress)) {
+        const diff = await updateAccountBalance({
+            context,
+            amountDiff: value.negated(),
+            accountAddress: senderAddress,
+            tokenAddress,
+            event,
+            chainId,
+        });
+        holderCountChange += diff.holderCountChange;
+    }
 
-  if (!ignoredAddresses.includes(receiverAddress)) {
-    const diff = await updateAccountBalance({ context, amountDiff: value, accountAddress: receiverAddress, tokenAddress, event, chainId })
-    holderCountChange += diff.holderCountChange
-  }
+    if (!ignoredAddresses.includes(receiverAddress)) {
+        const diff = await updateAccountBalance({
+            context,
+            amountDiff: value,
+            accountAddress: receiverAddress,
+            tokenAddress,
+            event,
+            chainId,
+        });
+        holderCountChange += diff.holderCountChange;
+    }
 
-  if (senderAddress === config.MINT_ADDRESS) {
-    totalSupplyChange = totalSupplyChange.plus(value)
-  }
-  if (receiverAddress === config.BURN_ADDRESS) {
-    totalSupplyChange = totalSupplyChange.minus(value)
-  }
+    if (senderAddress === config.MINT_ADDRESS) {
+        totalSupplyChange = totalSupplyChange.plus(value);
+    }
+    if (receiverAddress === config.BURN_ADDRESS) {
+        totalSupplyChange = totalSupplyChange.minus(value);
+    }
 
-  context.Token.set({
-    ...token,
-    holderCount: token.holderCount + holderCountChange,
-    totalSupply: token.totalSupply.plus(totalSupplyChange),
-  })
+    context.Token.set({
+        ...token,
+        holderCount: token.holderCount + holderCountChange,
+        totalSupply: token.totalSupply.plus(totalSupplyChange),
+    });
 });
 
+const updateAccountBalance = async ({
+    context,
+    amountDiff,
+    accountAddress,
+    tokenAddress,
+    event,
+    chainId,
+}: {
+    context: HandlerContext;
+    amountDiff: BigDecimal;
+    accountAddress: Hex;
+    tokenAddress: Hex;
+    event: Token_Transfer_event;
+    chainId: ChainId;
+}) => {
+    const balance = await getOrCreateTokenBalanceEntity({
+        context,
+        tokenAddress,
+        accountAddress,
+        chainId,
+    });
 
-const updateAccountBalance = async ({ context, amountDiff, accountAddress, tokenAddress, event, chainId }: { context: HandlerContext, amountDiff: BigDecimal, accountAddress: Hex, tokenAddress: Hex, event: Token_Transfer_event, chainId: ChainId }) => {
+    const before = balance.amount;
+    const after = balance.amount.plus(amountDiff);
 
-  const balance = await getOrCreateTokenBalanceEntity({ context, tokenAddress, accountAddress, chainId });
+    context.Account.getOrCreate({
+        id: accountAddress,
+    });
 
-  const before = balance.amount
-  const after = balance.amount.plus(amountDiff)
+    context.TokenBalance.set({
+        ...balance,
+        amount: after,
+    });
 
-  context.Account.getOrCreate({
-    id: accountAddress,
-  })
+    const balanceSnapshot = await getOrCreateTokenBalanceSnapshotEntity({
+        context,
+        tokenAddress,
+        accountAddress,
+        block: event.block,
+        balance: after,
+        chainId,
+    });
+    context.TokenBalanceSnapshot.set({
+        ...balanceSnapshot,
+        balance: after,
+    });
 
-  context.TokenBalance.set({
-    ...balance,
-    amount: after,
-  })
+    let holderCountChange = 0;
+    if (before.eq(BIG_ZERO) && !after.eq(BIG_ZERO)) {
+        holderCountChange = 1;
+    }
+    if (!before.eq(BIG_ZERO) && after.eq(BIG_ZERO)) {
+        holderCountChange = -1;
+    }
 
-  const balanceSnapshot = await getOrCreateTokenBalanceSnapshotEntity({ context, tokenAddress, accountAddress, block: event.block, balance: after, chainId })
-  context.TokenBalanceSnapshot.set({
-    ...balanceSnapshot,
-    balance: after,
-  });
-
-  let holderCountChange = 0;
-  if (before.eq(BIG_ZERO) && !after.eq(BIG_ZERO)) {
-    holderCountChange = 1;
-  }
-  if (!before.eq(BIG_ZERO) && after.eq(BIG_ZERO)) {
-    holderCountChange = -1;
-  }
-
-  return {
-    before,
-    after,
-    holderCountChange,
-  }
-}
+    return {
+        before,
+        after,
+        holderCountChange,
+    };
+};

@@ -1,4 +1,4 @@
-import { S } from "envio";
+import { S } from 'envio';
 
 // todo: refine
-export const hexSchema = S.string
+export const hexSchema = S.string;

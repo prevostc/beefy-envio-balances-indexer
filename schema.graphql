@@ -2,53 +2,78 @@
 An holder account. Can be a user or a contract
 """
 type Account {
-  """Account address"""
+  """
+  Account address
+  """
   id: ID!
 
-  """Balances of the account"""
+  """
+  Balances of the account
+  """
   balances: [TokenBalance!]! @derivedFrom(field: "account")
 
-  """Historical snapshots of the account balances to retrieve balance at specific points in time"""
+  """
+  Historical snapshots of the account balances to retrieve balance at specific points in time
+  """
   snapshots: [TokenBalanceSnapshot!]! @derivedFrom(field: "account")
 }
-
 
 """
 A token is a representation of a fungible asset on the blockchain
 as specified by the ERC20 standard.
 """
 type Token {
-  """chain - token address"""
+  """
+  chain - token address
+  """
   id: ID!
 
-  """chain id"""
+  """
+  chain id
+  """
   chainId: Int!
 
   # metadata
 
-  """Is virtual token, we create virtual tokens for the indexer to track non-ERC20 tokens like Beefy Boosts"""
+  """
+  Is virtual token, we create virtual tokens for the indexer to track non-ERC20 tokens like Beefy Boosts
+  """
   isVirtual: Boolean!
 
-  """The token symbol"""
+  """
+  The token symbol
+  """
   symbol: String
-  """The token name"""
+  """
+  The token name
+  """
   name: String
-  """The number of decimals the token uses"""
+  """
+  The number of decimals the token uses
+  """
   decimals: Int!
 
   ### metrics
 
-  """The total supply of the token"""
+  """
+  The total supply of the token
+  """
   totalSupply: BigDecimal! @config(precision: 100, scale: 24)
 
-  """How many holders this token has. With balance > 0"""
+  """
+  How many holders this token has. With balance > 0
+  """
   holderCount: Int!
 
   ### references
 
-  """The token balances of the token"""
+  """
+  The token balances of the token
+  """
   balances: [TokenBalance!]! @derivedFrom(field: "token")
-  """Historical snapshots of the token balance to retrieve balance at specific points in time"""
+  """
+  Historical snapshots of the token balance to retrieve balance at specific points in time
+  """
   snapshots: [TokenBalanceSnapshot!]! @derivedFrom(field: "token")
 }
 
@@ -56,14 +81,22 @@ type Token {
 A token balance represents the amount of a specific token that an account holds
 """
 type TokenBalance {
-  """chain - account address - token address"""
+  """
+  chain - account address - token address
+  """
   id: ID!
 
-  """chain id"""
+  """
+  chain id
+  """
   chainId: Int!
-  """The account that holds the token balance"""
+  """
+  The account that holds the token balance
+  """
   account: Account! @index
-  """The token that the account holds"""
+  """
+  The token that the account holds
+  """
   token: Token! @index
 
   """
@@ -74,10 +107,11 @@ type TokenBalance {
 
   ### references
 
-  """Historical snapshots of the token balance to retrieve balance at specific points in time"""
+  """
+  Historical snapshots of the token balance to retrieve balance at specific points in time
+  """
   snapshots: [TokenBalanceSnapshot!]! @derivedFrom(field: "tokenBalance")
 }
-
 
 """
 A balance snapshot entity to track account balances at specific points in time.
@@ -85,23 +119,39 @@ This enables time-travel queries since HyperIndex doesn't support them natively.
 One entry is created per transfer event per account.
 """
 type TokenBalanceSnapshot {
-  """Unique ID: chainId-token-account-blockNumber"""
+  """
+  Unique ID: chainId-token-account-blockNumber
+  """
   id: ID!
 
-  """chain id"""
+  """
+  chain id
+  """
   chainId: Int!
-  """Token balance reference"""
+  """
+  Token balance reference
+  """
   tokenBalance: TokenBalance! @index
-  """Account ID reference"""
+  """
+  Account ID reference
+  """
   account: Account!
-  """Token ID reference"""
+  """
+  Token ID reference
+  """
   token: Token!
 
-  """Block number of this snapshot"""
+  """
+  Block number of this snapshot
+  """
   blockNumber: BigInt! @index
-  """Timestamp of this snapshot"""
+  """
+  Timestamp of this snapshot
+  """
   blockTimestamp: Timestamp! @index
 
-  """Balance amount at the end of the block"""
+  """
+  Balance amount at the end of the block
+  """
   balance: BigDecimal! @config(precision: 100, scale: 24)
 }

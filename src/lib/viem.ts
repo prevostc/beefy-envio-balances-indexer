@@ -1,14 +1,13 @@
-import { createPublicClient, http, Chain as ViemChain } from "viem";
-import { config } from "./config";
-import { ChainId } from "./chain";
-import { base, bsc, mainnet } from "viem/chains";
+import { createPublicClient, http, type Chain as ViemChain } from 'viem';
+import { base, bsc, mainnet } from 'viem/chains';
+import type { ChainId } from './chain';
+import { config } from './config';
 
 const chainMap: Record<ChainId, ViemChain> = {
     1: mainnet,
     56: bsc,
     8453: base,
-}
-
+};
 
 export const getViemClient = (chainId: ChainId) => {
     const rpcUrl = config.RPC_URL[chainId];
@@ -25,14 +24,14 @@ export const getViemClient = (chainId: ChainId) => {
         // },
         // disable multicall batching to allow downstream erpc to cache calls more granularly
         batch: {
-            multicall: false
+            multicall: false,
         },
         // Thanks to automatic Effect API batching, we can also enable batching for Viem transport level
         transport: http(rpcUrl, {
             batch: {
-                batchSize: 50, /* requests */
-                wait: 200, /* ms */
-            }
+                batchSize: 50 /* requests */,
+                wait: 200 /* ms */,
+            },
         }),
     });
-}
+};

@@ -1,0 +1,2 @@
+{"level":34,"time":1757130134087,"pid":3900,"hostname":"MacBook-Pro-2.local","contractName":"ContractFactory","eventName":"ContractDeployed","chainId":56,"block":0,"logIndex":0,"address":"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266","contractAddress":"0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266","msg":"ContractDeployed"}
+{"level":32,"time":1757130134088,"pid":3900,"hostname":"MacBook-Pro-2.local","contractName":"Token","eventName":"Transfer","chainId":56,"block":0,"logIndex":0,"address":"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266","msg":"Ignoring transfer with zero value"}
