@@ -26,7 +26,7 @@ contracts:
       - event: "ProxyCreated(address proxy)"
         name: RewardPoolCreated
   - name: CLMManagerFactory
-    abi_file_path: abis/beefy/clm/CLMManagerFactory.json
+    abi_file_path: abis/beefy/clm/ClmManagerFactory.json
     handler: src/EventHandlers.factory.ts
     events:
       - event: "ProxyCreated(address proxy)"
