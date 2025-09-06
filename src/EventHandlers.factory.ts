@@ -1,8 +1,13 @@
 import { ClassicBoostFactory, ClassicVaultFactory, CLMManagerFactory, ContractFactory, RewardPoolFactory } from "generated";
 import { getDetectClassicVaultOrStrategy } from "./effects/factory.effects";
+import { vaultBlacklist } from "./lib/blacklist";
 
 ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, context }) => {
-  const proxyAddress = event.params._0.toLowerCase();
+  const proxyAddress = event.params.proxy.toString().toLowerCase();
+  if (vaultBlacklist.includes(proxyAddress)) {
+    context.log.debug("Blacklisted proxy address", { proxyAddress });
+    return;
+  }
 
   const { isVault, isStrategy } = await getDetectClassicVaultOrStrategy({ log: context.log, contractAddress: proxyAddress as `0x${string}`, chainId: 8453, blockNumber: event.block.number });
 
@@ -15,7 +20,7 @@ ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, cont
 });
 
 ClassicBoostFactory.BoostCreated.contractRegister(async ({ event, context }) => {
-  const boostAddress = event.params._0.toLowerCase();
+  const boostAddress = event.params.proxy.toString().toLowerCase();
 
   context.addToken(boostAddress);
 
@@ -23,7 +28,7 @@ ClassicBoostFactory.BoostCreated.contractRegister(async ({ event, context }) => 
 });
 
 RewardPoolFactory.RewardPoolCreated.contractRegister(async ({ event, context }) => {
-  const contractAddress = event.params._0.toLowerCase();
+  const contractAddress = event.params.proxy.toString().toLowerCase();
 
   context.addToken(contractAddress);
 
@@ -31,7 +36,7 @@ RewardPoolFactory.RewardPoolCreated.contractRegister(async ({ event, context }) 
 });
 
 CLMManagerFactory.CLMManagerCreated.contractRegister(async ({ event, context }) => {
-  const contractAddress = event.params._0.toLowerCase();
+  const contractAddress = event.params.proxy.toString().toLowerCase();
 
   context.addToken(contractAddress);
 
@@ -39,7 +44,7 @@ CLMManagerFactory.CLMManagerCreated.contractRegister(async ({ event, context }) 
 });
 
 ContractFactory.ContractDeployed.contractRegister(async ({ event, context }) => {
-  const contractAddress = event.params._0.toLowerCase();
+  const contractAddress = event.params.proxy.toString().toLowerCase();
 
   context.addToken(contractAddress);
 

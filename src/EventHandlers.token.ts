@@ -2,7 +2,7 @@ import { BigDecimal, Token, TokenBalance, HandlerContext } from "generated";
 import { getOrCreateToken } from "./entities/token.entity";
 import { toChainId } from "./lib/chain";
 import { config } from "./lib/config";
-import { toHex } from "viem";
+import { Hex } from "viem";
 import { getOrCreateTokenBalanceEntity } from "./entities/balance.entity";
 import { BIG_ZERO, interpretAsDecimal } from "./lib/decimal";
 import { getOrCreateAccount } from "./entities/account.entity";
@@ -15,10 +15,10 @@ const ignoredAddresses = [
 
 Token.Transfer.handler(async ({ event, context }) => {
   const chainId = toChainId(event.chainId)
-  const tokenAddress = toHex(event.srcAddress)
-  const senderAddress = toHex(event.params._0)
-  const receiverAddress = toHex(event.params._1)
-  const rawTransferAmount = event.params._2
+  const tokenAddress = event.srcAddress as Hex
+  const senderAddress = event.params.from.toString() as Hex
+  const receiverAddress = event.params.to.toString() as Hex
+  const rawTransferAmount = event.params.value
 
   if (rawTransferAmount === 0n) {
     context.log.debug("Ignoring transfer with zero value", { transactionHash: event.transaction })

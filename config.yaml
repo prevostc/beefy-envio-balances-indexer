@@ -10,39 +10,40 @@ contracts:
     abi_file_path: abis/beefy/classic/ClassicVaultFactory.json
     handler: src/EventHandlers.factory.ts
     events:
-      - event: "ProxyCreated(address)"
+      - event: "ProxyCreated(address proxy)"
         name: VaultOrStrategyCreated
   - name: ClassicBoostFactory
     abi_file_path: abis/beefy/classic/ClassicBoostFactory.json
     handler: src/EventHandlers.factory.ts
     events:
-      - event: "ProxyCreated(address)"
+      - event: "ProxyCreated(address proxy)"
         name: BoostCreated
 
   - name: RewardPoolFactory
     abi_file_path: abis/beefy/clm/RewardPoolFactory.json
     handler: src/EventHandlers.factory.ts
     events:
-      - event: "ProxyCreated(address)"
+      - event: "ProxyCreated(address proxy)"
         name: RewardPoolCreated
   - name: CLMManagerFactory
     abi_file_path: abis/beefy/clm/CLMManagerFactory.json
     handler: src/EventHandlers.factory.ts
     events:
-      - event: "ProxyCreated(address)"
+      - event: "ProxyCreated(address proxy)"
         name: CLMManagerCreated
 
   - name: ContractFactory
     abi_file_path: abis/beefy/ContractFactory.json
     handler: src/EventHandlers.factory.ts
     events:
-      - event: "ContractDeployed(bytes32,address)"
+      - event: "ContractDeployed(bytes32 rewardPoolName,address proxy)"
 
+  # contracts
   - name: Token
     abi_file_path: abis/IERC20/IERC20.json
     handler: src/EventHandlers.token.ts
     events:
-      - event: "Transfer(address,address,uint256)"
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
 
 networks:
   - id: 8453 # base

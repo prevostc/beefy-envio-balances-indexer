@@ -17,3 +17,5 @@ export const config = S.parseOrThrow({
         8453: process.env.BASE_RPC_URL ?? 'https://mainnet.base.org',
     } satisfies Record<ChainId, string>,
 }, configSchema);
+
+

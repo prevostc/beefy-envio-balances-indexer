@@ -2,7 +2,10 @@ import { getViemClient } from "../lib/viem";
 import { ChainId } from "../lib/chain";
 import { HandlerContext } from "generated";
 
-export const getDetectClassicVaultOrStrategy = async ({ contractAddress, chainId, blockNumber, log }: { contractAddress: `0x${string}`, chainId: ChainId, blockNumber: number, log: HandlerContext["log"] }) => {
+export const getDetectClassicVaultOrStrategy = async ({ contractAddress, chainId, blockNumber, log }: { contractAddress: `0x${string}`, chainId: ChainId, blockNumber?: number, log: HandlerContext["log"] }): Promise<{
+    isVault: boolean;
+    isStrategy: boolean;
+}> => {
     const client = getViemClient(chainId);
 
     // Try standard Erc20 interface first (most common)
@@ -16,10 +19,7 @@ export const getDetectClassicVaultOrStrategy = async ({ contractAddress, chainId
                         name: "vault",
                         type: "function",
                         inputs: [],
-                        outputs: [{
-                            name: "vault",
-                            type: "address",
-                        }],
+                        outputs: [],
                     },
                 ],
                 functionName: "vault",
@@ -31,27 +31,36 @@ export const getDetectClassicVaultOrStrategy = async ({ contractAddress, chainId
                         name: "strategy",
                         type: "function",
                         inputs: [],
-                        outputs: [{
-                            name: "strategy",
-                            type: "address",
-                        }],
+                        outputs: [],
                     },
                 ],
                 functionName: "strategy",
             },
         ],
-        blockNumber: BigInt(blockNumber),
+        blockNumber: blockNumber ? BigInt(blockNumber) : undefined,
     });
 
-    log.info("vault or strategy", { vault: vault.status, strategy: strategy.status });
+    log.debug("vault or strategy detection", { contractAddress, vault: vault.status, strategy: strategy.status, blockNumber });
 
     if (vault.status === "failure" && strategy.status === "failure") {
-        log.error(".vault() and .strategy() calls both failed on contract", { contractAddress, vault: vault.error, strategy: strategy.error });
-        throw new Error(".vault() and .strategy() calls both failed");
+        log.error(".vault() and .strategy() calls both failed on contract", { contractAddress, vault: vault.error, strategy: strategy.error, blockNumber });
+        throw new Error(`.vault() and .strategy() calls both FAILED for contract ${contractAddress}`);
+    }
+
+    if (vault.status === "success" && strategy.status === "success") {
+        // try the latest block number instead of the block number passed in
+        // this will bust any rpc cache so it's not done by default
+        if (blockNumber) {
+            log.debug("vault and strategy calls both succeeded on contract, trying latest block number", { contractAddress, blockNumber });
+            return getDetectClassicVaultOrStrategy({ contractAddress, chainId, log });
+        } else {
+            log.error("vault and strategy calls both succeeded on contract", { contractAddress, blockNumber });
+            throw new Error(`vault and strategy calls both SUCCESS for contract ${contractAddress}`);
+        }
     }
 
     return {
-        isVault: vault.status === "success",
-        isStrategy: strategy.status === "success",
+        isVault: strategy.status === "success",
+        isStrategy: vault.status === "success",
     };
 };

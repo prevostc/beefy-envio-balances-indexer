@@ -15,12 +15,16 @@ export const getViemClient = (chainId: ChainId) => {
     return createPublicClient({
         chain: chainMap[chainId],
         // Enable multicall batching for efficiency
+        // batch: {
+        //     multicall: {
+        //         batchSize: 512, /* bytes */
+        //         deployless: false,
+        //         wait: 200, /* ms */
+        //     }
+        // },
+        // disable multicall batching to allow downstream erpc to cache calls more granularly
         batch: {
-            multicall: {
-                batchSize: 512, /* bytes */
-                deployless: false,
-                wait: 200, /* ms */
-            }
+            multicall: false
         },
         // Thanks to automatic Effect API batching, we can also enable batching for Viem transport level
         transport: http(rpcUrl, { batch: { batchSize: 20 /* requests */ } }),

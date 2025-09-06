@@ -25,6 +25,8 @@ export const getTokenMetadata = experimental_createEffect(
 
         const client = getViemClient(chainId);
 
+        context.log.debug(`Fetching token metadata`, { tokenAddress, chainId, blockNumber });
+
         // Try standard Erc20 interface first (most common)
         const erc20 = { address: tokenAddress as `0x${string}`, abi: erc20Abi } as const;
         const [decimals, name, symbol] = await client.multicall({
