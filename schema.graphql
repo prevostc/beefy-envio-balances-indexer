@@ -18,8 +18,11 @@ A token is a representation of a fungible asset on the blockchain
 as specified by the ERC20 standard.
 """
 type Token {
-  """token address"""
+  """chain - token address"""
   id: ID!
+
+  """chain id"""
+  chainId: Int!
 
   # metadata
 
@@ -53,9 +56,11 @@ type Token {
 A token balance represents the amount of a specific token that an account holds
 """
 type TokenBalance {
-  """Account address + Token address"""
+  """chain - account address - token address"""
   id: ID!
 
+  """chain id"""
+  chainId: Int!
   """The account that holds the token balance"""
   account: Account! @index
   """The token that the account holds"""
@@ -83,6 +88,8 @@ type TokenBalanceSnapshot {
   """Unique ID: chainId-token-account-blockNumber"""
   id: ID!
 
+  """chain id"""
+  chainId: Int!
   """Token balance reference"""
   tokenBalance: TokenBalance! @index
   """Account ID reference"""

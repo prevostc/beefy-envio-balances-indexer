@@ -20,6 +20,8 @@ export const getOrCreateToken = async ({ context, chainId, tokenAddress }: { con
     return await context.Token.getOrCreate({
         id: tokenAddress,
 
+        chainId: chainId,
+
         isVirtual: false,
 
         name: tokenMetadata.name,
