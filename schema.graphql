@@ -31,7 +31,7 @@ type Token {
   """
   chain id
   """
-  chainId: Int!
+  chainId: Int! @index
 
   # metadata
 
@@ -89,7 +89,7 @@ type TokenBalance {
   """
   chain id
   """
-  chainId: Int!
+  chainId: Int! @index
   """
   The account that holds the token balance
   """
@@ -127,7 +127,7 @@ type TokenBalanceSnapshot {
   """
   chain id
   """
-  chainId: Int!
+  chainId: Int! @index
   """
   Token balance reference
   """

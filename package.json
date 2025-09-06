@@ -10,7 +10,7 @@
     "dev": "envio dev",
     "start": "envio start",
     "stop": "envio stop",
-    "deploy": "git checkout prod && git merge origin/main --ff-only && git push",
+    "deploy": "git checkout prod && git merge origin/main --ff-only && git push && git checkout -",
     "format": "biome check --write --unsafe",
     "format:safe": "biome check --write",
     "test": "pnpm run test:unit && pnpm run test:lint && pnpm run test:ts",
