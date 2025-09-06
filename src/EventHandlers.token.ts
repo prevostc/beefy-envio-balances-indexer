@@ -21,7 +21,7 @@ Token.Transfer.handler(async ({ event, context }) => {
   const rawTransferAmount = event.params.value
 
   if (rawTransferAmount === 0n) {
-    context.log.debug("Ignoring transfer with zero value", { transactionHash: event.transaction })
+    context.log.debug("Ignoring transfer with zero value")
     return
   }
 
