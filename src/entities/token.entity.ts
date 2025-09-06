@@ -4,6 +4,9 @@ import type { Hex } from 'viem';
 import { getTokenMetadata } from '../effects/token.effects';
 import type { ChainId } from '../lib/chain';
 
+export const tokenId = ({ chainId, tokenAddress }: { chainId: ChainId; tokenAddress: Hex }) =>
+    `${chainId}-${tokenAddress}`;
+
 export const getOrCreateToken = async ({
     context,
     chainId,
@@ -13,7 +16,8 @@ export const getOrCreateToken = async ({
     chainId: ChainId;
     tokenAddress: Hex;
 }): Promise<Token_t> => {
-    const maybeExistingToken = await context.Token.get(tokenAddress);
+    const id = tokenId({ chainId, tokenAddress });
+    const maybeExistingToken = await context.Token.get(id);
     if (maybeExistingToken) {
         return maybeExistingToken;
     }
@@ -24,7 +28,7 @@ export const getOrCreateToken = async ({
     });
 
     return await context.Token.getOrCreate({
-        id: tokenAddress,
+        id: id,
 
         chainId: chainId,
 

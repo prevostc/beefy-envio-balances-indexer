@@ -1,5 +1,6 @@
 import { type BigDecimal, type HandlerContext, Token, type Token_Transfer_event } from 'generated';
 import type { Hex } from 'viem';
+import { accountId } from './entities/account.entity';
 import { getOrCreateTokenBalanceEntity, getOrCreateTokenBalanceSnapshotEntity } from './entities/balance.entity';
 import { getOrCreateToken } from './entities/token.entity';
 import { type ChainId, toChainId } from './lib/chain';
@@ -105,7 +106,7 @@ const updateAccountBalance = async ({
     const after = balance.amount.plus(amountDiff);
 
     context.Account.getOrCreate({
-        id: accountAddress,
+        id: accountId({ accountAddress }),
     });
 
     context.TokenBalance.set({
