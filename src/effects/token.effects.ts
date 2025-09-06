@@ -10,7 +10,6 @@ export const getTokenMetadata = experimental_createEffect(
         input: {
             tokenAddress: hexSchema,
             chainId: chainIdSchema,
-            blockNumber: S.number,
         },
         output: S.schema({
             name: S.string,
@@ -21,11 +20,11 @@ export const getTokenMetadata = experimental_createEffect(
         cache: true,
     },
     async ({ input, context }) => {
-        const { tokenAddress, chainId, blockNumber } = input;
+        const { tokenAddress, chainId } = input;
 
         const client = getViemClient(chainId);
 
-        context.log.debug(`Fetching token metadata`, { tokenAddress, chainId, blockNumber });
+        context.log.debug(`Fetching token metadata`, { tokenAddress, chainId });
 
         // Try standard Erc20 interface first (most common)
         const erc20 = { address: tokenAddress as `0x${string}`, abi: erc20Abi } as const;
@@ -45,8 +44,8 @@ export const getTokenMetadata = experimental_createEffect(
                     functionName: "symbol",
                 },
             ],
-            blockNumber: BigInt(blockNumber),
         });
+
 
         context.log.info(`Got token details for ${tokenAddress}: ${name} (${symbol}) with ${decimals} decimals`);
 

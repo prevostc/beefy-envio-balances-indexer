@@ -27,6 +27,11 @@ export const getViemClient = (chainId: ChainId) => {
             multicall: false
         },
         // Thanks to automatic Effect API batching, we can also enable batching for Viem transport level
-        transport: http(rpcUrl, { batch: { batchSize: 20 /* requests */ } }),
+        transport: http(rpcUrl, {
+            batch: {
+                batchSize: 50, /* requests */
+                wait: 200, /* ms */
+            }
+        }),
     });
 }

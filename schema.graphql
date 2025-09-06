@@ -12,22 +12,6 @@ type Account {
   snapshots: [TokenBalanceSnapshot!]! @derivedFrom(field: "account")
 }
 
-"""
-A debug entity to track how we discover contracts and avoid double counting
-"""
-type Contract {
-  """The contract address"""
-  id: ID!
-
-  """The name of the contract"""
-  name: String!
-  """The block number when the contract was created"""
-  creationBlock: BigInt!
-  """The timestamp when the contract was created"""
-  creationTimestamp: Timestamp!
-  """The transaction hash when the contract was created"""
-  creationTransactionHash: String!
-}
 
 """
 A token is a representation of a fungible asset on the blockchain
@@ -38,9 +22,6 @@ type Token {
   id: ID!
 
   # metadata
-
-  """The contract infos that the token is associated with"""
-  contract: Contract!
 
   """Is virtual token, we create virtual tokens for the indexer to track non-ERC20 tokens like Beefy Boosts"""
   isVirtual: Boolean!
