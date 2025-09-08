@@ -59,12 +59,13 @@ export const getDetectClassicVaultOrStrategy = async ({
 
     if (vault.status === 'failure' && strategy.status === 'failure') {
         log.error('.vault() and .strategy() calls both failed on contract', {
+            chainId,
             contractAddress,
             vault: vault.error,
             strategy: strategy.error,
             blockNumber,
         });
-        throw new Error(`.vault() and .strategy() calls both FAILED for contract ${contractAddress}`);
+        throw new Error(`.vault() and .strategy() calls both FAILED for contract ${chainId}:${contractAddress}`);
     }
 
     if (vault.status === 'success' && strategy.status === 'success') {
