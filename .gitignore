@@ -24,6 +24,7 @@ lib/*
 .vscode
 .merlin
 .bsb.lock
+*.jsonl
 node_modules/
 build/
 benchmarks/

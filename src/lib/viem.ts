@@ -1,11 +1,12 @@
 import { createPublicClient, http, type Chain as ViemChain } from 'viem';
-import { base, bsc, mainnet } from 'viem/chains';
+import { base, bsc, mainnet, polygon } from 'viem/chains';
 import type { ChainId } from './chain';
 import { config } from './config';
 
 const chainMap: Record<ChainId, ViemChain> = {
     1: mainnet,
     56: bsc,
+    137: polygon,
     8453: base,
 };
 
