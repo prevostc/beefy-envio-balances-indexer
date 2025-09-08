@@ -18,7 +18,7 @@ ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, cont
     const { isVault, isStrategy } = await getDetectClassicVaultOrStrategy({
         log: context.log,
         contractAddress: proxyAddress as `0x${string}`,
-        chainId: 8453,
+        chainId: event.chainId,
         blockNumber: event.block.number,
     });
 
