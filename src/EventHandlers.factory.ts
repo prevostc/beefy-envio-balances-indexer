@@ -10,7 +10,7 @@ import { vaultBlacklist } from './lib/blacklist';
 
 ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, context }) => {
     const proxyAddress = event.params.proxy.toString().toLowerCase();
-    if (vaultBlacklist.includes(proxyAddress)) {
+    if ((vaultBlacklist[event.chainId] ?? []).includes(proxyAddress)) {
         context.log.debug('Blacklisted proxy address', { proxyAddress });
         return;
     }

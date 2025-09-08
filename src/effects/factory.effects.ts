@@ -82,7 +82,7 @@ export const getDetectClassicVaultOrStrategy = async ({
             contractAddress,
             blockNumber,
         });
-        throw new Error(`vault and strategy calls both SUCCESS for contract ${contractAddress}`);
+        throw new Error(`vault and strategy calls both SUCCESS for contract ${chainId}:${contractAddress}`);
     }
 
     return {
