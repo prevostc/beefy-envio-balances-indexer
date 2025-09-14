@@ -46,7 +46,11 @@ contracts:
     events:
       - event: "Initialized(uint8 version)"
       - event: "Staked(address indexed user, uint256 amount)"
+        field_selection:
+          transaction_fields: [hash]
       - event: "Withdrawn(address indexed user, uint256 amount)"
+        field_selection:
+          transaction_fields: [hash]
   
   - name: ClassicVault
     abi_file_path: abis/beefy/classic/ClassicVault.json
@@ -54,6 +58,8 @@ contracts:
     events:
       - event: "Initialized(uint8 version)"
       - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+        field_selection:
+          transaction_fields: [hash]
 
   - name: ClmStrategy
     abi_file_path: abis/beefy/clm/ClmStrategy.json
@@ -61,6 +67,8 @@ contracts:
     events:
       - event: "Initialized(uint8 version)"
       - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+        field_selection:
+          transaction_fields: [hash]
 
   - name: ClmManager
     abi_file_path: abis/beefy/clm/ClmManager.json
@@ -68,6 +76,8 @@ contracts:
     events:
       - event: "Initialized(uint8 version)"
       - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+        field_selection:
+          transaction_fields: [hash]
 
   - name: RewardPool
     abi_file_path: abis/beefy/common/RewardPool.json
@@ -75,6 +85,8 @@ contracts:
     events:
       - event: "Initialized(uint8 version)"
       - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+        field_selection:
+          transaction_fields: [hash]
 
   - name: LstVault
     abi_file_path: abis/beefy/lst/LstVault.json
@@ -82,6 +94,8 @@ contracts:
     events:
       - event: "Initialized(uint8 version)"
       - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+        field_selection:
+          transaction_fields: [hash]
   
   - name: Erc4626Adapter
     abi_file_path: abis/beefy/common/Erc4626Adapter.json
@@ -89,6 +103,8 @@ contracts:
     events:
       - event: "Initialized(uint8 version)"
       - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+        field_selection:
+          transaction_fields: [hash]
 
 networks:
   - id: 56 # bsc

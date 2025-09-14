@@ -64,6 +64,7 @@ ClassicBoost.Staked.handler(async ({ event, context }) => {
         receiverAddress: event.params.user.toString().toLowerCase() as Hex,
         rawTransferAmount: event.params.amount,
         block: event.block,
+        transaction: event.transaction,
     });
 });
 
@@ -79,5 +80,6 @@ ClassicBoost.Withdrawn.handler(async ({ event, context }) => {
         receiverAddress: config.BURN_ADDRESS,
         rawTransferAmount: event.params.amount,
         block: event.block,
+        transaction: event.transaction,
     });
 });

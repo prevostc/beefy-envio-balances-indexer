@@ -1,8 +1,8 @@
-import type { BigDecimal, Block_t, HandlerContext } from 'generated';
+import type { AggregatedTransaction_t, BigDecimal, Block_t, HandlerContext } from 'generated';
 import type { Account_t, Token_t, TokenBalance_t } from 'generated/src/db/Entities.gen';
 import type { Hex } from 'viem';
 import { getOrCreateAccount } from '../entities/account.entity';
-import { getOrCreateTokenBalanceEntity, getOrCreateTokenBalanceSnapshotEntity } from '../entities/balance.entity';
+import { getOrCreateTokenBalanceChangeEntity, getOrCreateTokenBalanceEntity } from '../entities/balance.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import type { ChainId } from './chain';
 import { config } from './config';
@@ -16,6 +16,7 @@ export const handleTokenTransfer = async ({
     receiverAddress,
     rawTransferAmount,
     block,
+    transaction,
 }: {
     context: HandlerContext;
     chainId: ChainId;
@@ -24,9 +25,10 @@ export const handleTokenTransfer = async ({
     receiverAddress: Hex;
     rawTransferAmount: bigint;
     block: Block_t;
+    transaction: AggregatedTransaction_t;
 }) => {
     if (rawTransferAmount === 0n) {
-        context.log.debug('Ignoring transfer with zero value');
+        context.log.debug('Ignoring transfer with zero value', { trx: transaction.hash });
         return;
     }
 
@@ -75,6 +77,7 @@ export const handleTokenTransfer = async ({
             balance: senderBalance,
             block,
             token,
+            transaction,
         });
         holderCountChange += diff.holderCountChange;
     }
@@ -88,6 +91,7 @@ export const handleTokenTransfer = async ({
             balance: receiverBalance,
             block,
             token,
+            transaction,
         });
         holderCountChange += diff.holderCountChange;
     }
@@ -114,6 +118,7 @@ const updateAccountBalance = async ({
     token,
     block,
     chainId,
+    transaction,
 }: {
     context: HandlerContext;
     amountDiff: BigDecimal;
@@ -122,6 +127,7 @@ const updateAccountBalance = async ({
     token: Token_t;
     block: Block_t;
     chainId: ChainId;
+    transaction: AggregatedTransaction_t;
 }) => {
     const before = balance.amount;
     const after = balance.amount.plus(amountDiff);
@@ -131,17 +137,19 @@ const updateAccountBalance = async ({
         amount: after,
     });
 
-    const balanceSnapshot = await getOrCreateTokenBalanceSnapshotEntity({
+    const balanceChange = await getOrCreateTokenBalanceChangeEntity({
         context,
         token,
         account,
         block,
         balance: after,
         chainId,
+        transaction,
     });
-    context.TokenBalanceSnapshot.set({
-        ...balanceSnapshot,
-        balance: after,
+    context.TokenBalanceChange.set({
+        ...balanceChange,
+        balanceBefore: before,
+        balanceAfter: after,
     });
 
     let holderCountChange = 0;

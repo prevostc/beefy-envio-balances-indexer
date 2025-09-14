@@ -70,5 +70,6 @@ ClmManager.Transfer.handler(async ({ event, context }) => {
         receiverAddress: event.params.to.toString().toLowerCase() as Hex,
         rawTransferAmount: event.params.value,
         block: event.block,
+        transaction: event.transaction,
     });
 });
