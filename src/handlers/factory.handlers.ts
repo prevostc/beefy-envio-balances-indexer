@@ -5,8 +5,8 @@ import {
     ContractFactory,
     RewardPoolFactory,
 } from 'generated';
-import { getDetectClassicVaultOrStrategy } from './effects/factory.effects';
-import { vaultBlacklist } from './lib/blacklist';
+import { getDetectClassicVaultOrStrategy } from '../effects/classicVaultFactory.effects';
+import { vaultBlacklist } from '../lib/blacklist';
 
 ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, context }) => {
     const proxyAddress = event.params.proxy.toString().toLowerCase();
@@ -23,7 +23,7 @@ ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, cont
     });
 
     if (isVault) {
-        context.addToken(proxyAddress);
+        context.addClassicVault(proxyAddress);
         context.log.info('Vault detected, adding to context', { proxyAddress });
     } else if (isStrategy) {
         context.log.info('Strategy detected, ignoring', { proxyAddress });
@@ -33,7 +33,7 @@ ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, cont
 ClassicBoostFactory.BoostCreated.contractRegister(async ({ event, context }) => {
     const boostAddress = event.params.proxy.toString().toLowerCase();
 
-    context.addToken(boostAddress);
+    context.addClassicBoost(boostAddress);
 
     context.log.info('BoostDeployed', { boostAddress });
 });
@@ -41,7 +41,7 @@ ClassicBoostFactory.BoostCreated.contractRegister(async ({ event, context }) => 
 RewardPoolFactory.RewardPoolCreated.contractRegister(async ({ event, context }) => {
     const contractAddress = event.params.proxy.toString().toLowerCase();
 
-    context.addToken(contractAddress);
+    context.addRewardPool(contractAddress);
 
     context.log.info('RewardPoolCreated', { contractAddress });
 });
@@ -49,15 +49,18 @@ RewardPoolFactory.RewardPoolCreated.contractRegister(async ({ event, context }) 
 CLMManagerFactory.CLMManagerCreated.contractRegister(async ({ event, context }) => {
     const contractAddress = event.params.proxy.toString().toLowerCase();
 
-    context.addToken(contractAddress);
+    context.addClmManager(contractAddress);
 
     context.log.info('CLMManagerCreated', { contractAddress });
 });
 
 ContractFactory.ContractDeployed.contractRegister(async ({ event, context }) => {
     const contractAddress = event.params.proxy.toString().toLowerCase();
+    // const rewardPoolName = event.params.rewardPoolName; // Property doesn't exist
 
-    context.addToken(contractAddress);
+    // Generic contract factory - determine type based on rewardPoolName or add as token
+    // For now, we'll skip adding these until we can determine the specific type
+    // context.addToken(contractAddress); // TODO: Determine contract type
 
     context.log.info('ContractDeployed', { contractAddress });
 });

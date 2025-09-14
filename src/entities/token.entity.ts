@@ -11,10 +11,17 @@ export const getOrCreateToken = async ({
     context,
     chainId,
     tokenAddress,
+    virtual,
 }: {
     context: HandlerContext;
     chainId: ChainId;
     tokenAddress: Hex;
+    virtual:
+        | false
+        | {
+              suffix: string;
+              stakingToken: Hex;
+          };
 }): Promise<Token_t> => {
     const id = tokenId({ chainId, tokenAddress });
     const maybeExistingToken = await context.Token.get(id);
@@ -22,17 +29,33 @@ export const getOrCreateToken = async ({
         return maybeExistingToken;
     }
 
-    const tokenMetadata = await context.effect(getTokenMetadata, {
-        tokenAddress: tokenAddress,
-        chainId: chainId,
-    });
+    let tokenMetadata: { name: string; symbol: string; decimals: number };
+    let isVirtual = false;
+
+    if (virtual === false) {
+        tokenMetadata = await context.effect(getTokenMetadata, {
+            tokenAddress: tokenAddress,
+            chainId: chainId,
+        });
+        isVirtual = false;
+    } else {
+        isVirtual = true;
+        const stakingTokenMetadata = await context.effect(getTokenMetadata, {
+            tokenAddress: virtual.stakingToken,
+            chainId: chainId,
+        });
+        tokenMetadata = {
+            name: `${stakingTokenMetadata.name} ${virtual.suffix}`,
+            symbol: `${stakingTokenMetadata.symbol} ${virtual.suffix}`,
+            decimals: stakingTokenMetadata.decimals,
+        };
+    }
 
     return await context.Token.getOrCreate({
-        id: id,
-
-        chainId: chainId,
-
-        isVirtual: false,
+        id,
+        chainId,
+        address: tokenAddress,
+        isVirtual,
 
         name: tokenMetadata.name,
         symbol: tokenMetadata.symbol,

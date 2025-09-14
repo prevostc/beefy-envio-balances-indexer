@@ -1,49 +1,43 @@
 import { BigDecimal, type Block_t, type HandlerContext } from 'generated';
-import type { TokenBalance_t } from 'generated/src/db/Entities.gen';
+import type { Account_t, Token_t, TokenBalance_t } from 'generated/src/db/Entities.gen';
 import type { Hex } from 'viem';
 import type { ChainId } from '../lib/chain';
 import { accountId } from './account.entity';
 import { tokenId } from './token.entity';
 
-export const tokenBalanceId = ({
-    chainId,
-    accountAddress,
-    tokenAddress,
-}: {
-    chainId: ChainId;
-    accountAddress: Hex;
-    tokenAddress: Hex;
-}) => `${chainId}-${accountAddress}-${tokenAddress}`;
+export const tokenBalanceId = ({ chainId, account, token }: { chainId: ChainId; account: Account_t; token: Token_t }) =>
+    `${chainId}-${account.address}-${token.address}`;
+
 export const tokenBalanceSnapshotId = ({
     chainId,
-    accountAddress,
-    tokenAddress,
+    account,
+    token,
     blockNumber,
 }: {
     chainId: ChainId;
-    accountAddress: Hex;
-    tokenAddress: Hex;
+    account: Account_t;
+    token: Token_t;
     blockNumber: number;
-}) => `${chainId}-${accountAddress}-${tokenAddress}-${blockNumber}`;
+}) => `${chainId}-${account.address}-${token.address}-${blockNumber}`;
 
 export const getOrCreateTokenBalanceEntity = async ({
     context,
-    tokenAddress,
-    accountAddress,
+    token,
+    account,
     chainId,
 }: {
     context: HandlerContext;
-    tokenAddress: Hex;
-    accountAddress: Hex;
+    account: Account_t;
+    token: Token_t;
     chainId: ChainId;
 }): Promise<TokenBalance_t> => {
     return await context.TokenBalance.getOrCreate({
-        id: tokenBalanceId({ chainId, accountAddress, tokenAddress }),
+        id: tokenBalanceId({ chainId, account, token }),
 
         chainId: chainId,
 
-        account_id: accountId({ accountAddress }),
-        token_id: tokenId({ chainId, tokenAddress }),
+        account_id: accountId({ accountAddress: account.address as Hex }),
+        token_id: tokenId({ chainId, tokenAddress: token.address as Hex }),
 
         amount: new BigDecimal(0),
     });
@@ -51,27 +45,27 @@ export const getOrCreateTokenBalanceEntity = async ({
 
 export const getOrCreateTokenBalanceSnapshotEntity = async ({
     context,
-    tokenAddress,
-    accountAddress,
+    token,
+    account,
     block,
     balance,
     chainId,
 }: {
     context: HandlerContext;
-    tokenAddress: Hex;
-    accountAddress: Hex;
+    chainId: ChainId;
+    token: Token_t;
+    account: Account_t;
     block: Block_t;
     balance: BigDecimal;
-    chainId: ChainId;
 }) => {
     return await context.TokenBalanceSnapshot.getOrCreate({
-        id: tokenBalanceSnapshotId({ chainId, accountAddress, tokenAddress, blockNumber: block.number }),
+        id: tokenBalanceSnapshotId({ chainId, account, token, blockNumber: block.number }),
 
         chainId: chainId,
 
-        tokenBalance_id: tokenBalanceId({ chainId, accountAddress, tokenAddress }),
-        account_id: accountId({ accountAddress }),
-        token_id: tokenId({ chainId, tokenAddress }),
+        tokenBalance_id: tokenBalanceId({ chainId, account, token }),
+        account_id: accountId({ accountAddress: account.address as Hex }),
+        token_id: tokenId({ chainId, tokenAddress: token.address as Hex }),
 
         balance: balance,
         blockNumber: BigInt(block.number),

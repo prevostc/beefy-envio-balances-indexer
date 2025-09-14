@@ -8,41 +8,86 @@ contracts:
   # factories
   - name: ClassicVaultFactory
     abi_file_path: abis/beefy/classic/ClassicVaultFactory.json
-    handler: src/EventHandlers.factory.ts
+    handler: src/handlers/factory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: VaultOrStrategyCreated
   - name: ClassicBoostFactory
     abi_file_path: abis/beefy/classic/ClassicBoostFactory.json
-    handler: src/EventHandlers.factory.ts
+    handler: src/handlers/factory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: BoostCreated
 
   - name: RewardPoolFactory
-    abi_file_path: abis/beefy/clm/RewardPoolFactory.json
-    handler: src/EventHandlers.factory.ts
+    abi_file_path: abis/beefy/common/RewardPoolFactory.json
+    handler: src/handlers/factory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: RewardPoolCreated
+        
   - name: CLMManagerFactory
     abi_file_path: abis/beefy/clm/ClmManagerFactory.json
-    handler: src/EventHandlers.factory.ts
+    handler: src/handlers/factory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: CLMManagerCreated
 
   - name: ContractFactory
     abi_file_path: abis/beefy/ContractFactory.json
-    handler: src/EventHandlers.factory.ts
+    handler: src/handlers/factory.handlers.ts
     events:
-      - event: "ContractDeployed(bytes32 rewardPoolName,address proxy)"
+      - event: "ContractDeployed(bytes32 contractName,address proxy)"
 
   # contracts
-  - name: Token
-    abi_file_path: abis/IERC20/IERC20.json
-    handler: src/EventHandlers.token.ts
+  - name: ClassicBoost
+    abi_file_path: abis/beefy/classic/ClassicBoost.json
+    handler: src/handlers/classicBoost.handlers.ts
     events:
+      - event: "Initialized(uint8 version)"
+      - event: "Staked(address indexed user, uint256 amount)"
+      - event: "Withdrawn(address indexed user, uint256 amount)"
+  
+  - name: ClassicVault
+    abi_file_path: abis/beefy/classic/ClassicVault.json
+    handler: src/handlers/classicVault.handlers.ts
+    events:
+      - event: "Initialized(uint8 version)"
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+
+  - name: ClmStrategy
+    abi_file_path: abis/beefy/clm/ClmStrategy.json
+    handler: src/handlers/clmStrategy.handlers.ts
+    events:
+      - event: "Initialized(uint8 version)"
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+
+  - name: ClmManager
+    abi_file_path: abis/beefy/clm/ClmManager.json
+    handler: src/handlers/clmManager.handlers.ts
+    events:
+      - event: "Initialized(uint8 version)"
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+
+  - name: RewardPool
+    abi_file_path: abis/beefy/common/RewardPool.json
+    handler: src/handlers/rewardPool.handlers.ts
+    events:
+      - event: "Initialized(uint8 version)"
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+
+  - name: LstVault
+    abi_file_path: abis/beefy/lst/LstVault.json
+    handler: src/handlers/lstVault.handlers.ts
+    events:
+      - event: "Initialized(uint8 version)"
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+  
+  - name: Erc4626Adapter
+    abi_file_path: abis/beefy/common/Erc4626Adapter.json
+    handler: src/handlers/erc4626Adapter.handlers.ts
+    events:
+      - event: "Initialized(uint8 version)"
       - event: "Transfer(address indexed from, address indexed to, uint256 value)"
 
 networks:
@@ -62,7 +107,7 @@ networks:
         address: 
           - 0xcc536552A6214d6667fBC3EC38965F7f556A6391
 
-      - name: Token
+      - name: ClassicVault
         address: 
           - 0x00aec34489a7ade91a0507b6b9dbb0a50938b7c0
           - 0x00ecbb8f9853dbc621b39ab205a148a26eac3b11
@@ -805,6 +850,8 @@ networks:
           - 0xff36953cc5b159fe31fbf5e68a3b4bd6010cdeed
           - 0xff494b7cb341311f86da21a49c5ff176637aa85e
           - 0xff750ee63f1e428de1d6c8d9d92676b5fc8376a8
+      - name: ClassicBoost
+        address:
           - 0x04756126f044634c9a0f0e985e60c88a51acc206
           - 0x3bc5ac0dfdc871b365d159f728dd1b9a0b5481e8
           - 0xc3c7d422809852031b44ab29eec9f1eff2a58756
@@ -829,14 +876,13 @@ networks:
           - 0xcc536552A6214d6667fBC3EC38965F7f556A6391
 
       # individual products created without factory
-      - name: Token # ClassicVault
+      - name: ClassicVault
         address: 
           - 0x62e5b9934dcb87618cfc74b222305d16c997e8c1
           - 0xc55E93C62874D8100dBd2DfE307EDc1036ad5434
 
-
   - id: 137 # polygon
-    start_block: 58270050
+    start_block: 13795241
     contracts:
       - name: CLMManagerFactory
         address: 
@@ -851,7 +897,7 @@ networks:
         address: 
           - 0xcc536552A6214d6667fBC3EC38965F7f556A6391
 
-      - name: Token
+      - name: ClassicVault
         address: 
           - 0x009e0abc8cecbc576dfe2b8e372338b8e597dbc9
           - 0x01a8f2e5bfb8679c82442f90e1166469a2e530c8
@@ -1244,6 +1290,8 @@ networks:
           - 0xfe2f5e215c0fe9b5d4ff99ca7cbb5f5a77f5c515
           - 0xfe4519d295089ac689a6ec6779de4740c06d4707
           - 0xfecf784f48125ccb7d8855cdda7c5ed6b5024cb3
+      - name: ClassicBoost
+        address: 
           - 0x1d734a02ef1e1f5886e66b0673b71af5b53ffa94
           - 0x2760e46d9bb43dafcbecaad1f64b93207f9f0ed7
           - 0x3a29cab2e124919d14a6f735b6033a3aad2b260f

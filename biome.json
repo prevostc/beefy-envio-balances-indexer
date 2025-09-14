@@ -40,7 +40,8 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "useImportExtensions": "off"
+        "useImportExtensions": "off",
+        "useJsonImportAttributes": "off"
       }
     }
   },

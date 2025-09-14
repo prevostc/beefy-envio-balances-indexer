@@ -20,18 +20,8 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "RewardPoolName",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newImplementation",
-        "type": "address"
-      }
+      { "indexed": false, "internalType": "string", "name": "RewardPoolName", "type": "string" },
+      { "indexed": false, "internalType": "address", "name": "newImplementation", "type": "address" }
     ],
     "name": "InstanceUpgraded",
     "type": "event"
@@ -39,18 +29,8 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "rewardPoolName",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "implementation",
-        "type": "address"
-      }
+      { "indexed": false, "internalType": "string", "name": "rewardPoolName", "type": "string" },
+      { "indexed": false, "internalType": "address", "name": "implementation", "type": "address" }
     ],
     "name": "NewRewardPoolAdded",
     "type": "event"
@@ -58,18 +38,8 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+      { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
     ],
     "name": "OwnershipTransferred",
     "type": "event"
@@ -77,45 +47,21 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "rewardPoolName",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "proxy",
-        "type": "address"
-      }
+      { "indexed": false, "internalType": "string", "name": "rewardPoolName", "type": "string" },
+      { "indexed": false, "internalType": "address", "name": "proxy", "type": "address" }
     ],
     "name": "ProxyCreated",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "rewardPoolName",
-        "type": "string"
-      }
-    ],
+    "inputs": [{ "indexed": false, "internalType": "string", "name": "rewardPoolName", "type": "string" }],
     "name": "RewardPoolIsImmutable",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "keeper",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "keeper", "type": "address" }],
     "name": "SetKeeper",
     "type": "event"
   },
@@ -129,11 +75,7 @@
   {
     "inputs": [
       { "internalType": "string", "name": "_rewardPoolName", "type": "string" },
-      {
-        "internalType": "address",
-        "name": "_implementation",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_implementation", "type": "address" }
     ],
     "name": "addRewardPool",
     "outputs": [],
@@ -164,13 +106,7 @@
   {
     "inputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "name": "instances",
-    "outputs": [
-      {
-        "internalType": "contract UpgradeableBeacon",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "contract UpgradeableBeacon", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -195,13 +131,7 @@
     "stateMutability": "view",
     "type": "function"
   },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
+  { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
   {
     "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "rewardPoolTypes",
@@ -226,11 +156,7 @@
   {
     "inputs": [
       { "internalType": "string", "name": "_rewardPoolName", "type": "string" },
-      {
-        "internalType": "address",
-        "name": "_newImplementation",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_newImplementation", "type": "address" }
     ],
     "name": "upgradeTo",
     "outputs": [],

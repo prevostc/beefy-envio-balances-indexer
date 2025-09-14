@@ -6,14 +6,7 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "proxy",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "proxy", "type": "address" }],
     "name": "ProxyCreated",
     "type": "event"
   },

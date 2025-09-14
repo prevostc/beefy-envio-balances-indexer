@@ -1,10 +1,12 @@
 import { S } from 'envio';
+import type { Hex } from 'viem';
 import type { ChainId } from './chain';
+import { hexSchema } from './hex';
 
 const configSchema = S.schema({
-    ADDRESS_ZERO: S.string,
-    BURN_ADDRESS: S.string,
-    MINT_ADDRESS: S.string,
+    ADDRESS_ZERO: hexSchema,
+    BURN_ADDRESS: hexSchema,
+    MINT_ADDRESS: hexSchema,
     RPC_URL: S.schema({
         1: S.string,
         56: S.string,
@@ -27,4 +29,8 @@ export const config = S.parseOrThrow(
         } satisfies Record<ChainId, string>,
     },
     configSchema
+);
+
+export const IGNORED_ADDRESSES = [config.ADDRESS_ZERO, config.BURN_ADDRESS, config.MINT_ADDRESS].map(
+    (address) => address.toLowerCase() as Hex
 );
