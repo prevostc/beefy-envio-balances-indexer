@@ -1,3 +1,4 @@
+import type { Logger } from 'envio';
 import { createPublicClient, http, type Chain as ViemChain } from 'viem';
 import { base, bsc, mainnet, polygon } from 'viem/chains';
 import type { ChainId } from './chain';
@@ -10,7 +11,7 @@ const chainMap: Record<ChainId, ViemChain> = {
     8453: base,
 };
 
-export const getViemClient = (chainId: ChainId) => {
+export const getViemClient = (chainId: ChainId, logger: Logger) => {
     const rpcUrl = config.RPC_URL[chainId];
 
     return createPublicClient({
@@ -29,10 +30,21 @@ export const getViemClient = (chainId: ChainId) => {
         },
         // Thanks to automatic Effect API batching, we can also enable batching for Viem transport level
         transport: http(rpcUrl, {
-            batch: {
-                batchSize: 50 /* requests */,
-                wait: 200 /* ms */,
+            onFetchRequest: async (request) => {
+                const requestData = await request.clone().json();
+                logger.debug('rpc.http: request', { request: requestData });
             },
+            onFetchResponse: async (response) => {
+                const responseData = await response.clone().json();
+                logger.debug('rpc.http: response', { response: responseData });
+            },
+
+            // erpc batches requests for us, no need to do it on the client level
+            // batch: {
+            //     batchSize: 20 /* requests */,
+            //     wait: 200 /* ms */,
+            // },
+            batch: false,
         }),
     });
 };

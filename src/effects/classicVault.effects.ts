@@ -18,7 +18,7 @@ export const getClassicVaultTokens = experimental_createEffect(
     },
     async ({ input, context }) => {
         const { vaultAddress, chainId } = input;
-        const client = getViemClient(chainId);
+        const client = getViemClient(chainId, context.log);
 
         context.log.debug('Fetching ClassicVault tokens', { vaultAddress, chainId });
 

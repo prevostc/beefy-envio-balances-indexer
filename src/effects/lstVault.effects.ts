@@ -18,7 +18,7 @@ export const getLstVaultTokens = experimental_createEffect(
     },
     async ({ input, context }) => {
         const { lstAddress, chainId } = input;
-        const client = getViemClient(chainId);
+        const client = getViemClient(chainId, context.log);
 
         context.log.debug('Fetching LstVault tokens', { lstAddress, chainId });
 

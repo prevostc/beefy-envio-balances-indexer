@@ -5,17 +5,14 @@ import {
     ContractFactory,
     RewardPoolFactory,
 } from 'generated';
-import { getDetectClassicVaultOrStrategy } from '../effects/classicVaultFactory.effects';
-import { vaultBlacklist } from '../lib/blacklist';
+import { detectClassicVaultOrStrategy } from '../effects/classicVaultFactory.effects';
+import { isVaultBlacklisted } from '../lib/blacklist';
 
 ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, context }) => {
     const proxyAddress = event.params.proxy.toString().toLowerCase();
-    if ((vaultBlacklist[event.chainId] ?? []).includes(proxyAddress)) {
-        context.log.debug('Blacklisted proxy address', { proxyAddress });
-        return;
-    }
+    if (isVaultBlacklisted(event.chainId, proxyAddress)) return;
 
-    const { isVault, isStrategy } = await getDetectClassicVaultOrStrategy({
+    const { isVault, isStrategy } = await detectClassicVaultOrStrategy({
         log: context.log,
         contractAddress: proxyAddress as `0x${string}`,
         chainId: event.chainId,
@@ -32,6 +29,7 @@ ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, cont
 
 ClassicBoostFactory.BoostCreated.contractRegister(async ({ event, context }) => {
     const boostAddress = event.params.proxy.toString().toLowerCase();
+    if (isVaultBlacklisted(event.chainId, boostAddress)) return;
 
     context.addClassicBoost(boostAddress);
 
@@ -40,6 +38,7 @@ ClassicBoostFactory.BoostCreated.contractRegister(async ({ event, context }) => 
 
 RewardPoolFactory.RewardPoolCreated.contractRegister(async ({ event, context }) => {
     const contractAddress = event.params.proxy.toString().toLowerCase();
+    if (isVaultBlacklisted(event.chainId, contractAddress)) return;
 
     context.addRewardPool(contractAddress);
 
@@ -48,6 +47,7 @@ RewardPoolFactory.RewardPoolCreated.contractRegister(async ({ event, context }) 
 
 CLMManagerFactory.CLMManagerCreated.contractRegister(async ({ event, context }) => {
     const contractAddress = event.params.proxy.toString().toLowerCase();
+    if (isVaultBlacklisted(event.chainId, contractAddress)) return;
 
     context.addClmManager(contractAddress);
 
@@ -56,6 +56,8 @@ CLMManagerFactory.CLMManagerCreated.contractRegister(async ({ event, context }) 
 
 ContractFactory.ContractDeployed.contractRegister(async ({ event, context }) => {
     const contractAddress = event.params.proxy.toString().toLowerCase();
+    if (isVaultBlacklisted(event.chainId, contractAddress)) return;
+
     // const rewardPoolName = event.params.rewardPoolName; // Property doesn't exist
 
     // Generic contract factory - determine type based on rewardPoolName or add as token

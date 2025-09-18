@@ -1,8 +1,11 @@
+import { experimental_createEffect, S } from 'envio';
 import type { HandlerContext } from 'generated';
 import type { ChainId } from '../lib/chain';
+import { chainIdSchema } from '../lib/chain';
+import { hexSchema } from '../lib/hex';
 import { getViemClient } from '../lib/viem';
 
-export const getDetectClassicVaultOrStrategy = async ({
+export const detectClassicVaultOrStrategy = async ({
     contractAddress,
     chainId,
     blockNumber,
@@ -16,7 +19,7 @@ export const getDetectClassicVaultOrStrategy = async ({
     isVault: boolean;
     isStrategy: boolean;
 }> => {
-    const client = getViemClient(chainId);
+    const client = getViemClient(chainId, log);
 
     // Try standard Erc20 interface first (most common)
     const [vault, strategy] = await client.multicall({
@@ -76,7 +79,7 @@ export const getDetectClassicVaultOrStrategy = async ({
                 contractAddress,
                 blockNumber,
             });
-            return getDetectClassicVaultOrStrategy({ contractAddress, chainId, log });
+            return detectClassicVaultOrStrategy({ contractAddress, chainId, log });
         }
         log.error('vault and strategy calls both succeeded on contract', {
             contractAddress,
@@ -90,3 +93,29 @@ export const getDetectClassicVaultOrStrategy = async ({
         isStrategy: vault.status === 'success',
     };
 };
+
+export const detectClassicVaultOrStrategyEffect = experimental_createEffect(
+    {
+        name: 'detectClassicVaultOrStrategyEffect',
+        input: {
+            contractAddress: hexSchema,
+            chainId: chainIdSchema,
+            blockNumber: S.number,
+        },
+        output: {
+            isStrategy: S.boolean,
+            isVault: S.boolean,
+        },
+        cache: true,
+    },
+    async ({ input, context }) => {
+        const { contractAddress, chainId, blockNumber } = input;
+        const { isStrategy, isVault } = await detectClassicVaultOrStrategy({
+            contractAddress,
+            chainId,
+            log: context.log,
+            blockNumber,
+        });
+        return { isStrategy, isVault };
+    }
+);

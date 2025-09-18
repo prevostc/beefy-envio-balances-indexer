@@ -22,7 +22,7 @@ export const getTokenMetadata = experimental_createEffect(
     async ({ input, context }) => {
         const { tokenAddress, chainId } = input;
 
-        const client = getViemClient(chainId);
+        const client = getViemClient(chainId, context.log);
 
         context.log.debug('Fetching token metadata', { tokenAddress, chainId });
 

@@ -18,7 +18,7 @@ export const getClassicBoostTokens = experimental_createEffect(
     },
     async ({ input, context }) => {
         const { boostAddress, chainId } = input;
-        const client = getViemClient(chainId);
+        const client = getViemClient(chainId, context.log);
 
         context.log.debug('Fetching ClassicBoost tokens', { boostAddress, chainId });
 
