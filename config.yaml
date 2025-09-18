@@ -874,7 +874,17 @@ networks:
           - 0x04756126f044634c9a0f0e985e60c88a51acc206
           - 0x3bc5ac0dfdc871b365d159f728dd1b9a0b5481e8
           - 0xc3c7d422809852031b44ab29eec9f1eff2a58756
-
+      - name: ClmStrategy
+        address: []
+      - name: ClmManager
+        address: []
+      - name: RewardPool
+        address: []
+      - name: LstVault
+        address: []
+      - name: Erc4626Adapter
+        address: []
+        
   - id: 8453 # base
     start_block: 2181945
     contracts:
@@ -899,6 +909,18 @@ networks:
         address: 
           - 0x62e5b9934dcb87618cfc74b222305d16c997e8c1
           - 0xc55E93C62874D8100dBd2DfE307EDc1036ad5434
+      - name: ClassicBoost
+        address: []
+      - name: ClmStrategy
+        address: []
+      - name: ClmManager
+        address: []
+      - name: RewardPool
+        address: []
+      - name: LstVault
+        address: []
+      - name: Erc4626Adapter
+        address: []
 
   - id: 137 # polygon
     start_block: 13795241
@@ -1320,3 +1342,13 @@ networks:
           - 0x8343091f2499fd4b6174a46d067a920a3b851ff9
           - 0xadac33f543267c4d59a8c299cf804c303bc3e4ac
           - 0xc3c7d422809852031b44ab29eec9f1eff2a58756
+      - name: ClmStrategy
+        address: []
+      - name: ClmManager
+        address: []
+      - name: RewardPool
+        address: []
+      - name: LstVault
+        address: []
+      - name: Erc4626Adapter
+        address: []
