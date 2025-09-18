@@ -22,14 +22,8 @@ ClassicVault.Initialized.handler(async ({ event, context }) => {
 
     // sometimes the vault is not correctly initialized, and the underlying token is not set
     // ex: https://basescan.org/address/0xF42B6993304425B3D5aDF57b2DCF4A51364B6697
-    // in this case we want to ignore the vault and not create it
-    // but we also need to log it as an error so we can add it to the blacklist and not try to index it again
-    // on the next run
     if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
-        context.log.error(
-            'ClassicVault is not correctly initialized, underlying token is not set, ignoring. add to blacklist so we do not try to index it again on the next run',
-            { vaultAddress, shareTokenAddress, underlyingTokenAddress }
-        );
+        context.log.error('[BLACKLIST] ClassicVault', { vaultAddress, shareTokenAddress, underlyingTokenAddress });
         return;
     }
 

@@ -5,6 +5,7 @@ import { createClassicBoost } from '../entities/classicBoost.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { toChainId } from '../lib/chain';
 import { config } from '../lib/config';
+import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 ClassicBoost.Initialized.handler(async ({ event, context }) => {
@@ -19,6 +20,15 @@ ClassicBoost.Initialized.handler(async ({ event, context }) => {
         boostAddress,
         chainId,
     });
+
+    // sometimes the vault is not correctly initialized, and the underlying token is not set
+    // in this case we want to ignore the vault and not create it
+    // but we also need to log it as an error so we can add it to the blacklist and not try to index it again
+    // on the next run
+    if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
+        context.log.error('[BLACKLIST] ClassicBoost', { boostAddress, shareTokenAddress, underlyingTokenAddress });
+        return;
+    }
 
     // Create tokens - share token is virtual for boost
     const [shareToken, underlyingToken] = await Promise.all([

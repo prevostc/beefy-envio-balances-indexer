@@ -4,6 +4,7 @@ import { getLstVaultTokens } from '../effects/lstVault.effects';
 import { createLstVault } from '../entities/lstVault.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { toChainId } from '../lib/chain';
+import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 LstVault.Initialized.handler(async ({ event, context }) => {
@@ -18,6 +19,12 @@ LstVault.Initialized.handler(async ({ event, context }) => {
         lstAddress,
         chainId,
     });
+
+    // sometimes the vault is not correctly initialized, and the underlying token is not set
+    if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
+        context.log.error('[BLACKLIST] LstVault', { lstAddress, shareTokenAddress, underlyingTokenAddress });
+        return;
+    }
 
     // Create tokens
     const [shareToken, underlyingToken] = await Promise.all([

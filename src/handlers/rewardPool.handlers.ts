@@ -4,6 +4,7 @@ import { getRewardPoolTokens } from '../effects/rewardPool.effects';
 import { createRewardPool } from '../entities/rewardPool.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { toChainId } from '../lib/chain';
+import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 RewardPool.Initialized.handler(async ({ event, context }) => {
@@ -18,6 +19,12 @@ RewardPool.Initialized.handler(async ({ event, context }) => {
         rewardPoolAddress,
         chainId,
     });
+
+    // sometimes the vault is not correctly initialized, and the underlying token is not set
+    if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
+        context.log.error('[BLACKLIST] RewardPool', { rewardPoolAddress, shareTokenAddress, underlyingTokenAddress });
+        return;
+    }
 
     // Create tokens - share token is virtual for reward pool
     const [shareToken, underlyingToken] = await Promise.all([

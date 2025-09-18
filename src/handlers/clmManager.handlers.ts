@@ -4,6 +4,7 @@ import { getClmManagerTokens } from '../effects/clmManager.effects';
 import { createClmManager } from '../entities/clmManager.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { toChainId } from '../lib/chain';
+import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 ClmManager.Initialized.handler(async ({ event, context }) => {
@@ -21,6 +22,22 @@ ClmManager.Initialized.handler(async ({ event, context }) => {
             chainId,
         }
     );
+
+    // sometimes the vault is not correctly initialized, and the underlying token is not set
+    if (
+        !underlyingToken0Address ||
+        underlyingToken0Address === ADDRESS_ZERO ||
+        !underlyingToken1Address ||
+        underlyingToken1Address === ADDRESS_ZERO
+    ) {
+        context.log.error('[BLACKLIST] ClmManager', {
+            managerAddress,
+            shareTokenAddress,
+            underlyingToken0Address,
+            underlyingToken1Address,
+        });
+        return;
+    }
 
     // Create tokens - share token is virtual for CLM manager
     const [shareToken, underlyingToken0, underlyingToken1] = await Promise.all([

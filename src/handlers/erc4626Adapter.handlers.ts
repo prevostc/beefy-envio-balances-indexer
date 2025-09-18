@@ -4,6 +4,7 @@ import { getErc4626AdapterTokens } from '../effects/erc4626Adapter.effects';
 import { createErc4626Adapter } from '../entities/classicErc4626Adapter.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { toChainId } from '../lib/chain';
+import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 Erc4626Adapter.Initialized.handler(async ({ event, context }) => {
@@ -18,6 +19,12 @@ Erc4626Adapter.Initialized.handler(async ({ event, context }) => {
         adapterAddress,
         chainId,
     });
+
+    // sometimes the adapter is not correctly initialized, and the underlying token is not set
+    if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
+        context.log.error('[BLACKLIST] Erc4626Adapter', { adapterAddress, shareTokenAddress, underlyingTokenAddress });
+        return;
+    }
 
     // Create tokens
     const [shareToken, underlyingToken] = await Promise.all([
