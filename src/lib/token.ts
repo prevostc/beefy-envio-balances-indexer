@@ -1,4 +1,4 @@
-import type { AggregatedTransaction_t, BigDecimal, Block_t, HandlerContext } from 'generated';
+import type { BigDecimal, Block_t, HandlerContext } from 'generated';
 import type { Account_t, Token_t, TokenBalance_t } from 'generated/src/db/Entities.gen';
 import type { Hex } from 'viem';
 import { getOrCreateAccount } from '../entities/account.entity';
@@ -25,7 +25,7 @@ export const handleTokenTransfer = async ({
     receiverAddress: Hex;
     rawTransferAmount: bigint;
     block: Block_t;
-    transaction: AggregatedTransaction_t;
+    transaction: { hash: string };
 }) => {
     if (rawTransferAmount === 0n) {
         context.log.debug('Ignoring transfer with zero value', { trx: transaction.hash });
@@ -127,7 +127,7 @@ const updateAccountBalance = async ({
     token: Token_t;
     block: Block_t;
     chainId: ChainId;
-    transaction: AggregatedTransaction_t;
+    transaction: { hash: string };
 }) => {
     const before = balance.amount;
     const after = balance.amount.plus(amountDiff);

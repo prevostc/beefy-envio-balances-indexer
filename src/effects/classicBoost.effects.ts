@@ -44,9 +44,7 @@ export const getClassicBoostTokens = experimental_createEffect(
         // The boost contract itself is the share token (virtual token)
         const shareTokenAddress = boostAddress;
 
-        context.log.info(
-            `ClassicBoost ${boostAddress}: shareTokenAddress=${shareTokenAddress}, underlyingTokenAddress=${underlyingTokenAddress}`
-        );
+        context.log.info(`ClassicBoost data fetched`, { boostAddress, shareTokenAddress, underlyingTokenAddress });
 
         return {
             shareTokenAddress,

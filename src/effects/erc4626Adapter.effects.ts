@@ -44,9 +44,7 @@ export const getErc4626AdapterTokens = experimental_createEffect(
         // The adapter contract itself is the share token
         const shareTokenAddress = adapterAddress;
 
-        context.log.info(
-            `Erc4626Adapter ${adapterAddress}: shareTokenAddress=${shareTokenAddress}, underlyingTokenAddress=${underlyingTokenAddress}`
-        );
+        context.log.info(`Erc4626Adapter data fetched`, { adapterAddress, shareTokenAddress, underlyingTokenAddress });
 
         return {
             shareTokenAddress,

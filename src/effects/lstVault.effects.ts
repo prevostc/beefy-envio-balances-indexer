@@ -44,9 +44,7 @@ export const getLstVaultTokens = experimental_createEffect(
         // The LST contract itself is the share token
         const shareTokenAddress = lstAddress;
 
-        context.log.info(
-            `LstVault ${lstAddress}: shareTokenAddress=${shareTokenAddress}, underlyingTokenAddress=${underlyingTokenAddress}`
-        );
+        context.log.info(`LstVault data fetched`, { lstAddress, shareTokenAddress, underlyingTokenAddress });
 
         return {
             shareTokenAddress,

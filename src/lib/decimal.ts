@@ -9,6 +9,7 @@ BigDecimal.set({
     EXPONENTIAL_AT: [-250, 250],
 });
 
+export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000' as const;
 export const BIG_ZERO = new BigDecimal(0);
 export const BIG_ONE = new BigDecimal(1);
 export const BIG_TEN = new BigDecimal(10);

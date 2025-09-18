@@ -1,7 +1,7 @@
 import {
-    CLMManagerFactory,
     ClassicBoostFactory,
     ClassicVaultFactory,
+    ClmManagerFactory,
     ContractFactory,
     RewardPoolFactory,
 } from 'generated';
@@ -12,11 +12,14 @@ ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, cont
     const proxyAddress = event.params.proxy.toString().toLowerCase();
     if (isVaultBlacklisted(event.chainId, proxyAddress)) return;
 
+    const transactionInput = event.transaction.input as `0x${string}`;
+
     const { isVault, isStrategy } = await detectClassicVaultOrStrategy({
         log: context.log,
         contractAddress: proxyAddress as `0x${string}`,
         chainId: event.chainId,
         blockNumber: event.block.number,
+        transactionInput,
     });
 
     if (isVault) {
@@ -45,13 +48,13 @@ RewardPoolFactory.RewardPoolCreated.contractRegister(async ({ event, context }) 
     context.log.info('RewardPoolCreated', { contractAddress });
 });
 
-CLMManagerFactory.CLMManagerCreated.contractRegister(async ({ event, context }) => {
+ClmManagerFactory.ClmManagerCreated.contractRegister(async ({ event, context }) => {
     const contractAddress = event.params.proxy.toString().toLowerCase();
     if (isVaultBlacklisted(event.chainId, contractAddress)) return;
 
     context.addClmManager(contractAddress);
 
-    context.log.info('CLMManagerCreated', { contractAddress });
+    context.log.info('ClmManagerCreated', { contractAddress });
 });
 
 ContractFactory.ContractDeployed.contractRegister(async ({ event, context }) => {

@@ -50,9 +50,12 @@ export const getClmManagerTokens = experimental_createEffect(
         // The manager contract itself is the share token
         const shareTokenAddress = managerAddress;
 
-        context.log.info(
-            `ClmManager ${managerAddress}: shareTokenAddress=${shareTokenAddress}, underlyingToken0Address=${underlyingToken0Address}, underlyingToken1Address=${underlyingToken1Address}`
-        );
+        context.log.info(`ClmManager data fetched`, {
+            managerAddress,
+            shareTokenAddress,
+            underlyingToken0Address,
+            underlyingToken1Address,
+        });
 
         return {
             shareTokenAddress,

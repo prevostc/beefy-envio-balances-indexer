@@ -44,9 +44,7 @@ export const getRewardPoolTokens = experimental_createEffect(
         // The reward pool contract itself is the share token (virtual token)
         const shareTokenAddress = rewardPoolAddress;
 
-        context.log.info(
-            `RewardPool ${rewardPoolAddress}: shareTokenAddress=${shareTokenAddress}, underlyingTokenAddress=${underlyingTokenAddress}`
-        );
+        context.log.info(`RewardPool data fetched`, { rewardPoolAddress, shareTokenAddress, underlyingTokenAddress });
 
         return {
             shareTokenAddress,

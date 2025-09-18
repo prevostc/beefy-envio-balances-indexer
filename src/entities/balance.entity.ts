@@ -1,4 +1,4 @@
-import { type AggregatedTransaction_t, BigDecimal, type Block_t, type HandlerContext } from 'generated';
+import { BigDecimal, type Block_t, type HandlerContext } from 'generated';
 import type { Account_t, Token_t, TokenBalance_t } from 'generated/src/db/Entities.gen';
 import type { Hex } from 'viem';
 import type { ChainId } from '../lib/chain';
@@ -58,7 +58,7 @@ export const getOrCreateTokenBalanceChangeEntity = async ({
     token: Token_t;
     account: Account_t;
     block: Block_t;
-    transaction: AggregatedTransaction_t;
+    transaction: { hash: string };
     balance: BigDecimal;
 }) => {
     return await context.TokenBalanceChange.getOrCreate({

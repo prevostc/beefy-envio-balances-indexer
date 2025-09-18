@@ -44,9 +44,7 @@ export const getClassicVaultTokens = experimental_createEffect(
         // The vault contract itself is the share token
         const shareTokenAddress = vaultAddress;
 
-        context.log.info(
-            `ClassicVault ${vaultAddress}: shareTokenAddress=${shareTokenAddress}, underlyingTokenAddress=${underlyingTokenAddress}`
-        );
+        context.log.info('ClassicVault data fetched', { vaultAddress, shareTokenAddress, underlyingTokenAddress });
 
         return {
             shareTokenAddress,
