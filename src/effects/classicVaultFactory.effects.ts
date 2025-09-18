@@ -72,15 +72,6 @@ export const detectClassicVaultOrStrategy = async ({
     }
 
     if (vault.status === 'success' && strategy.status === 'success') {
-        // try the latest block number instead of the block number passed in
-        // this will bust any rpc cache so it's not done by default
-        if (blockNumber) {
-            log.debug('vault and strategy calls both succeeded on contract, trying latest block number', {
-                contractAddress,
-                blockNumber,
-            });
-            return detectClassicVaultOrStrategy({ contractAddress, chainId, log });
-        }
         log.error('vault and strategy calls both succeeded on contract', {
             contractAddress,
             blockNumber,
