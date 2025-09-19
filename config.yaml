@@ -870,10 +870,7 @@ networks:
           - 0xff494b7cb341311f86da21a49c5ff176637aa85e
           - 0xff750ee63f1e428de1d6c8d9d92676b5fc8376a8
       - name: ClassicBoost
-        address:
-          - 0x04756126f044634c9a0f0e985e60c88a51acc206
-          - 0x3bc5ac0dfdc871b365d159f728dd1b9a0b5481e8
-          - 0xc3c7d422809852031b44ab29eec9f1eff2a58756
+        address: []
       - name: ClmStrategy
         address: []
       - name: ClmManager
@@ -1332,16 +1329,7 @@ networks:
           - 0xfe4519d295089ac689a6ec6779de4740c06d4707
           - 0xfecf784f48125ccb7d8855cdda7c5ed6b5024cb3
       - name: ClassicBoost
-        address: 
-          - 0x1d734a02ef1e1f5886e66b0673b71af5b53ffa94
-          - 0x2760e46d9bb43dafcbecaad1f64b93207f9f0ed7
-          - 0x3a29cab2e124919d14a6f735b6033a3aad2b260f
-          - 0x4200000000000000000000000000000000000042
-          - 0x4e3decbb3645551b8a19f0ea1678079fcb33fb4c
-          - 0x6ae96cc93331c19148541d4d2f31363684917092
-          - 0x8343091f2499fd4b6174a46d067a920a3b851ff9
-          - 0xadac33f543267c4d59a8c299cf804c303bc3e4ac
-          - 0xc3c7d422809852031b44ab29eec9f1eff2a58756
+        address: []
       - name: ClmStrategy
         address: []
       - name: ClmManager
