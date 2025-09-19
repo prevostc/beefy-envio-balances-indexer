@@ -3,8 +3,8 @@ import type { Hex } from 'viem';
 import { getClmManagerTokens } from '../effects/clmManager.effects';
 import { createClmManager } from '../entities/clmManager.entity';
 import { getOrCreateToken } from '../entities/token.entity';
+import { logBlacklistStatus } from '../lib/blacklist';
 import { toChainId } from '../lib/chain';
-import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 ClmManager.Initialized.handler(async ({ event, context }) => {
@@ -15,23 +15,15 @@ ClmManager.Initialized.handler(async ({ event, context }) => {
     context.log.info(`Initializing ClmManager at ${managerAddress} on chain ${chainId}`);
 
     // Fetch underlying tokens using effect
-    const { shareTokenAddress, underlyingToken0Address, underlyingToken1Address } = await context.effect(
-        getClmManagerTokens,
-        {
+    const { shareTokenAddress, underlyingToken0Address, underlyingToken1Address, blacklistStatus } =
+        await context.effect(getClmManagerTokens, {
             managerAddress,
             chainId,
-        }
-    );
+        });
 
-    // sometimes the vault is not correctly initialized, and the underlying token is not set
-    if (
-        !underlyingToken0Address ||
-        underlyingToken0Address === ADDRESS_ZERO ||
-        !underlyingToken1Address ||
-        underlyingToken1Address === ADDRESS_ZERO
-    ) {
-        context.log.error('[BLACKLIST] ClmManager', {
-            managerAddress,
+    if (blacklistStatus !== 'ok') {
+        logBlacklistStatus(context.log, blacklistStatus, 'ClmManager', {
+            contractAddress: managerAddress,
             shareTokenAddress,
             underlyingToken0Address,
             underlyingToken1Address,

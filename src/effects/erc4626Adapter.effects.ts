@@ -1,5 +1,7 @@
 import { experimental_createEffect } from 'envio';
+import { blacklistStatus } from '../lib/blacklist';
 import { chainIdSchema } from '../lib/chain';
+import { ADDRESS_ZERO } from '../lib/decimal';
 import { hexSchema } from '../lib/hex';
 import { getViemClient } from '../lib/viem';
 
@@ -13,6 +15,7 @@ export const getErc4626AdapterTokens = experimental_createEffect(
         output: {
             shareTokenAddress: hexSchema,
             underlyingTokenAddress: hexSchema,
+            blacklistStatus: blacklistStatus,
         },
         cache: true,
     },
@@ -22,8 +25,8 @@ export const getErc4626AdapterTokens = experimental_createEffect(
 
         context.log.debug('Fetching Erc4626Adapter tokens', { adapterAddress, chainId });
 
-        const [underlyingTokenAddress] = await client.multicall({
-            allowFailure: false,
+        const [underlyingTokenResult] = await client.multicall({
+            allowFailure: true,
             contracts: [
                 {
                     address: adapterAddress as `0x${string}`,
@@ -44,11 +47,31 @@ export const getErc4626AdapterTokens = experimental_createEffect(
         // The adapter contract itself is the share token
         const shareTokenAddress = adapterAddress;
 
-        context.log.info(`Erc4626Adapter data fetched`, { adapterAddress, shareTokenAddress, underlyingTokenAddress });
+        if (underlyingTokenResult.status === 'failure') {
+            context.log.error('Erc4626Adapter asset call failed', { adapterAddress, chainId });
+            return {
+                shareTokenAddress,
+                underlyingTokenAddress: ADDRESS_ZERO,
+                blacklistStatus: 'blacklisted' as const,
+            };
+        }
+
+        const underlyingTokenAddress = underlyingTokenResult.result;
+
+        context.log.info('Erc4626Adapter data fetched', { adapterAddress, shareTokenAddress, underlyingTokenAddress });
+
+        if (underlyingTokenAddress === ADDRESS_ZERO) {
+            return {
+                shareTokenAddress,
+                underlyingTokenAddress,
+                blacklistStatus: 'blacklisted' as const,
+            };
+        }
 
         return {
             shareTokenAddress,
             underlyingTokenAddress,
+            blacklistStatus: 'ok' as const,
         };
     }
 );

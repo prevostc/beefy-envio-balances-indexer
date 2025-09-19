@@ -3,9 +3,9 @@ import type { Hex } from 'viem';
 import { getClassicBoostTokens } from '../effects/classicBoost.effects';
 import { createClassicBoost } from '../entities/classicBoost.entity';
 import { getOrCreateToken } from '../entities/token.entity';
+import { logBlacklistStatus } from '../lib/blacklist';
 import { toChainId } from '../lib/chain';
 import { config } from '../lib/config';
-import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 ClassicBoost.Initialized.handler(async ({ event, context }) => {
@@ -16,17 +16,17 @@ ClassicBoost.Initialized.handler(async ({ event, context }) => {
     context.log.info(`Initializing ClassicBoost at ${boostAddress} on chain ${chainId}`);
 
     // Fetch underlying tokens using effect
-    const { shareTokenAddress, underlyingTokenAddress } = await context.effect(getClassicBoostTokens, {
+    const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getClassicBoostTokens, {
         boostAddress,
         chainId,
     });
 
-    // sometimes the vault is not correctly initialized, and the underlying token is not set
-    // in this case we want to ignore the vault and not create it
-    // but we also need to log it as an error so we can add it to the blacklist and not try to index it again
-    // on the next run
-    if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
-        context.log.error('[BLACKLIST] ClassicBoost', { boostAddress, shareTokenAddress, underlyingTokenAddress });
+    if (blacklistStatus !== 'ok') {
+        logBlacklistStatus(context.log, blacklistStatus, 'ClassicBoost', {
+            contractAddress: boostAddress,
+            shareTokenAddress,
+            underlyingTokenAddress,
+        });
         return;
     }
 

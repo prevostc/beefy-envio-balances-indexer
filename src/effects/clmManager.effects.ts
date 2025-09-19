@@ -1,5 +1,7 @@
 import { experimental_createEffect } from 'envio';
+import { blacklistStatus } from '../lib/blacklist';
 import { chainIdSchema } from '../lib/chain';
+import { ADDRESS_ZERO } from '../lib/decimal';
 import { hexSchema } from '../lib/hex';
 import { getViemClient } from '../lib/viem';
 
@@ -14,6 +16,7 @@ export const getClmManagerTokens = experimental_createEffect(
             shareTokenAddress: hexSchema,
             underlyingToken0Address: hexSchema,
             underlyingToken1Address: hexSchema,
+            blacklistStatus: blacklistStatus,
         },
         cache: true,
     },
@@ -24,7 +27,7 @@ export const getClmManagerTokens = experimental_createEffect(
         context.log.debug('Fetching ClmManager tokens', { managerAddress, chainId });
 
         const [wantsResult] = await client.multicall({
-            allowFailure: false,
+            allowFailure: true,
             contracts: [
                 {
                     address: managerAddress as `0x${string}`,
@@ -45,22 +48,42 @@ export const getClmManagerTokens = experimental_createEffect(
             ],
         });
 
-        const [underlyingToken0Address, underlyingToken1Address] = wantsResult as [`0x${string}`, `0x${string}`];
-
         // The manager contract itself is the share token
         const shareTokenAddress = managerAddress;
 
-        context.log.info(`ClmManager data fetched`, {
+        if (wantsResult.status === 'failure') {
+            context.log.error('ClmManager wants call failed', { managerAddress, chainId });
+            return {
+                shareTokenAddress,
+                underlyingToken0Address: ADDRESS_ZERO,
+                underlyingToken1Address: ADDRESS_ZERO,
+                blacklistStatus: 'blacklisted' as const,
+            };
+        }
+
+        const [underlyingToken0Address, underlyingToken1Address] = wantsResult.result;
+
+        context.log.info('ClmManager data fetched', {
             managerAddress,
             shareTokenAddress,
             underlyingToken0Address,
             underlyingToken1Address,
         });
 
+        if (underlyingToken0Address === ADDRESS_ZERO || underlyingToken1Address === ADDRESS_ZERO) {
+            return {
+                shareTokenAddress,
+                underlyingToken0Address,
+                underlyingToken1Address,
+                blacklistStatus: 'blacklisted' as const,
+            };
+        }
+
         return {
             shareTokenAddress,
             underlyingToken0Address,
             underlyingToken1Address,
+            blacklistStatus: 'ok' as const,
         };
     }
 );

@@ -3,8 +3,8 @@ import type { Hex } from 'viem';
 import { getLstVaultTokens } from '../effects/lstVault.effects';
 import { createLstVault } from '../entities/lstVault.entity';
 import { getOrCreateToken } from '../entities/token.entity';
+import { logBlacklistStatus } from '../lib/blacklist';
 import { toChainId } from '../lib/chain';
-import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 LstVault.Initialized.handler(async ({ event, context }) => {
@@ -15,14 +15,17 @@ LstVault.Initialized.handler(async ({ event, context }) => {
     context.log.info(`Initializing LstVault at ${lstAddress} on chain ${chainId}`);
 
     // Fetch underlying tokens using effect
-    const { shareTokenAddress, underlyingTokenAddress } = await context.effect(getLstVaultTokens, {
+    const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getLstVaultTokens, {
         lstAddress,
         chainId,
     });
 
-    // sometimes the vault is not correctly initialized, and the underlying token is not set
-    if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
-        context.log.error('[BLACKLIST] LstVault', { lstAddress, shareTokenAddress, underlyingTokenAddress });
+    if (blacklistStatus !== 'ok') {
+        logBlacklistStatus(context.log, blacklistStatus, 'LstVault', {
+            contractAddress: lstAddress,
+            shareTokenAddress,
+            underlyingTokenAddress,
+        });
         return;
     }
 

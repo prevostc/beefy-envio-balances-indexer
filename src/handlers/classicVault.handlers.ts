@@ -3,8 +3,8 @@ import type { Hex } from 'viem';
 import { getClassicVaultTokens } from '../effects/classicVault.effects';
 import { createClassicVault } from '../entities/classicVault.entity';
 import { getOrCreateToken } from '../entities/token.entity';
+import { logBlacklistStatus } from '../lib/blacklist';
 import { toChainId } from '../lib/chain';
-import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 ClassicVault.Initialized.handler(async ({ event, context }) => {
@@ -15,15 +15,17 @@ ClassicVault.Initialized.handler(async ({ event, context }) => {
     context.log.info(`Initializing ClassicVault at ${vaultAddress} on chain ${chainId}`);
 
     // Fetch underlying tokens using effect
-    const { shareTokenAddress, underlyingTokenAddress } = await context.effect(getClassicVaultTokens, {
+    const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getClassicVaultTokens, {
         vaultAddress,
         chainId,
     });
 
-    // sometimes the vault is not correctly initialized, and the underlying token is not set
-    // ex: https://basescan.org/address/0xF42B6993304425B3D5aDF57b2DCF4A51364B6697
-    if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
-        context.log.error('[BLACKLIST] ClassicVault', { vaultAddress, shareTokenAddress, underlyingTokenAddress });
+    if (blacklistStatus !== 'ok') {
+        logBlacklistStatus(context.log, blacklistStatus, 'ClassicVault', {
+            contractAddress: vaultAddress,
+            shareTokenAddress,
+            underlyingTokenAddress,
+        });
         return;
     }
 

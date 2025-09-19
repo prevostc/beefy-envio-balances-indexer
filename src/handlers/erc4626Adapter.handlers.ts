@@ -3,8 +3,8 @@ import type { Hex } from 'viem';
 import { getErc4626AdapterTokens } from '../effects/erc4626Adapter.effects';
 import { createErc4626Adapter } from '../entities/classicErc4626Adapter.entity';
 import { getOrCreateToken } from '../entities/token.entity';
+import { logBlacklistStatus } from '../lib/blacklist';
 import { toChainId } from '../lib/chain';
-import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 Erc4626Adapter.Initialized.handler(async ({ event, context }) => {
@@ -15,14 +15,20 @@ Erc4626Adapter.Initialized.handler(async ({ event, context }) => {
     context.log.info(`Initializing Erc4626Adapter at ${adapterAddress} on chain ${chainId}`);
 
     // Fetch underlying tokens using effect
-    const { shareTokenAddress, underlyingTokenAddress } = await context.effect(getErc4626AdapterTokens, {
-        adapterAddress,
-        chainId,
-    });
+    const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(
+        getErc4626AdapterTokens,
+        {
+            adapterAddress,
+            chainId,
+        }
+    );
 
-    // sometimes the adapter is not correctly initialized, and the underlying token is not set
-    if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
-        context.log.error('[BLACKLIST] Erc4626Adapter', { adapterAddress, shareTokenAddress, underlyingTokenAddress });
+    if (blacklistStatus !== 'ok') {
+        logBlacklistStatus(context.log, blacklistStatus, 'Erc4626Adapter', {
+            contractAddress: adapterAddress,
+            shareTokenAddress,
+            underlyingTokenAddress,
+        });
         return;
     }
 

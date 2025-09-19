@@ -3,8 +3,8 @@ import type { Hex } from 'viem';
 import { getRewardPoolTokens } from '../effects/rewardPool.effects';
 import { createRewardPool } from '../entities/rewardPool.entity';
 import { getOrCreateToken } from '../entities/token.entity';
+import { logBlacklistStatus } from '../lib/blacklist';
 import { toChainId } from '../lib/chain';
-import { ADDRESS_ZERO } from '../lib/decimal';
 import { handleTokenTransfer } from '../lib/token';
 
 RewardPool.Initialized.handler(async ({ event, context }) => {
@@ -15,14 +15,17 @@ RewardPool.Initialized.handler(async ({ event, context }) => {
     context.log.info(`Initializing ClassicRewardPool at ${rewardPoolAddress} on chain ${chainId}`);
 
     // Fetch underlying tokens using effect
-    const { shareTokenAddress, underlyingTokenAddress } = await context.effect(getRewardPoolTokens, {
+    const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getRewardPoolTokens, {
         rewardPoolAddress,
         chainId,
     });
 
-    // sometimes the vault is not correctly initialized, and the underlying token is not set
-    if (!underlyingTokenAddress || underlyingTokenAddress === ADDRESS_ZERO) {
-        context.log.error('[BLACKLIST] RewardPool', { rewardPoolAddress, shareTokenAddress, underlyingTokenAddress });
+    if (blacklistStatus !== 'ok') {
+        logBlacklistStatus(context.log, blacklistStatus, 'RewardPool', {
+            contractAddress: rewardPoolAddress,
+            shareTokenAddress,
+            underlyingTokenAddress,
+        });
         return;
     }
 

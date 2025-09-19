@@ -1,3 +1,4 @@
+import { type Logger, S } from 'envio';
 import type { Hex } from 'viem';
 import type { ChainId } from './chain';
 
@@ -8,7 +9,7 @@ const vaultBlacklist: Record<ChainId, Hex[]> = {
         '0xe444df32778bbd2afbe0e81d368421f609733ec4',
         '0x12c409605e6cc819395422cf77049b18d76437ad',
     ],
-    137: [],
+    137: ['0xc63395ab04e08fe2e48b97dc917130bb47641736'],
     8453: [
         '0x0a1bbea11423f0cd2c247a9ad2ae6bd06aebc60d',
         '0x0bd1ecea83b07ec9836f82236567bcbc4f0862f0',
@@ -70,3 +71,29 @@ for (const address of Object.values(vaultBlacklist).flat()) {
 export function isVaultBlacklisted(chainId: ChainId, address: string) {
     return (vaultBlacklist[chainId] ?? []).includes(address.toLowerCase() as Hex);
 }
+
+export const blacklistStatus = S.union([
+    // all is green
+    'ok',
+    // definitly malformed contract
+    'blacklisted',
+    // we won't be able to index it for now
+    // but that does not mean it's malformed
+    // maybe it can be indexed later when rpc is available
+    // but can also be a bug in the indexer
+    // but can also be a bug in the contract
+    'maybe_blacklisted',
+]);
+export type BlacklistStatus = S.Output<typeof blacklistStatus>;
+
+// have a common log function for blacklist status
+// that makes it easy to grep all blacklist logs and inspect them:
+// tail -f ./generated/hyperindex.log | rg -i 'BLACKLIST' | jq '{chainId, contractAddress}'
+export const logBlacklistStatus = (
+    log: Logger,
+    status: BlacklistStatus,
+    type: string,
+    data: Record<string, unknown> & { contractAddress: string }
+) => {
+    log.error(`[BLACKLIST] ${type}`, { status, ...data, contractAddress: data.contractAddress });
+};
