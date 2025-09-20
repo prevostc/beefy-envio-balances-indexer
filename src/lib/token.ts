@@ -35,10 +35,12 @@ export const handleTokenTransfer = async ({
     const [senderAccount, receiverAccount, token] = await Promise.all([
         getOrCreateAccount({
             context,
+            chainId,
             accountAddress: senderAddress,
         }),
         getOrCreateAccount({
             context,
+            chainId,
             accountAddress: receiverAddress,
         }),
         getOrCreateToken({ context, chainId, tokenAddress, virtual: false }),
@@ -96,10 +98,10 @@ export const handleTokenTransfer = async ({
         holderCountChange += diff.holderCountChange;
     }
 
-    if (senderAddress === config.MINT_ADDRESS) {
+    if (senderAddress === config.MINT_ADDRESS || senderAddress === config.BURN_ADDRESS) {
         totalSupplyChange = totalSupplyChange.plus(value);
     }
-    if (receiverAddress === config.BURN_ADDRESS) {
+    if (receiverAddress === config.BURN_ADDRESS || receiverAddress === config.MINT_ADDRESS) {
         totalSupplyChange = totalSupplyChange.minus(value);
     }
 

@@ -1,5 +1,4 @@
 import { S } from 'envio';
-import type { Hex } from 'viem';
 import type { ChainId } from './chain';
 import { hexSchema } from './hex';
 
@@ -29,8 +28,4 @@ export const config = S.parseOrThrow(
         } satisfies Record<ChainId, string>,
     },
     configSchema
-);
-
-export const IGNORED_ADDRESSES = [config.ADDRESS_ZERO, config.BURN_ADDRESS, config.MINT_ADDRESS].map(
-    (address) => address.toLowerCase() as Hex
 );

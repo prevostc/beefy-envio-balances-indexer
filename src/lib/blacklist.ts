@@ -1,6 +1,7 @@
 import { type Logger, S } from 'envio';
 import type { Hex } from 'viem';
 import type { ChainId } from './chain';
+import { config } from './config';
 
 const vaultBlacklist: Record<ChainId, Hex[]> = {
     1: [],
@@ -167,6 +168,37 @@ for (const address of Object.values(vaultBlacklist).flat()) {
 
 export function isVaultBlacklisted(chainId: ChainId, address: string) {
     return (vaultBlacklist[chainId] ?? []).includes(address.toLowerCase() as Hex);
+}
+
+const accountBlacklist: Record<ChainId, Hex[]> = {
+    1: [],
+    56: [
+        '0x03c509fd85d51dc7e75fa2de06276cfa147486ea',
+        '0xac18fcb470f913b94946bee43dc52e197d765791',
+        '0x31fe02b9ea5501bfe8a872e205dfe6b6a79435ed',
+    ],
+    137: ['0xf039fe26456901f863c873556f40fb207c6c9c18', '0x540a9f99bb730631bf243a34b19fd00ba8cf315c'],
+    8453: ['0x6f19da51d488926c007b9ebaa5968291a2ec6a63'],
+};
+
+// Ensure all addresses in the blacklist are lowercase at runtime (defensive check)
+for (const address of Object.values(accountBlacklist).flat()) {
+    if (address !== address.toLowerCase()) {
+        throw new Error(`Address ${address} is not lowercase`);
+    }
+}
+
+export function isAccountBlacklisted(chainId: ChainId, address: string) {
+    const lowerAddress = address.toLowerCase() as Hex;
+    if (
+        lowerAddress === config.ADDRESS_ZERO ||
+        lowerAddress === config.BURN_ADDRESS ||
+        lowerAddress === config.MINT_ADDRESS
+    ) {
+        return true;
+    }
+
+    return (accountBlacklist[chainId] ?? []).includes(lowerAddress);
 }
 
 export const blacklistStatus = S.union([
