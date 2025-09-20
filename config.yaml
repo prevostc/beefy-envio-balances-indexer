@@ -2,7 +2,7 @@
 name: beefy-balance-indexer
 description: Beefy Finance Balance Indexer - Tracks ERC20 balances across multiple networks
 unordered_multichain_mode: true
-preload_handlers: false
+preload_handlers: true
 
 contracts:
   # factories
