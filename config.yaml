@@ -28,6 +28,7 @@ contracts:
     events:
       - event: "ProxyCreated(address proxy)"
         name: BoostCreated
+      - event: "BoostDeployed(address boost)"
 
   - name: RewardPoolFactory
     abi_file_path: abis/beefy/common/RewardPoolFactory.json
@@ -135,6 +136,7 @@ contracts:
       - event: "Transfer(address indexed from, address indexed to, uint256 value)"
         field_selection:
           transaction_fields: [hash]
+
 
 networks:
           
@@ -1311,7 +1313,7 @@ networks:
       
   - id: 1 # ethereum
     start_block: 15891216
-    rpc: 'https://rpc.form.network/http'
+    rpc: 'https://eth.drpc.org'
     contracts:
       - name: ClassicVaultFactory
         address: 
