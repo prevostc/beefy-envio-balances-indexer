@@ -40,6 +40,7 @@ export const getClassicBoostTokens = experimental_createEffect(
                         },
                     ],
                     functionName: 'stakedToken',
+                    args: [],
                 },
             ],
         });

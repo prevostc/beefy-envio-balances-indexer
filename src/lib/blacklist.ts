@@ -3,8 +3,7 @@ import type { Hex } from 'viem';
 import type { ChainId } from './chain';
 import { config } from './config';
 
-const vaultBlacklist: Record<ChainId, Hex[]> = {
-    1: [],
+const vaultBlacklist: Partial<Record<ChainId, Hex[]>> = {
     56: [
         '0x12c409605e6cc819395422cf77049b18d76437ad',
         '0x355ecddb484541796c6cbe4e21dc4994d46c096e',
@@ -170,8 +169,7 @@ export function isVaultBlacklisted(chainId: ChainId, address: string) {
     return (vaultBlacklist[chainId] ?? []).includes(address.toLowerCase() as Hex);
 }
 
-const accountBlacklist: Record<ChainId, Hex[]> = {
-    1: [],
+const accountBlacklist: Partial<Record<ChainId, Hex[]>> = {
     56: [
         '0x03c509fd85d51dc7e75fa2de06276cfa147486ea',
         '0xac18fcb470f913b94946bee43dc52e197d765791',

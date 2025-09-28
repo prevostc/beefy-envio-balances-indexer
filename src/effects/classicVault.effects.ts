@@ -40,6 +40,7 @@ export const getClassicVaultTokens = experimental_createEffect(
                         },
                     ],
                     functionName: 'want',
+                    args: [],
                 },
             ],
         });

@@ -40,6 +40,7 @@ export const getLstVaultTokens = experimental_createEffect(
                         },
                     ],
                     functionName: 'asset',
+                    args: [],
                 },
             ],
         });

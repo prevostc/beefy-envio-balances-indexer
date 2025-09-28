@@ -1,4 +1,4 @@
-import type { HandlerContext } from 'generated';
+import type { handlerContext as HandlerContext } from 'generated';
 import type { RewardPool_t, Token_t } from 'generated/src/db/Entities.gen';
 import type { Hex } from 'viem';
 import type { ChainId } from '../lib/chain';

@@ -44,6 +44,7 @@ export const getClmManagerTokens = experimental_createEffect(
                         },
                     ],
                     functionName: 'wants',
+                    args: [],
                 },
             ],
         });

@@ -40,6 +40,7 @@ export const getRewardPoolTokens = experimental_createEffect(
                         },
                     ],
                     functionName: 'stakedToken',
+                    args: [],
                 },
             ],
         });

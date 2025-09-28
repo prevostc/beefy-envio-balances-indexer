@@ -1,5 +1,5 @@
 import { experimental_createEffect, S } from 'envio';
-import type { HandlerContext } from 'generated';
+import type { handlerContext as HandlerContext } from 'generated';
 import { decodeFunctionData } from 'viem';
 import type { ChainId } from '../lib/chain';
 import { chainIdSchema } from '../lib/chain';
@@ -37,6 +37,7 @@ const detectClassicVaultOrStrategyWithEthCall = async ({
                     },
                 ],
                 functionName: 'vault',
+                args: [],
             },
             {
                 address: contractAddress as `0x${string}`,
@@ -49,6 +50,7 @@ const detectClassicVaultOrStrategyWithEthCall = async ({
                     },
                 ],
                 functionName: 'strategy',
+                args: [],
             },
         ],
         blockNumber: blockNumber ? BigInt(blockNumber) : undefined,

@@ -40,6 +40,7 @@ export const getErc4626AdapterTokens = experimental_createEffect(
                         },
                     ],
                     functionName: 'asset',
+                    args: [],
                 },
             ],
         });

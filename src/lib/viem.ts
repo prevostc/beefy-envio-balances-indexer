@@ -1,14 +1,89 @@
 import type { Logger } from 'envio';
-import { createPublicClient, http, type Chain as ViemChain } from 'viem';
-import { base, bsc, mainnet, polygon } from 'viem/chains';
+import { createPublicClient, defineChain, http, type Chain as ViemChain } from 'viem';
+import {
+    arbitrum,
+    avalanche,
+    base,
+    berachain,
+    bsc,
+    fantom,
+    fraxtal,
+    gnosis,
+    linea,
+    lisk,
+    mainnet,
+    manta,
+    mantle,
+    metis,
+    mode,
+    moonbeam,
+    optimism,
+    plasma,
+    polygon,
+    rootstock,
+    saga,
+    scroll,
+    sei,
+    sonic,
+    unichain,
+    zksync,
+} from 'viem/chains';
 import type { ChainId } from './chain';
 import { config } from './config';
 
+const hyperevm = defineChain({
+    id: 999,
+    name: 'HyperEVM',
+    nativeCurrency: {
+        decimals: 18,
+        name: 'Hyperliquid',
+        symbol: 'HYPE',
+    },
+    rpcUrls: {
+        default: {
+            http: ['https://rpc.hyperliquid.xyz/evm'],
+            webSocket: ['wss://rpc.hyperliquid.xyz/evm'],
+        },
+    },
+    blockExplorers: {
+        default: { name: 'Explorer', url: '"https://www.hyperscan.com' },
+    },
+    contracts: {
+        multicall3: {
+            address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+            blockCreated: 13051,
+        },
+    },
+});
+
 const chainMap: Record<ChainId, ViemChain> = {
-    1: mainnet,
-    56: bsc,
-    137: polygon,
+    42161: arbitrum,
+    43114: avalanche,
     8453: base,
+    80094: berachain,
+    56: bsc,
+    1: mainnet,
+    250: fantom,
+    252: fraxtal,
+    100: gnosis,
+    999: hyperevm,
+    59144: linea,
+    1135: lisk,
+    169: manta,
+    5000: mantle,
+    1088: metis,
+    34443: mode,
+    1284: moonbeam,
+    10: optimism,
+    9745: plasma,
+    137: polygon,
+    30: rootstock,
+    5464: saga,
+    534352: scroll,
+    1329: sei,
+    146: sonic,
+    130: unichain,
+    324: zksync,
 };
 
 export const getViemClient = (chainId: ChainId, logger: Logger) => {

@@ -37,14 +37,17 @@ export const getTokenMetadata = experimental_createEffect(
                 {
                     ...erc20,
                     functionName: 'decimals',
+                    args: [],
                 },
                 {
                     ...erc20,
                     functionName: 'name',
+                    args: [],
                 },
                 {
                     ...erc20,
                     functionName: 'symbol',
+                    args: [],
                 },
             ],
         });

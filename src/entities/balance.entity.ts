@@ -1,4 +1,4 @@
-import { BigDecimal, type Block_t, type HandlerContext } from 'generated';
+import { BigDecimal, type Block_t, type handlerContext as HandlerContext } from 'generated';
 import type { Account_t, Token_t, TokenBalance_t } from 'generated/src/db/Entities.gen';
 import type { Hex } from 'viem';
 import type { ChainId } from '../lib/chain';

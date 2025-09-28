@@ -1,4 +1,4 @@
-import type { HandlerContext } from 'generated';
+import type { handlerContext as HandlerContext } from 'generated';
 import type { Account_t } from 'generated/src/db/Entities.gen';
 import type { Hex } from 'viem';
 import { isAccountBlacklisted } from '../lib/blacklist';

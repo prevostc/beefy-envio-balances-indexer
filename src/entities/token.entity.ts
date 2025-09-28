@@ -1,4 +1,4 @@
-import { BigDecimal, type HandlerContext } from 'generated';
+import { BigDecimal, type handlerContext as HandlerContext } from 'generated';
 import type { Token_t } from 'generated/src/db/Entities.gen';
 import type { Hex } from 'viem';
 import { getTokenMetadata } from '../effects/token.effects';

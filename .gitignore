@@ -34,3 +34,5 @@ cache
 *.res.mjs
 generated
 .env
+
+networks_config.yaml
