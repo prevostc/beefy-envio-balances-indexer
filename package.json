@@ -33,7 +33,7 @@
   "dependencies": {
     "blockchain-addressbook": "0.54.77",
     "envio": "2.29.1",
-    "viem": "2.37.8"
+    "viem": "2.37.9"
   },
   "optionalDependencies": {
     "generated": "./generated"

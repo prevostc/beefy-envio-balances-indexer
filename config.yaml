@@ -8,7 +8,7 @@ contracts:
   # factories
   - name: ClassicVaultFactory
     abi_file_path: abis/beefy/classic/ClassicVaultFactory.json
-    handler: src/handlers/factory.handlers.ts
+    handler: src/handlers/classicVaultFactory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: VaultOrStrategyCreated
@@ -17,50 +17,48 @@ contracts:
 
   - name: ClassicStrategyFactory
     abi_file_path: abis/beefy/classic/ClassicVaultFactory.json
-    handler: src/handlers/factory.handlers.ts
+    handler: src/handlers/classicStrategyFactory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
-        name: VaultOrStrategyCreated
-        field_selection:
-          transaction_fields: [hash, input]
+        name: StrategyCreated
 
   - name: ClassicBoostFactory
     abi_file_path: abis/beefy/classic/ClassicBoostFactory.json
-    handler: src/handlers/factory.handlers.ts
+    handler: src/handlers/classicBoostFactory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: BoostCreated
 
   - name: RewardPoolFactory
     abi_file_path: abis/beefy/common/RewardPoolFactory.json
-    handler: src/handlers/factory.handlers.ts
+    handler: src/handlers/rewardPoolFactory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: RewardPoolCreated
         
   - name: ClmManagerFactory
     abi_file_path: abis/beefy/clm/ClmManagerFactory.json
-    handler: src/handlers/factory.handlers.ts
+    handler: src/handlers/clmManagerFactory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: ClmManagerCreated
 
   - name: ClmStrategyFactory
     abi_file_path: abis/beefy/clm/ClmStrategyFactory.json
-    handler: src/handlers/factory.handlers.ts
+    handler: src/handlers/clmStrategyFactory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: ClmStrategyCreated
 
   - name: ContractFactory
     abi_file_path: abis/beefy/ContractFactory.json
-    handler: src/handlers/factory.handlers.ts
+    handler: src/handlers/contractFactory.handlers.ts
     events:
       - event: "ContractDeployed(bytes32 contractName,address proxy)"
 
   - name: Erc4626AdapterFactory
     abi_file_path: abis/beefy/common/Erc4626AdapterFactory.json
-    handler: src/handlers/factory.handlers.ts
+    handler: src/handlers/erc4626AdapterFactory.handlers.ts
     events:
       - event: "ProxyCreated(address proxy)"
         name: Erc4626AdapterCreated
@@ -1322,7 +1320,8 @@ networks:
         address: 
           - 0x52941De3eDE234ae6B8608597440Ac3394C64Ae8
       - name: ClassicBoostFactory
-        address: []
+        address: 
+          - 0x6f168346aed66f37cd972191ec4c3db11b8e5ecd
       - name: RewardPoolFactory
         address: 
           - 0xf8a577A29C85Bb379Ef9CEf2eAe5AB11c3965C1b

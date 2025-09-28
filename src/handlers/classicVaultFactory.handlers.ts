@@ -1,0 +1,25 @@
+import { ClassicVaultFactory } from 'generated';
+import { detectClassicVaultOrStrategy } from '../effects/classicVaultFactory.effects';
+import { isVaultBlacklisted } from '../lib/blacklist';
+
+ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, context }) => {
+    const proxyAddress = event.params.proxy.toString().toLowerCase();
+    if (isVaultBlacklisted(event.chainId, proxyAddress)) return;
+
+    const transactionInput = event.transaction.input as `0x${string}`;
+
+    const { isVault, isStrategy } = await detectClassicVaultOrStrategy({
+        log: context.log,
+        contractAddress: proxyAddress as `0x${string}`,
+        chainId: event.chainId,
+        blockNumber: event.block.number,
+        transactionInput,
+    });
+
+    if (isVault) {
+        context.addClassicVault(proxyAddress);
+        context.log.info('Vault detected, adding to context', { proxyAddress });
+    } else if (isStrategy) {
+        context.log.info('Strategy detected, ignoring', { proxyAddress });
+    }
+});
