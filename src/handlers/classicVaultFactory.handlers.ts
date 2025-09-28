@@ -6,6 +6,7 @@ ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, cont
     const proxyAddress = event.params.proxy.toString().toLowerCase();
     if (isVaultBlacklisted(event.chainId, proxyAddress)) return;
 
+    const transactionHash = event.transaction.hash as `0x${string}`;
     const transactionInput = event.transaction.input as `0x${string}`;
 
     const { isVault, isStrategy } = await detectClassicVaultOrStrategy({
@@ -13,6 +14,7 @@ ClassicVaultFactory.VaultOrStrategyCreated.contractRegister(async ({ event, cont
         contractAddress: proxyAddress as `0x${string}`,
         chainId: event.chainId,
         blockNumber: event.block.number,
+        transactionHash,
         transactionInput,
     });
 

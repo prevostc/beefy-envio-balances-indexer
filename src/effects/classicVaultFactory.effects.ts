@@ -1,20 +1,19 @@
-import { experimental_createEffect, S } from 'envio';
 import type { handlerContext as HandlerContext } from 'generated';
 import { decodeFunctionData } from 'viem';
 import type { ChainId } from '../lib/chain';
-import { chainIdSchema } from '../lib/chain';
-import { hexSchema } from '../lib/hex';
 import { getViemClient } from '../lib/viem';
 
 const detectClassicVaultOrStrategyWithEthCall = async ({
     contractAddress,
     chainId,
     blockNumber,
+    transactionHash,
     log,
 }: {
     contractAddress: `0x${string}`;
     chainId: ChainId;
     blockNumber?: number;
+    transactionHash: `0x${string}`;
     log: HandlerContext['log'];
 }): Promise<{
     isVault: boolean;
@@ -58,6 +57,7 @@ const detectClassicVaultOrStrategyWithEthCall = async ({
 
     log.debug('vault or strategy detection', {
         contractAddress,
+        transactionHash,
         vault: vault.status,
         strategy: strategy.status,
         blockNumber,
@@ -67,19 +67,25 @@ const detectClassicVaultOrStrategyWithEthCall = async ({
         log.error('.vault() and .strategy() calls both failed on contract', {
             chainId,
             contractAddress,
+            transactionHash,
             vault: vault.error,
             strategy: strategy.error,
             blockNumber,
         });
-        throw new Error(`.vault() and .strategy() calls both FAILED for contract ${chainId}:${contractAddress}`);
+        throw new Error(
+            `.vault() and .strategy() calls both FAILED for contract ${chainId}:${contractAddress} with transaction hash ${transactionHash}`
+        );
     }
 
     if (vault.status === 'success' && strategy.status === 'success') {
         log.error('vault and strategy calls both succeeded on contract', {
             contractAddress,
+            transactionHash,
             blockNumber,
         });
-        throw new Error(`vault and strategy calls both SUCCESS for contract ${chainId}:${contractAddress}`);
+        throw new Error(
+            `vault and strategy calls both SUCCESS for contract ${chainId}:${contractAddress} with transaction hash ${transactionHash}`
+        );
     }
 
     return {
@@ -139,12 +145,14 @@ export async function detectClassicVaultOrStrategy({
     contractAddress,
     chainId,
     transactionInput,
+    transactionHash,
     blockNumber,
     log,
 }: {
     contractAddress: `0x${string}`;
     chainId: ChainId;
     transactionInput: `0x${string}`;
+    transactionHash: `0x${string}`;
     blockNumber?: number;
     log: HandlerContext['log'];
 }) {
@@ -156,6 +164,7 @@ export async function detectClassicVaultOrStrategy({
             isStrategy,
             isVault,
             transactionInput,
+            transactionHash,
             contractAddress,
             chainId,
             blockNumber,
@@ -163,11 +172,12 @@ export async function detectClassicVaultOrStrategy({
         return { isStrategy, isVault };
     } catch (error) {
         // fallback to slow eth call
-        log.warn('Failed to decode transaction input, falling back to eth call', { error });
+        log.warn('Failed to decode transaction input, falling back to eth call', { transactionHash, error });
         const { isStrategy, isVault } = await detectClassicVaultOrStrategyWithEthCall({
             contractAddress,
             chainId,
             blockNumber,
+            transactionHash,
             log,
         });
         log.debug('detected classic vault or strategy with eth call', {
@@ -180,31 +190,3 @@ export async function detectClassicVaultOrStrategy({
         return { isStrategy, isVault };
     }
 }
-
-export const detectClassicVaultOrStrategyEffect = experimental_createEffect(
-    {
-        name: 'detectClassicVaultOrStrategyEffect',
-        input: {
-            contractAddress: hexSchema,
-            chainId: chainIdSchema,
-            blockNumber: S.number,
-            transactionInput: hexSchema,
-        },
-        output: {
-            isStrategy: S.boolean,
-            isVault: S.boolean,
-        },
-        cache: true,
-    },
-    async ({ input, context }) => {
-        const { contractAddress, chainId, blockNumber, transactionInput } = input;
-        const { isStrategy, isVault } = await detectClassicVaultOrStrategy({
-            contractAddress,
-            chainId,
-            log: context.log,
-            blockNumber,
-            transactionInput,
-        });
-        return { isStrategy, isVault };
-    }
-);
