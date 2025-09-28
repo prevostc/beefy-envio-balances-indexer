@@ -4,6 +4,40 @@ import type { ChainId } from './chain';
 import { config } from './config';
 
 const vaultBlacklist: Partial<Record<ChainId, Hex[]>> = {
+    10: [
+        '0x2da2d873450d2f0b3c1c7893f16dfb342f9c8492',
+        '0x3d5dfb6241bf611e472df9affc44711b2f81939e',
+        '0x44913882fe27452e51bfce17849df7ffc3e9ba0f',
+        '0x6521a5b613e35c30980fe38e87aac3aa73e1713d',
+        '0x9793831abec4563975da7b01f7f9ba5df61b44c7',
+        '0xec4b69ff273be97874d063d18082da911a4fb135',
+    ],
+    100: [
+        '0x47b75ddc83c0012f2b35f248a3188a977f8b326b',
+        '0x481f365b3f086d76a55b8df589b791a3fb51a94b',
+        '0x99b2b3330d68f9acfd9a5b09b92158f4857a3bef',
+        '0xddf0c27c6f6be455fefbf563dd95d8833f1d7af7',
+        '0xf1fbf36124c00567748782df54d47e7f09c91ab4',
+    ],
+    1284: [
+        '0x21f6a933f3dc7f34a1908dffff7d9fec699cfd95',
+        '0x57de8fafb97a0a8e051fd01a91f707280cba809b',
+        '0xb7eae5ec5c002f8f747df6c671aaa4fa51bb630f',
+    ],
+    324: ['0x3355df6d4c9c3035724fd0e3914de96a5a83aaf4'],
+    34443: ['0x4ad02bf095b8ffb6e0ac687beee5610ca3ebe6b1', '0xde59ca36f43ed1fa7ab67c419fc20be12a868712'],
+    42161: [
+        '0x0311372fc28f1be254853005b67e0e82942cbd4d',
+        '0x1871e965a4ee3c31967c12a498cfe2906bc24c73',
+        '0x293bf49df5400692c603ebdec52ef2b5dcb4a0c0',
+        '0x332d4f7960fd8a927e40313f6d60c6f980cc593e',
+        '0xd28a4ca0fdab6fcdb09427e20d8190f86469e89a',
+    ],
+    59144: [
+        '0x3d80b49fc4dc9e450efac1bd34cdeb2f303c2e81',
+        '0x719b6c7c4c0ad965bc972ccba4a37544a11c766e',
+        '0xdd43c6e636fac90598dde21e57e8e9cbb1a6d8fd',
+    ],
     56: [
         '0x12c409605e6cc819395422cf77049b18d76437ad',
         '0x355ecddb484541796c6cbe4e21dc4994d46c096e',
