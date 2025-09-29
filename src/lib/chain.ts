@@ -1,34 +1,42 @@
 import { S } from 'envio';
+import * as R from 'remeda';
 
-export const chainIdSchema = S.union([
-    S.schema(42161), // arbitrum
-    S.schema(43114), // avax
-    S.schema(8453), // base
-    S.schema(80094), // berachain
-    S.schema(56), // bsc
-    S.schema(1), // ethereum
-    S.schema(250), // fantom
-    S.schema(252), // fraxtal
-    S.schema(100), // gnosis
-    S.schema(999), // hyperevm
-    S.schema(59144), // linea
-    S.schema(1135), // lisk
-    S.schema(169), // manta
-    S.schema(5000), // mantle
-    S.schema(1088), // metis
-    S.schema(34443), // mode
-    S.schema(1284), // moonbeam
-    S.schema(10), // optimism
-    S.schema(9745), // plasma
-    S.schema(137), // polygon
-    S.schema(30), // rootstock
-    S.schema(5464), // saga
-    S.schema(534352), // scroll
-    S.schema(1329), // sei
-    S.schema(146), // sonic
-    S.schema(130), // unichain
-    S.schema(324), // zksync
-]);
+export const allChainIds = [
+    42161, // arbitrum
+    43114, // avax
+    8453, // base
+    80094, // berachain
+    56, // bsc
+    1, // ethereum
+    250, // fantom
+    252, // fraxtal
+    100, // gnosis
+    999, // hyperevm
+    59144, // linea
+    1135, // lisk
+    169, // manta
+    5000, // mantle
+    1088, // metis
+    34443, // mode
+    1284, // moonbeam
+    10, // optimism
+    9745, // plasma
+    137, // polygon
+    30, // rootstock
+    5464, // saga
+    534352, // scroll
+    1329, // sei
+    146, // sonic
+    130, // unichain
+    324, // zksync
+] as const;
+
+export const chainIdSchema = S.union(
+    R.pipe(
+        allChainIds,
+        R.map((chainId) => S.schema(chainId))
+    )
+);
 
 export type ChainId = S.Infer<typeof chainIdSchema>;
 
