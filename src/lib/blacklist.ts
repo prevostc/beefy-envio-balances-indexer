@@ -1,7 +1,9 @@
 import { addressBookByChainId } from 'blockchain-addressbook';
 import { type Logger, S } from 'envio';
+import type { HandlerContext } from 'generated/src/Types';
 import * as R from 'remeda';
 import type { Hex } from 'viem';
+import { isErc4626Adapter } from '../entities/classicErc4626Adapter.entity';
 import { allChainIds, type ChainId } from './chain';
 import { config } from './config';
 
@@ -255,9 +257,17 @@ const allAccountBlacklist = R.pipe(
     )
 );
 
-export function isAccountBlacklisted(chainId: ChainId, address: string) {
+export async function isAccountBlacklisted(context: HandlerContext, chainId: ChainId, address: string) {
     const lowerAddress = address.toLowerCase() as Hex;
-    return allAccountBlacklist[chainId][lowerAddress] ?? false;
+    if (allAccountBlacklist[chainId][lowerAddress]) {
+        return true;
+    }
+    // don't track balances for ERC4626 adapters
+    // we'll track that separately as vault breakdown
+    if (await isErc4626Adapter(context, chainId, lowerAddress)) {
+        return true;
+    }
+    return false;
 }
 
 export const blacklistStatus = S.union([

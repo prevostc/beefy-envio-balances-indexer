@@ -4,7 +4,7 @@ import type { Hex } from 'viem';
 import type { ChainId } from '../lib/chain';
 
 export const erc4626AdapterId = ({ chainId, adapterAddress }: { chainId: ChainId; adapterAddress: Hex }) =>
-    `${chainId}-${adapterAddress}`;
+    `${chainId}-${adapterAddress.toLowerCase()}`;
 
 export const createErc4626Adapter = async ({
     context,
@@ -35,4 +35,10 @@ export const createErc4626Adapter = async ({
 
     context.Erc4626Adapter.set(adapter);
     return adapter;
+};
+
+export const isErc4626Adapter = async (context: HandlerContext, chainId: ChainId, adapterAddress: Hex) => {
+    const id = erc4626AdapterId({ chainId, adapterAddress });
+    const adapter = await context.Erc4626Adapter.get(id);
+    return adapter !== undefined;
 };

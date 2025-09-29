@@ -5,7 +5,7 @@ import { getTokenMetadata } from '../effects/token.effects';
 import type { ChainId } from '../lib/chain';
 
 export const tokenId = ({ chainId, tokenAddress }: { chainId: ChainId; tokenAddress: Hex }) =>
-    `${chainId}-${tokenAddress}`;
+    `${chainId}-${tokenAddress.toLowerCase()}`;
 
 export const getOrCreateToken = async ({
     context,

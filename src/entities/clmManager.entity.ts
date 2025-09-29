@@ -4,7 +4,7 @@ import type { Hex } from 'viem';
 import type { ChainId } from '../lib/chain';
 
 export const clmManagerId = ({ chainId, managerAddress }: { chainId: ChainId; managerAddress: Hex }) =>
-    `${chainId}-${managerAddress}`;
+    `${chainId}-${managerAddress.toLowerCase()}`;
 
 export const createClmManager = async ({
     context,

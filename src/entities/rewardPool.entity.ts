@@ -4,7 +4,7 @@ import type { Hex } from 'viem';
 import type { ChainId } from '../lib/chain';
 
 export const rewardPoolId = ({ chainId, rewardPoolAddress }: { chainId: ChainId; rewardPoolAddress: Hex }) =>
-    `${chainId}-${rewardPoolAddress}`;
+    `${chainId}-${rewardPoolAddress.toLowerCase()}`;
 
 export const createRewardPool = async ({
     context,

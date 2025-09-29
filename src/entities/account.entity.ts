@@ -4,7 +4,7 @@ import type { Hex } from 'viem';
 import { isAccountBlacklisted } from '../lib/blacklist';
 import type { ChainId } from '../lib/chain';
 
-export const accountId = ({ accountAddress }: { accountAddress: Hex }) => `${accountAddress}`;
+export const accountId = ({ accountAddress }: { accountAddress: Hex }) => `${accountAddress.toLowerCase()}`;
 
 export const getOrCreateAccount = async ({
     context,
@@ -15,7 +15,9 @@ export const getOrCreateAccount = async ({
     chainId: ChainId;
     accountAddress: Hex;
 }): Promise<Account_t | null> => {
-    if (isAccountBlacklisted(chainId, accountAddress)) {
+    const blacklisted = await isAccountBlacklisted(context, chainId, accountAddress);
+    if (blacklisted) {
+        context.log.debug(`Account ${chainId}:${accountAddress} is blacklisted, skipping`);
         return null;
     }
     return await context.Account.getOrCreate({

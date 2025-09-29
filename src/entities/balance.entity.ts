@@ -7,7 +7,7 @@ import { accountId } from './account.entity';
 import { tokenId } from './token.entity';
 
 export const tokenBalanceId = ({ chainId, account, token }: { chainId: ChainId; account: Account_t; token: Token_t }) =>
-    `${chainId}-${account.address}-${token.address}`;
+    `${chainId}-${account.address.toLowerCase()}-${token.address.toLowerCase()}`;
 
 export const TokenBalanceChangeId = ({
     chainId,
@@ -19,7 +19,7 @@ export const TokenBalanceChangeId = ({
     account: Account_t;
     token: Token_t;
     blockNumber: number;
-}) => `${chainId}-${account.address}-${token.address}-${blockNumber}`;
+}) => `${chainId}-${account.address.toLowerCase()}-${token.address.toLowerCase()}-${blockNumber}`;
 
 export const getOrCreateTokenBalanceEntity = async ({
     context,

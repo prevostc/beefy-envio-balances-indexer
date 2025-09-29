@@ -4,7 +4,7 @@ import type { Hex } from 'viem';
 import type { ChainId } from '../lib/chain';
 
 export const classicBoostId = ({ chainId, boostAddress }: { chainId: ChainId; boostAddress: Hex }) =>
-    `${chainId}-${boostAddress}`;
+    `${chainId}-${boostAddress.toLowerCase()}`;
 
 export const createClassicBoost = async ({
     context,

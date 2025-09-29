@@ -4,7 +4,7 @@ import type { Hex } from 'viem';
 import type { ChainId } from '../lib/chain';
 
 export const LstVaultId = ({ chainId, lstAddress }: { chainId: ChainId; lstAddress: Hex }) =>
-    `${chainId}-${lstAddress}`;
+    `${chainId}-${lstAddress.toLowerCase()}`;
 
 export const createLstVault = async ({
     context,
