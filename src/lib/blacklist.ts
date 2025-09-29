@@ -37,7 +37,6 @@ const vaultBlacklist = R.pipe(
         { chainId: 10, address: '0x8e90bb08eed12556119aa4ed6a5b014856d1078b' },
         { chainId: 10, address: '0x9357702b0801383535315372420e94d6e2a10901' },
         { chainId: 10, address: '0x9793831abec4563975da7b01f7f9ba5df61b44c7' },
-        { chainId: 10, address: '0x9b50b06b81f033ca86d70f0a44f30bd7e0155737' },
         { chainId: 10, address: '0xb135ae335f37737aa9e7ba8250e5f5a9b11e2323' },
         { chainId: 10, address: '0xb4dabdaccdc20a081cf24b6d6ef3a6b1c84d46a7' },
         { chainId: 10, address: '0xb6b34cbd11f7ddd83d2d92d84f4c706a8962e04c' },
@@ -201,7 +200,6 @@ const vaultBlacklist = R.pipe(
         { chainId: 43114, address: '0x2de6b91e8695054a53aa9d3fcf1e8efb791079c8' },
         { chainId: 43114, address: '0x392629bc3ef46b537f1a33730b28b75d8616176a' },
         { chainId: 43114, address: '0x473dd2fc03343fad45369bed4d56f72fb5c9a130' },
-        { chainId: 43114, address: '0x6674f3961C5908B086A5551377806f4BA8F0Ac99' },
         { chainId: 43114, address: '0x74b3766f6a742bbcc91534354a4cfbf981996b82' },
         { chainId: 43114, address: '0xb82fea26c9eabdbbb03c20d6b86fe027004d4927' },
         { chainId: 43114, address: '0xc3d48ba8d79de6fcfe814b78c5cf4241a74cb02c' },
@@ -326,11 +324,14 @@ export function isVaultBlacklisted(chainId: ChainId, address: string) {
 const allAccountBlacklist = R.pipe(
     // raw account blacklist
     [
-        { chainId: 56, address: '0x03c509fd85d51dc7e75fa2de06276cfa147486ea' },
-        { chainId: 56, address: '0xac18fcb470f913b94946bee43dc52e197d765791' },
-        { chainId: 56, address: '0x31fe02b9ea5501bfe8a872e205dfe6b6a79435ed' },
-        { chainId: 137, address: '0xf039fe26456901f863c873556f40fb207c6c9c18' },
+        { chainId: 10, address: '0x9b50b06b81f033ca86d70f0a44f30bd7e0155737' },
         { chainId: 137, address: '0x540a9f99bb730631bf243a34b19fd00ba8cf315c' },
+        { chainId: 137, address: '0xf039fe26456901f863c873556f40fb207c6c9c18' },
+        { chainId: 43114, address: '0x6674f3961C5908B086A5551377806f4BA8F0Ac99' },
+        { chainId: 43114, address: '0x7f62af30081178f502c3d4da17825e58d240d737' },
+        { chainId: 56, address: '0x03c509fd85d51dc7e75fa2de06276cfa147486ea' },
+        { chainId: 56, address: '0x31fe02b9ea5501bfe8a872e205dfe6b6a79435ed' },
+        { chainId: 56, address: '0xac18fcb470f913b94946bee43dc52e197d765791' },
         { chainId: 8453, address: '0x6f19da51d488926c007b9ebaa5968291a2ec6a63' },
     ],
     // ignore addresses from address book to all chains
