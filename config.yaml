@@ -139,7 +139,7 @@ networks:
           
   - id: 42161 # arbitrum
     start_block: 1362980
-    rpc: 'https://arb1.arbitrum.io/rpc'
+    rpc: ${ARBITRUM_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -231,7 +231,7 @@ networks:
       
   - id: 43114 # avax
     start_block: 591621
-    rpc: 'https://api.avax.network/ext/bc/C/rpc'
+    rpc: ${AVAX_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -436,7 +436,7 @@ networks:
       
   - id: 8453 # base
     start_block: 2181945
-    rpc: 'https://mainnet.base.org'
+    rpc: ${BASE_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -481,7 +481,7 @@ networks:
       
   - id: 80094 # berachain
     start_block: 792341
-    rpc: 'https://rpc.berachain.com'
+    rpc: ${BERACHAIN_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -523,7 +523,7 @@ networks:
       
   - id: 56 # bsc
     start_block: 1174850
-    rpc: 'https://56.rpc.thirdweb.com'
+    rpc: ${BSC_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1310,7 +1310,7 @@ networks:
       
   - id: 1 # ethereum
     start_block: 15891216
-    rpc: 'https://eth.drpc.org'
+    rpc: ${ETHEREUM_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1353,7 +1353,7 @@ networks:
       
   - id: 250 # fantom
     start_block: 5541765
-    rpc: 'https://250.rpc.thirdweb.com'
+    rpc: ${FANTOM_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1678,7 +1678,7 @@ networks:
       
   - id: 252 # fraxtal
     start_block: 2365710
-    rpc: 'https://rpc.frax.com'
+    rpc: ${FRAXTAL_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1718,7 +1718,7 @@ networks:
       
   - id: 100 # gnosis
     start_block: 30489787
-    rpc: 'https://rpc.gnosischain.com'
+    rpc: ${GNOSIS_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1761,7 +1761,7 @@ networks:
       
   - id: 999 # hyperevm
     start_block: 4883535
-    rpc: 'https://rpc.hyperliquid.xyz/evm'
+    rpc: ${HYPEREVM_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1803,7 +1803,7 @@ networks:
       
   - id: 59144 # linea
     start_block: 1111015
-    rpc: 'https://rpc.linea.build'
+    rpc: ${LINEA_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1846,7 +1846,7 @@ networks:
       
   - id: 1135 # lisk
     start_block: 8910850
-    rpc: 'https://rpc.api.lisk.com'
+    rpc: ${LISK_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1888,7 +1888,7 @@ networks:
       
   - id: 169 # manta
     start_block: 2501033
-    rpc: 'https://pacific-rpc.manta.network/http'
+    rpc: ${MANTA_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1929,7 +1929,7 @@ networks:
       
   - id: 5000 # mantle
     start_block: 48135884
-    rpc: 'https://rpc.mantle.xyz'
+    rpc: ${MANTLE_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -1998,7 +1998,7 @@ networks:
       
   - id: 1088 # metis
     start_block: 411040
-    rpc: 'https://metis.rpc.hypersync.xyz'
+    rpc: ${METIS_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -2065,7 +2065,7 @@ networks:
       
   - id: 34443 # mode
     start_block: 7558107
-    rpc: 'https://mainnet.mode.network'
+    rpc: ${MODE_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -2107,7 +2107,7 @@ networks:
       
   - id: 1284 # moonbeam
     start_block: 389840
-    rpc: 'https://moonbeam.public.blastapi.io'
+    rpc: ${MOONBEAM_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -2214,7 +2214,7 @@ networks:
       
   - id: 10 # optimism
     start_block: 13334163
-    rpc: 'https://mainnet.optimism.io'
+    rpc: ${OPTIMISM_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -2330,7 +2330,7 @@ networks:
       
   - id: 9745 # plasma
     start_block: 1899550
-    rpc: 'https://rpc.plasma.to'
+    rpc: ${PLASMA_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -2374,7 +2374,7 @@ networks:
       
   - id: 137 # polygon
     start_block: 13795241
-    rpc: 'https://polygon-rpc.com'
+    rpc: ${POLYGON_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -2817,7 +2817,7 @@ networks:
       
   - id: 30 # rootstock
     start_block: 6729703
-    rpc: 'https://public-node.rsk.co'
+    rpc: ${ROOTSTOCK_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -2858,7 +2858,7 @@ networks:
       
   # - id: 5464 # saga
   #   start_block: 2544719
-  #   rpc: 'https://sagaevm.jsonrpc.sagarpc.io'
+  #   rpc: ${SAGA_RPC_URL}
   #   contracts:
   #     - name: ClassicVaultFactory
   #       address: 
@@ -2900,7 +2900,7 @@ networks:
       
   - id: 534352 # scroll
     start_block: 10224183
-    rpc: 'https://rpc.scroll.io'
+    rpc: ${SCROLL_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -2942,7 +2942,7 @@ networks:
       
   - id: 1329 # sei
     start_block: 92535412
-    rpc: 'https://evm-rpc.sei-apis.com/'
+    rpc: ${SEI_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -2983,7 +2983,7 @@ networks:
       
   - id: 146 # sonic
     start_block: 490985
-    rpc: 'https://rpc.soniclabs.com'
+    rpc: ${SONIC_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -3026,7 +3026,7 @@ networks:
       
   - id: 130 # unichain
     start_block: 9042349
-    rpc: 'https://mainnet.unichain.org/'
+    rpc: ${UNICHAIN_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
@@ -3068,7 +3068,7 @@ networks:
       
   - id: 324 # zksync
     start_block: 2295741
-    rpc: 'https://mainnet.era.zksync.io'
+    rpc: ${ZKSYNC_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
         address: 
