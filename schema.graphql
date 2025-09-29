@@ -151,6 +151,24 @@ type ClassicVault {
 }
 
 """
+A strategy is a contract that manages the assets of a Beefy product.
+This entity is mostly used to start tracking the events and link them to the Beefy product on new event
+Also used to ignore balance changes events for this address
+"""
+type ClassicVaultStrategy {
+  "chain - strategy address"
+  id: ID!
+
+  "chain id"
+  chainId: Int! @index
+  "The strategy address"
+  address: Bytes! @index
+
+  "The classic vault of the strategy"
+  classicVault: ClassicVault!
+}
+
+"""
 A boost is a contract that manages the assets of a Beefy product.
 This entity is mostly used to start tracking the events and link them to the Beefy product on new event
 """

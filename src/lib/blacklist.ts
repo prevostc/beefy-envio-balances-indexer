@@ -5,6 +5,7 @@ import * as R from 'remeda';
 import type { Hex } from 'viem';
 import { isClassicBoost } from '../entities/classicBoost.entity';
 import { isErc4626Adapter } from '../entities/classicErc4626Adapter.entity';
+import { isClassicVaultStrategy } from '../entities/classicVault.entity';
 import { isRewardPool } from '../entities/rewardPool.entity';
 import { allChainIds, type ChainId } from './chain';
 import { config } from './config';
@@ -17,6 +18,7 @@ const vaultBlacklist = R.pipe(
         { chainId: 10, address: '0x6521a5b613e35c30980fe38e87aac3aa73e1713d' },
         { chainId: 10, address: '0x9793831abec4563975da7b01f7f9ba5df61b44c7' },
         { chainId: 10, address: '0xec4b69ff273be97874d063d18082da911a4fb135' },
+        { chainId: 10, address: '0x9b50b06b81f033ca86d70f0a44f30bd7e0155737' },
         { chainId: 100, address: '0x47b75ddc83c0012f2b35f248a3188a977f8b326b' },
         { chainId: 100, address: '0x481f365b3f086d76a55b8df589b791a3fb51a94b' },
         { chainId: 100, address: '0x99b2b3330d68f9acfd9a5b09b92158f4857a3bef' },
@@ -266,12 +268,13 @@ export async function isAccountBlacklisted(context: HandlerContext, chainId: Cha
     if (allAccountBlacklist[chainId][lowerAddress]) {
         return true;
     }
-    // don't track balances for ERC4626 adapters
-    // we'll track that separately as vault breakdown
+    // don't track balances for indexed entities that are known to handle some share tokens
+    // we'll track that separately as proper vault breakdown
     const [erc4626Adapter, rewardPool] = await Promise.all([
         isErc4626Adapter(context, chainId, lowerAddress),
         isRewardPool(context, chainId, lowerAddress),
         isClassicBoost(context, chainId, lowerAddress),
+        isClassicVaultStrategy(context, chainId, lowerAddress),
     ]);
     if (erc4626Adapter || rewardPool) {
         return true;

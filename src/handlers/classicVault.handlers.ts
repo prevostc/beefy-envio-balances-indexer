@@ -15,10 +15,13 @@ ClassicVault.Initialized.handler(async ({ event, context }) => {
     context.log.info(`Initializing ClassicVault at ${vaultAddress} on chain ${chainId}`);
 
     // Fetch underlying tokens using effect
-    const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getClassicVaultTokens, {
-        vaultAddress,
-        chainId,
-    });
+    const { shareTokenAddress, underlyingTokenAddress, strategyAddress, blacklistStatus } = await context.effect(
+        getClassicVaultTokens,
+        {
+            vaultAddress,
+            chainId,
+        }
+    );
 
     if (blacklistStatus !== 'ok') {
         logBlacklistStatus(context.log, blacklistStatus, 'ClassicVault', {
@@ -52,6 +55,7 @@ ClassicVault.Initialized.handler(async ({ event, context }) => {
         vaultAddress,
         shareToken,
         underlyingToken,
+        strategyAddress,
         initializedBlock,
     });
 

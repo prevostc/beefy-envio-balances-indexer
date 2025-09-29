@@ -15,6 +15,7 @@ export const getClassicVaultTokens = experimental_createEffect(
         output: {
             shareTokenAddress: hexSchema,
             underlyingTokenAddress: hexSchema,
+            strategyAddress: hexSchema,
             blacklistStatus: blacklistStatus,
         },
         cache: true,
@@ -25,7 +26,7 @@ export const getClassicVaultTokens = experimental_createEffect(
 
         context.log.debug('Fetching ClassicVault tokens', { vaultAddress, chainId });
 
-        const [wantResult] = await client.multicall({
+        const [wantResult, strategyResult] = await client.multicall({
             allowFailure: true,
             contracts: [
                 {
@@ -42,6 +43,20 @@ export const getClassicVaultTokens = experimental_createEffect(
                     functionName: 'want',
                     args: [],
                 },
+                {
+                    address: vaultAddress as `0x${string}`,
+                    abi: [
+                        {
+                            inputs: [],
+                            name: 'strategy',
+                            outputs: [{ name: '', type: 'address' }],
+                            stateMutability: 'view',
+                            type: 'function',
+                        },
+                    ],
+                    functionName: 'strategy',
+                    args: [],
+                },
             ],
         });
 
@@ -53,18 +68,31 @@ export const getClassicVaultTokens = experimental_createEffect(
             return {
                 shareTokenAddress,
                 underlyingTokenAddress: ADDRESS_ZERO,
+                strategyAddress: ADDRESS_ZERO,
                 blacklistStatus: 'blacklisted' as const,
             };
         }
 
-        const underlyingTokenAddress = wantResult.result;
+        if (strategyResult.status === 'failure') {
+            context.log.error('ClassicVault strategy call failed', { vaultAddress, chainId });
+            throw new Error('ClassicVault strategy call failed');
+        }
 
-        context.log.info('ClassicVault data fetched', { vaultAddress, shareTokenAddress, underlyingTokenAddress });
+        const underlyingTokenAddress = wantResult.result;
+        const strategyAddress = strategyResult.result;
+
+        context.log.info('ClassicVault data fetched', {
+            vaultAddress,
+            shareTokenAddress,
+            underlyingTokenAddress,
+            strategyAddress,
+        });
 
         if (underlyingTokenAddress === ADDRESS_ZERO) {
             return {
                 shareTokenAddress,
                 underlyingTokenAddress,
+                strategyAddress,
                 blacklistStatus: 'blacklisted' as const,
             };
         }
@@ -72,6 +100,7 @@ export const getClassicVaultTokens = experimental_createEffect(
         return {
             shareTokenAddress,
             underlyingTokenAddress,
+            strategyAddress,
             blacklistStatus: 'ok' as const,
         };
     }
