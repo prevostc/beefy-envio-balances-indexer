@@ -270,13 +270,13 @@ export async function isAccountBlacklisted(context: HandlerContext, chainId: Cha
     }
     // don't track balances for indexed entities that are known to handle some share tokens
     // we'll track that separately as proper vault breakdown
-    const [erc4626Adapter, rewardPool] = await Promise.all([
+    const [erc4626Adapter, rewardPool, classicBoost, classicVaultStrategy] = await Promise.all([
         isErc4626Adapter(context, chainId, lowerAddress),
         isRewardPool(context, chainId, lowerAddress),
         isClassicBoost(context, chainId, lowerAddress),
         isClassicVaultStrategy(context, chainId, lowerAddress),
     ]);
-    if (erc4626Adapter || rewardPool) {
+    if (erc4626Adapter || rewardPool || classicBoost || classicVaultStrategy) {
         return true;
     }
     return false;
