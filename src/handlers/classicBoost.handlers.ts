@@ -48,6 +48,9 @@ ClassicBoost.Withdrawn.handler(async ({ event, context }) => {
     const chainId = toChainId(event.chainId);
     const boostAddress = event.srcAddress.toString().toLowerCase() as Hex;
 
+    const boost = await initializeBoost(context, chainId, boostAddress, BigInt(event.block.number));
+    if (!boost) return;
+
     await handleTokenTransfer({
         context,
         chainId,
