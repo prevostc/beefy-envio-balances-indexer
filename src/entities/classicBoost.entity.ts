@@ -36,3 +36,9 @@ export const createClassicBoost = async ({
     context.ClassicBoost.set(boost);
     return boost;
 };
+
+export const isClassicBoost = async (context: HandlerContext, chainId: ChainId, boostAddress: Hex) => {
+    const id = classicBoostId({ chainId, boostAddress });
+    const boost = await context.ClassicBoost.get(id);
+    return boost !== undefined;
+};

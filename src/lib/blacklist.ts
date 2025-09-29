@@ -3,7 +3,9 @@ import { type Logger, S } from 'envio';
 import type { HandlerContext } from 'generated/src/Types';
 import * as R from 'remeda';
 import type { Hex } from 'viem';
+import { isClassicBoost } from '../entities/classicBoost.entity';
 import { isErc4626Adapter } from '../entities/classicErc4626Adapter.entity';
+import { isRewardPool } from '../entities/rewardPool.entity';
 import { allChainIds, type ChainId } from './chain';
 import { config } from './config';
 
@@ -84,6 +86,7 @@ const vaultBlacklist = R.pipe(
         { chainId: 137, address: '0xe87cbd763517760277abed58d5baefcf0af11581' },
         { chainId: 137, address: '0xe94f29067205de23ddd4d8ed1b4e61b25bb37e4b' },
         { chainId: 137, address: '0xf3e4042e66a31268ef4750b85ecedaead60b93ca' },
+        { chainId: 250, address: '0x8afc0f9BdC5DcA9f0408Df03A03520bFa98A15aF' },
         { chainId: 324, address: '0x3355df6d4c9c3035724fd0e3914de96a5a83aaf4' },
         { chainId: 34443, address: '0x4ad02bf095b8ffb6e0ac687beee5610ca3ebe6b1' },
         { chainId: 34443, address: '0xde59ca36f43ed1fa7ab67c419fc20be12a868712' },
@@ -92,6 +95,7 @@ const vaultBlacklist = R.pipe(
         { chainId: 42161, address: '0x293bf49df5400692c603ebdec52ef2b5dcb4a0c0' },
         { chainId: 42161, address: '0x332d4f7960fd8a927e40313f6d60c6f980cc593e' },
         { chainId: 42161, address: '0xd28a4ca0fdab6fcdb09427e20d8190f86469e89a' },
+        { chainId: 43114, address: '0x6674f3961C5908B086A5551377806f4BA8F0Ac99' },
         { chainId: 56, address: '0x12c409605e6cc819395422cf77049b18d76437ad' },
         { chainId: 56, address: '0x19daae2ae9ded737d980e328b509986bce27ad91' },
         { chainId: 56, address: '0x22f4eb9514fd01a7909215656643880a060c4f6f' },
@@ -264,7 +268,12 @@ export async function isAccountBlacklisted(context: HandlerContext, chainId: Cha
     }
     // don't track balances for ERC4626 adapters
     // we'll track that separately as vault breakdown
-    if (await isErc4626Adapter(context, chainId, lowerAddress)) {
+    const [erc4626Adapter, rewardPool] = await Promise.all([
+        isErc4626Adapter(context, chainId, lowerAddress),
+        isRewardPool(context, chainId, lowerAddress),
+        isClassicBoost(context, chainId, lowerAddress),
+    ]);
+    if (erc4626Adapter || rewardPool) {
         return true;
     }
     return false;

@@ -36,3 +36,9 @@ export const createRewardPool = async ({
     context.RewardPool.set(rewardPool);
     return rewardPool;
 };
+
+export const isRewardPool = async (context: HandlerContext, chainId: ChainId, rewardPoolAddress: Hex) => {
+    const id = rewardPoolId({ chainId, rewardPoolAddress });
+    const rewardPool = await context.RewardPool.get(id);
+    return rewardPool !== undefined;
+};
