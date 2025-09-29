@@ -2856,47 +2856,47 @@ networks:
       - name: Erc4626Adapter
         address: []
       
-  # - id: 5464 # saga
-  #   start_block: 2544719
-  #   rpc: ${SAGA_RPC_URL}
-  #   contracts:
-  #     - name: ClassicVaultFactory
-  #       address: 
-  #         - 0xD19ab62F83380908D65E344567378cF104cE46c2
-  #     - name: ClassicStrategyFactory
-  #       address: 
-  #         - 0x43d05dB4C288e11096eD1e3e3a749Ef209AF5b2F
-  #     - name: ClassicBoostFactory
-  #       address: []
-  #     - name: RewardPoolFactory
-  #       address: 
-  #         - 0xF08cc9422a43Be7c1d6663DF2890Cf7E36E79307
-  #     - name: ClmManagerFactory
-  #       address: 
-  #         - 0xc26314091EB7a9c75E5536f7f54A8F63e829547D
-  #     - name: ClmStrategyFactory
-  #       address: 
-  #         - 0x5dAEd8dEe03CF685D072414cBc82Bf3933D9ed7f
-  #     - name: ContractFactory
-  #       address: []
-  #     - name: Erc4626AdapterFactory
-  #       address: []
-  #     - name: ClassicVault
-  #       address: []
-  #     - name: ClassicBoost
-  #       address: []
-  #     - name: ClassicStrategy
-  #       address: []
-  #     - name: ClmStrategy
-  #       address: []
-  #     - name: ClmManager
-  #       address: []
-  #     - name: RewardPool
-  #       address: []
-  #     - name: LstVault
-  #       address: []
-  #     - name: Erc4626Adapter
-  #       address: []
+  - id: 5464 # saga
+    start_block: 2544719
+    rpc: ${SAGA_RPC_URL}
+    contracts:
+      - name: ClassicVaultFactory
+        address: 
+          - 0xD19ab62F83380908D65E344567378cF104cE46c2
+      - name: ClassicStrategyFactory
+        address: 
+          - 0x43d05dB4C288e11096eD1e3e3a749Ef209AF5b2F
+      - name: ClassicBoostFactory
+        address: []
+      - name: RewardPoolFactory
+        address: 
+          - 0xF08cc9422a43Be7c1d6663DF2890Cf7E36E79307
+      - name: ClmManagerFactory
+        address: 
+          - 0xc26314091EB7a9c75E5536f7f54A8F63e829547D
+      - name: ClmStrategyFactory
+        address: 
+          - 0x5dAEd8dEe03CF685D072414cBc82Bf3933D9ed7f
+      - name: ContractFactory
+        address: []
+      - name: Erc4626AdapterFactory
+        address: []
+      - name: ClassicVault
+        address: []
+      - name: ClassicBoost
+        address: []
+      - name: ClassicStrategy
+        address: []
+      - name: ClmStrategy
+        address: []
+      - name: ClmManager
+        address: []
+      - name: RewardPool
+        address: []
+      - name: LstVault
+        address: []
+      - name: Erc4626Adapter
+        address: []
       
   - id: 534352 # scroll
     start_block: 10224183
