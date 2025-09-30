@@ -36,3 +36,4 @@ generated
 .env
 
 networks_config.yaml
+*.log

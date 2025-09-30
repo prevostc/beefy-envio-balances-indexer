@@ -2,13 +2,20 @@ import type { Logger } from 'envio';
 import { createPublicClient, defineChain, http, type Chain as ViemChain } from 'viem';
 import {
     arbitrum,
+    aurora,
     avalanche,
     base,
     berachain,
     bsc,
+    canto,
+    celo,
+    cronos,
     fantom,
     fraxtal,
+    fuse,
     gnosis,
+    harmonyOne,
+    kava,
     linea,
     lisk,
     mainnet,
@@ -17,9 +24,12 @@ import {
     metis,
     mode,
     moonbeam,
+    moonriver,
     optimism,
     plasma,
     polygon,
+    polygonZkEvm,
+    real,
     rootstock,
     saga,
     scroll,
@@ -30,6 +40,49 @@ import {
 } from 'viem/chains';
 import type { ChainId } from './chain';
 import { config } from './config';
+
+const emerald = defineChain({
+    id: 42262,
+    name: 'Emerald',
+    nativeCurrency: {
+        decimals: 18,
+        name: 'Rose',
+        symbol: 'ROSE',
+    },
+    rpcUrls: {
+        default: {
+            http: ['https://emerald.oasis.io'],
+            webSocket: ['wss://emerald.oasis.io/ws'],
+        },
+    },
+    blockExplorers: {
+        default: { name: 'Explorer', url: 'https://explorer.oasis.io/mainnet/emerald' },
+    },
+    contracts: {
+        multicall3: {
+            address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+            blockCreated: 1481392,
+        },
+    },
+});
+
+const heco = defineChain({
+    id: 128,
+    name: 'Heco',
+    nativeCurrency: {
+        decimals: 18,
+        name: 'Huobi Token',
+        symbol: 'HT',
+    },
+    rpcUrls: {
+        default: {
+            http: ['https://heco.drpc.org'],
+        },
+    },
+    blockExplorers: {
+        default: { name: 'Explorer', url: 'https://hecoscan.io/' },
+    },
+});
 
 const hyperevm = defineChain({
     id: 999,
@@ -57,15 +110,23 @@ const hyperevm = defineChain({
 });
 
 const chainMap: Record<ChainId, ViemChain> = {
+    1313161554: aurora,
     42161: arbitrum,
     43114: avalanche,
     8453: base,
     80094: berachain,
     56: bsc,
+    7700: canto,
+    42220: celo,
+    25: cronos,
+    42262: emerald,
     1: mainnet,
     250: fantom,
     252: fraxtal,
     100: gnosis,
+    128: heco,
+    122: fuse,
+    2222: kava,
     999: hyperevm,
     59144: linea,
     1135: lisk,
@@ -74,15 +135,19 @@ const chainMap: Record<ChainId, ViemChain> = {
     1088: metis,
     34443: mode,
     1284: moonbeam,
+    1285: moonriver,
+    1666600000: harmonyOne,
     10: optimism,
     9745: plasma,
     137: polygon,
+    111188: real,
     30: rootstock,
     5464: saga,
     534352: scroll,
     1329: sei,
     146: sonic,
     130: unichain,
+    1101: polygonZkEvm,
     324: zksync,
 };
 
