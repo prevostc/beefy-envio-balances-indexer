@@ -15,7 +15,7 @@ ClassicBoost.Initialized.handler(async ({ event, context }) => {
     const boostAddress = event.srcAddress.toString().toLowerCase() as Hex;
     const initializedBlock = BigInt(event.block.number);
 
-    const boost = await initializeBoost(context, chainId, boostAddress, initializedBlock);
+    const boost = await initializeBoost({ context, chainId, boostAddress, initializedBlock });
     if (!boost) return;
 
     context.log.info(`ClassicBoost ${boostAddress} initialized successfully`);
@@ -29,7 +29,7 @@ ClassicBoost.Staked.handler(async ({ event, context }) => {
     // Ensure that the boost virtual token is created first
     // otherwise, handleTokenTransfer will try and create it and fail because
     // it's not aware it is being virtual
-    const boost = await initializeBoost(context, chainId, boostAddress, initializedBlock);
+    const boost = await initializeBoost({ context, chainId, boostAddress, initializedBlock });
     if (!boost) return;
 
     await handleTokenTransfer({
@@ -48,7 +48,12 @@ ClassicBoost.Withdrawn.handler(async ({ event, context }) => {
     const chainId = toChainId(event.chainId);
     const boostAddress = event.srcAddress.toString().toLowerCase() as Hex;
 
-    const boost = await initializeBoost(context, chainId, boostAddress, BigInt(event.block.number));
+    const boost = await initializeBoost({
+        context,
+        chainId,
+        boostAddress,
+        initializedBlock: BigInt(event.block.number),
+    });
     if (!boost) return;
 
     await handleTokenTransfer({
@@ -63,12 +68,17 @@ ClassicBoost.Withdrawn.handler(async ({ event, context }) => {
     });
 });
 
-const initializeBoost = async (
-    context: HandlerContext,
-    chainId: ChainId,
-    boostAddress: Hex,
-    initializedBlock: bigint
-): Promise<ClassicBoost_t | null> => {
+const initializeBoost = async ({
+    context,
+    chainId,
+    boostAddress,
+    initializedBlock,
+}: {
+    context: HandlerContext;
+    chainId: ChainId;
+    boostAddress: Hex;
+    initializedBlock: bigint;
+}): Promise<ClassicBoost_t | null> => {
     context.log.info(`Initializing ClassicBoost at ${boostAddress} on chain ${chainId}`);
 
     // Fetch underlying tokens using effect
