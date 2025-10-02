@@ -3,7 +3,7 @@ import type { LstVault_t } from 'generated/src/db/Entities.gen';
 import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getLstVaultTokens } from '../effects/lstVault.effects';
-import { createLstVault } from '../entities/lstVault.entity';
+import { createLstVault, getLstVault } from '../entities/lstVault.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
@@ -57,6 +57,12 @@ const initializeLstVault = async ({
     initializedBlock: bigint;
 }): Promise<LstVault_t | null> => {
     context.log.info(`Initializing LstVault at ${lstAddress} on chain ${chainId}`);
+
+    // Check if the LST vault already exists
+    const existingLst = await getLstVault(context, chainId, lstAddress);
+    if (existingLst) {
+        return existingLst;
+    }
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getLstVaultTokens, {

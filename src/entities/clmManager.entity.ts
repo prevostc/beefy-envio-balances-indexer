@@ -6,6 +6,12 @@ import type { ChainId } from '../lib/chain';
 export const clmManagerId = ({ chainId, managerAddress }: { chainId: ChainId; managerAddress: Hex }) =>
     `${chainId}-${managerAddress.toLowerCase()}`;
 
+export const getClmManager = async (context: HandlerContext, chainId: ChainId, managerAddress: Hex) => {
+    const id = clmManagerId({ chainId, managerAddress });
+    const manager = await context.ClmManager.get(id);
+    return manager;
+};
+
 export const createClmManager = async ({
     context,
     chainId,

@@ -6,6 +6,12 @@ import type { ChainId } from '../lib/chain';
 export const classicBoostId = ({ chainId, boostAddress }: { chainId: ChainId; boostAddress: Hex }) =>
     `${chainId}-${boostAddress.toLowerCase()}`;
 
+export const getClassicBoost = async (context: HandlerContext, chainId: ChainId, boostAddress: Hex) => {
+    const id = classicBoostId({ chainId, boostAddress });
+    const boost = await context.ClassicBoost.get(id);
+    return boost;
+};
+
 export const createClassicBoost = async ({
     context,
     chainId,

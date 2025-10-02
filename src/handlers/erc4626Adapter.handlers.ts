@@ -3,7 +3,7 @@ import type { Erc4626Adapter_t } from 'generated/src/db/Entities.gen';
 import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getErc4626AdapterTokens } from '../effects/erc4626Adapter.effects';
-import { createErc4626Adapter } from '../entities/classicErc4626Adapter.entity';
+import { createErc4626Adapter, getErc4626Adapter } from '../entities/classicErc4626Adapter.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
@@ -57,6 +57,12 @@ const initializeErc4626Adapter = async ({
     initializedBlock: bigint;
 }): Promise<Erc4626Adapter_t | null> => {
     context.log.info(`Initializing Erc4626Adapter at ${adapterAddress} on chain ${chainId}`);
+
+    // Check if the adapter already exists
+    const existingAdapter = await getErc4626Adapter(context, chainId, adapterAddress);
+    if (existingAdapter) {
+        return existingAdapter;
+    }
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(

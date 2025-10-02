@@ -3,7 +3,7 @@ import type { ClassicBoost_t } from 'generated/src/db/Entities.gen';
 import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getClassicBoostTokens } from '../effects/classicBoost.effects';
-import { createClassicBoost } from '../entities/classicBoost.entity';
+import { createClassicBoost, getClassicBoost } from '../entities/classicBoost.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
@@ -80,6 +80,12 @@ const initializeBoost = async ({
     initializedBlock: bigint;
 }): Promise<ClassicBoost_t | null> => {
     context.log.info(`Initializing ClassicBoost at ${boostAddress} on chain ${chainId}`);
+
+    // Check if the boost already exists
+    const existingBoost = await getClassicBoost(context, chainId, boostAddress);
+    if (existingBoost) {
+        return existingBoost;
+    }
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getClassicBoostTokens, {

@@ -6,6 +6,12 @@ import type { ChainId } from '../lib/chain';
 export const LstVaultId = ({ chainId, lstAddress }: { chainId: ChainId; lstAddress: Hex }) =>
     `${chainId}-${lstAddress.toLowerCase()}`;
 
+export const getLstVault = async (context: HandlerContext, chainId: ChainId, lstAddress: Hex) => {
+    const id = LstVaultId({ chainId, lstAddress });
+    const lst = await context.LstVault.get(id);
+    return lst;
+};
+
 export const createLstVault = async ({
     context,
     chainId,

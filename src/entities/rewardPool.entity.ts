@@ -6,6 +6,12 @@ import type { ChainId } from '../lib/chain';
 export const rewardPoolId = ({ chainId, rewardPoolAddress }: { chainId: ChainId; rewardPoolAddress: Hex }) =>
     `${chainId}-${rewardPoolAddress.toLowerCase()}`;
 
+export const getRewardPool = async (context: HandlerContext, chainId: ChainId, rewardPoolAddress: Hex) => {
+    const id = rewardPoolId({ chainId, rewardPoolAddress });
+    const rewardPool = await context.RewardPool.get(id);
+    return rewardPool;
+};
+
 export const createRewardPool = async ({
     context,
     chainId,

@@ -3,7 +3,7 @@ import type { ClmManager_t } from 'generated/src/db/Entities.gen';
 import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getClmManagerTokens } from '../effects/clmManager.effects';
-import { createClmManager } from '../entities/clmManager.entity';
+import { createClmManager, getClmManager } from '../entities/clmManager.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
@@ -57,6 +57,12 @@ const initializeClmManager = async ({
     initializedBlock: bigint;
 }): Promise<ClmManager_t | null> => {
     context.log.info(`Initializing ClmManager at ${managerAddress} on chain ${chainId}`);
+
+    // Check if the manager already exists
+    const existingManager = await getClmManager(context, chainId, managerAddress);
+    if (existingManager) {
+        return existingManager;
+    }
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingToken0Address, underlyingToken1Address, blacklistStatus } =

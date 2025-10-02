@@ -3,7 +3,7 @@ import type { RewardPool_t } from 'generated/src/db/Entities.gen';
 import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getRewardPoolTokens } from '../effects/rewardPool.effects';
-import { createRewardPool } from '../entities/rewardPool.entity';
+import { createRewardPool, getRewardPool } from '../entities/rewardPool.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
@@ -57,6 +57,12 @@ const initializeRewardPool = async ({
     initializedBlock: bigint;
 }): Promise<RewardPool_t | null> => {
     context.log.info(`Initializing ClassicRewardPool at ${rewardPoolAddress} on chain ${chainId}`);
+
+    // Check if the reward pool already exists
+    const existingRewardPool = await getRewardPool(context, chainId, rewardPoolAddress);
+    if (existingRewardPool) {
+        return existingRewardPool;
+    }
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getRewardPoolTokens, {

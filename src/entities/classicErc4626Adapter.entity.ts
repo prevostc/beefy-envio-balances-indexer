@@ -6,6 +6,12 @@ import type { ChainId } from '../lib/chain';
 export const erc4626AdapterId = ({ chainId, adapterAddress }: { chainId: ChainId; adapterAddress: Hex }) =>
     `${chainId}-${adapterAddress.toLowerCase()}`;
 
+export const getErc4626Adapter = async (context: HandlerContext, chainId: ChainId, adapterAddress: Hex) => {
+    const id = erc4626AdapterId({ chainId, adapterAddress });
+    const adapter = await context.Erc4626Adapter.get(id);
+    return adapter;
+};
+
 export const createErc4626Adapter = async ({
     context,
     chainId,

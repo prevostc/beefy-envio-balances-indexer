@@ -3,7 +3,7 @@ import type { ClassicVault_t } from 'generated/src/db/Entities.gen';
 import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getClassicVaultTokens } from '../effects/classicVault.effects';
-import { createClassicVault } from '../entities/classicVault.entity';
+import { createClassicVault, getClassicVault } from '../entities/classicVault.entity';
 import { getOrCreateToken } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
@@ -57,6 +57,12 @@ const initializeClassicVault = async ({
     initializedBlock: bigint;
 }): Promise<ClassicVault_t | null> => {
     context.log.info(`Initializing ClassicVault at ${vaultAddress} on chain ${chainId}`);
+
+    // Check if the vault already exists
+    const existingVault = await getClassicVault(context, chainId, vaultAddress);
+    if (existingVault) {
+        return existingVault;
+    }
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, strategyAddress, blacklistStatus } = await context.effect(

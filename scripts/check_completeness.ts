@@ -59,7 +59,7 @@ const main = async () => {
             R.map((pool) => pool.reward_pool_address),
             R.unique()
         );
-        const allShareTokens = classicVaults.concat(clmVaults).concat(boosts).concat(rewardPools);
+        const _allShareTokens = classicVaults.concat(clmVaults).concat(boosts).concat(rewardPools);
         // console.log({ classicVaults });
         // console.log({ clmVaults });
         // console.log({ boosts });
@@ -81,7 +81,7 @@ const main = async () => {
             allDbRewardPools,
             R.filter((row) => row.chainId === networkId)
         );
-        const dbTokens = R.pipe(
+        const _dbTokens = R.pipe(
             allTokens,
             R.filter((row) => row.chainId === networkId)
         );
@@ -95,7 +95,7 @@ const main = async () => {
             dbKey: (dbRow) => dbRow.id.toLowerCase(),
             ctx: 'classicVaults',
         });
-        const _clmVaultReport = checkCompleteness({
+        const clmVaultReport = checkCompleteness({
             configs: clmVaults,
             dbRows: dbClmVaults,
             configKey: addressKey,
@@ -117,20 +117,20 @@ const main = async () => {
             ctx: 'rewardPools',
         });
 
-        const tokenReport = checkCompleteness({
-            configs: allShareTokens,
-            dbRows: dbTokens,
-            configKey: addressKey,
-            dbKey: (dbRow) => dbRow.id.toLowerCase(),
-            ctx: 'tokens',
-        });
+        // const tokenReport = checkCompleteness({
+        //     configs: allShareTokens,
+        //     dbRows: dbTokens,
+        //     configKey: addressKey,
+        //     dbKey: (dbRow) => dbRow.id.toLowerCase(),
+        //     ctx: 'tokens',
+        // });
         // console.log({ dbClassicVaults });
         // console.log({ dbClmVaults });
         // console.log({ dbBoosts });
         // console.log({ dbRewardPools });
 
         // console.log({ classicVaultReport, clmVaultReport, boostReport, rewardPoolReport, tokenReport });
-        reports.push({ networkId, chainId: network, ...tokenReport });
+        reports.push({ networkId, chainId: network, ...clmVaultReport });
     }
 
     console.log(
