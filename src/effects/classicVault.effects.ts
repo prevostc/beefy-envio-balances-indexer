@@ -26,9 +26,25 @@ export const getClassicVaultTokens = experimental_createEffect(
 
         context.log.debug('Fetching ClassicVault tokens', { vaultAddress, chainId });
 
-        const [wantResult, strategyResult] = await client.multicall({
+        const [tokenResult, wantResult, strategyResult] = await client.multicall({
             allowFailure: true,
             contracts: [
+                // token (BeefyVaultV4 and before)
+                {
+                    address: vaultAddress as `0x${string}`,
+                    abi: [
+                        {
+                            inputs: [],
+                            name: 'token',
+                            outputs: [{ name: '', type: 'address' }],
+                            stateMutability: 'view',
+                            type: 'function',
+                        },
+                    ],
+                    functionName: 'token',
+                    args: [],
+                },
+                // token (BeefyVaultV5 and after)
                 {
                     address: vaultAddress as `0x${string}`,
                     abi: [
@@ -63,8 +79,15 @@ export const getClassicVaultTokens = experimental_createEffect(
         // The vault contract itself is the share token
         const shareTokenAddress = vaultAddress;
 
-        if (wantResult.status === 'failure') {
-            context.log.error('ClassicVault want call failed', { vaultAddress, chainId });
+        let underlyingTokenAddress: `0x${string}` | null = null;
+        if (wantResult.status === 'success') {
+            // vault v5 and after
+            underlyingTokenAddress = wantResult.result;
+        } else if (tokenResult.status === 'success') {
+            // vault v4 and before
+            underlyingTokenAddress = tokenResult.result;
+        } else {
+            context.log.error('ClassicVault want AND token call failed', { vaultAddress, chainId });
             return {
                 shareTokenAddress,
                 underlyingTokenAddress: ADDRESS_ZERO,
@@ -78,7 +101,6 @@ export const getClassicVaultTokens = experimental_createEffect(
             throw new Error('ClassicVault strategy call failed');
         }
 
-        const underlyingTokenAddress = wantResult.result;
         const strategyAddress = strategyResult.result;
 
         context.log.info('ClassicVault data fetched', {

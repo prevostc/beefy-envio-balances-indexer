@@ -2217,7 +2217,11 @@ networks:
 
   - id: 999 # hyperevm
     start_block: 4883535
-    rpc: ${HYPEREVM_RPC_URL}
+    # force rpc usage over hypersync because hyperevm used an existing chainid
+    # that was already used by another chain (wanchain)
+    rpc_config:
+      url: ${HYPEREVM_RPC_URL} 
+      query_timeout_millis: 60000
     contracts:
       - name: ClassicVaultFactory
         address: 

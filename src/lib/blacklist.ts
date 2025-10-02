@@ -10,7 +10,7 @@ import { isRewardPool } from '../entities/rewardPool.entity';
 import { allChainIds, type ChainId } from './chain';
 import { config } from './config';
 
-const vaultBlacklist = R.pipe(
+export const rawVaultBlacklist =
     // rg -Ni '\[BLACKLIST\]' ./generated/hyperindex.log | jq -c '{chainId, address: .contractAddress}'
     [
         { chainId: 10, address: '0x07ae77025feaf04f915375bc5f02c07545160db8' },
@@ -150,7 +150,6 @@ const vaultBlacklist = R.pipe(
         { chainId: 250, address: '0xce3820daeb2cd11a685f9c5a69d3a2c45b283c12' },
         { chainId: 30, address: '0x7ab03a37822014f4aba762f0a622bf0cc8a32f47' },
         { chainId: 30, address: '0xd0019d13d2f2eb3ba81bca1650cd45cd2db6526e' },
-        { chainId: 324, address: '0x3355df6d4c9c3035724fd0e3914de96a5a83aaf4' },
         { chainId: 34443, address: '0x4ad02bf095b8ffb6e0ac687beee5610ca3ebe6b1' },
         { chainId: 34443, address: '0xde59ca36f43ed1fa7ab67c419fc20be12a868712' },
         { chainId: 42161, address: '0x009b340fffa28bfb18e6247e90ff4539728c67af' },
@@ -245,7 +244,6 @@ const vaultBlacklist = R.pipe(
         { chainId: 56, address: '0xef2b7166d389b5726de4ca634c9ed1fbd8ccead4' },
         { chainId: 56, address: '0xf0ead8d70f65a162fb88f481c7c306b27309a119' },
         { chainId: 56, address: '0xf5f8289b204bff321fc965ef86c6107d63f2a421' },
-        { chainId: 59144, address: '0x3d80b49fc4dc9e450efac1bd34cdeb2f303c2e81' },
         { chainId: 59144, address: '0x51811e1cec1a2fde5a1e5661312cba177fe532d3' },
         { chainId: 59144, address: '0x719b6c7c4c0ad965bc972ccba4a37544a11c766e' },
         { chainId: 59144, address: '0x84edab4008b95d504e3cdc58260395b9d9b9415e' },
@@ -330,7 +328,10 @@ const vaultBlacklist = R.pipe(
         { chainId: 999, address: '0xb400ea86eb0ded6d313b89ee579fd76cb730922a' },
         { chainId: 999, address: '0xcca0a5e330d7640d2599b4f0ac6067d658d46688' },
         { chainId: 999, address: '0xd9bcdf03d03d1f36d2b6daf6b30b9ee6c014f610' },
-    ],
+    ];
+
+const vaultBlacklist = R.pipe(
+    rawVaultBlacklist,
     // ensure lowercase addresses
     R.map((entry) => ({ ...entry, address: entry.address.toLowerCase() as Hex })),
     // O(1) lookup
