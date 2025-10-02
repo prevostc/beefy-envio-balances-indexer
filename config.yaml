@@ -2221,7 +2221,12 @@ networks:
     # that was already used by another chain (wanchain)
     rpc_config:
       url: ${HYPEREVM_RPC_URL} 
-      query_timeout_millis: 60000
+      initial_block_interval: 250 # Initial number of blocks to fetch in each request
+      backoff_multiplicative: 0.999999 # Factor to scale back block request size after errors
+      acceleration_additive: 0 # How many more blocks to request when successful
+      interval_ceiling: 250 # Maximum blocks to request in a single call
+      backoff_millis: 5000 # Milliseconds to wait after an error
+      query_timeout_millis: 60000 # Milliseconds before timing out a request
     contracts:
       - name: ClassicVaultFactory
         address: 
