@@ -3000,8 +3000,7 @@ networks:
       - name: Erc4626AdapterFactory
         address: []
       - name: ClassicVault
-        address: 
-          - 0x871A101Dcf22fE4fE37be7B654098c801CBA1c88
+        address: []
       - name: ClassicBoost
         address: []
       - name: ClassicStrategy
@@ -3689,8 +3688,7 @@ networks:
         address: 
           - 0x234f7F81434e340910A84F45F8e89D07fa86611A
       - name: ClassicVault
-        address: 
-          - 0x871A101Dcf22fE4fE37be7B654098c801CBA1c88
+        address: []
       - name: ClassicBoost
         address: []
       - name: ClassicStrategy
@@ -3702,7 +3700,8 @@ networks:
       - name: RewardPool
         address: []
       - name: LstVault
-        address: []
+        address:
+          - 0x871A101Dcf22fE4fE37be7B654098c801CBA1c88
       - name: Erc4626Adapter
         address: []
       
