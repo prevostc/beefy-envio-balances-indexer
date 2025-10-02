@@ -526,6 +526,7 @@ networks:
         address: 
           - 0x62e5b9934dcb87618cfc74b222305d16c997e8c1
           - 0xc55E93C62874D8100dBd2DfE307EDc1036ad5434
+          - 0x48dffa589c0ca127c5c7b3e7250ba83fac206309
       - name: ClassicBoost
         address: []
       - name: ClassicStrategy
@@ -1354,8 +1355,6 @@ networks:
           - 0xff750ee63f1e428de1d6c8d9d92676b5fc8376a8
       - name: ClassicBoost
         address: 
-          - 0x04756126f044634c9a0f0e985e60c88a51acc206
-          - 0x3bc5ac0dfdc871b365d159f728dd1b9a0b5481e8
           - 0xc3c7d422809852031b44ab29eec9f1eff2a58756
       - name: ClassicStrategy
         address: []
@@ -1392,7 +1391,43 @@ networks:
       - name: Erc4626AdapterFactory
         address: []
       - name: ClassicVault
-        address: []
+        address: 
+          - 0x016a77661a44fc1b0bb5d13989e0959b6d74fdd6
+          - 0x09cb6f84e7074860b21e36cd92ee2338e4b75071
+          - 0x0b61b9cdddc4b1ef43bb80dec27c60c72d548339
+          - 0x177619eb8d17b9973351ccdc71fedb1eb7531161
+          - 0x1def224be84cc28aed7c669ad21b8dd5c1c5e571
+          - 0x2696cae3d3b58ddda639fbdede7cbc4ddc6b5f99
+          - 0x27982d4595a5603244e4f40a4c01d38dee5499f6
+          - 0x2cc300ac2401f42951e0a37b6b590293a2659e99
+          - 0x2dda6da9b43fd068b8b0306bde0ceccbbda54f58
+          - 0x2f734362a86d1a1265ad3302cca897302e7ecfe2
+          - 0x36cb35a61437ab76970982ace2ee77b9442f2f26
+          - 0x38f93cc8038f0da637da08a2272fbb7ab04b2c00
+          - 0x45bd5d53979bd1b7b968f178b1155db41d7277be
+          - 0x46551912335360453a2ab7fa35e4f5e3c14f53ef
+          - 0x53be90f5684a5cf0ffe901a4320e6e41c4a6a584
+          - 0x6087deb139fc78312e9613de576185d228b1f892
+          - 0x696cd5af93c3f1ddc0e95ecfc8a48649773bb074
+          - 0x69a78e17146819b293a4bbf6943f4757fea16ec8
+          - 0x6da781c196e5cdf666871b1f06fc736994b42d71
+          - 0x733d8dc2aeb904d7385ed84a2d629d8ec255960d
+          - 0x798c8c08e1b2dd39c1133fe081f26cc0ee9c946e
+          - 0x88de1d1435f5655b733bf5f90640bddea92935b2
+          - 0x8f7e7e3c52fe407006333be9a9d038db86119bf0
+          - 0x91c7353897d0f1d78f7e437a92aa53de0d94f99a
+          - 0xa947dabecf27a8d088a7380cd178969a1c0165d3
+          - 0xac650244d6e838a71a506b3e9605fc0f64afb245
+          - 0xb5bbda17ea76de4afc117998e99b1e826d6ba8d2
+          - 0xb690a29a9ded200698ab4a35b1a4c81f55d7a83c
+          - 0xbf59090023e4f30a0019f6dd4af91bc286ada88f
+          - 0xceabc6d6020180a0a858318e92efea842327fa12
+          - 0xdbf9f587ef81c8b54677a8bd18fb70e61b2306c6
+          - 0xe3fa2f50d3a4d924a77190db770a0178a313fa8f
+          - 0xee00530226d78740a625f3fe0bcf20c6e6d528fc
+          - 0xf3cddaed682a46f8682fbdfe3d594f5bef7160a2
+          - 0x3d817096e66de9b1bc3800735c597b0e47ef8a0b
+          - 0xff0baf077e8035a3da0dd2abececfbd98d8e63be
       - name: ClassicBoost
         address: []
       - name: ClassicStrategy
@@ -1430,7 +1465,19 @@ networks:
       - name: Erc4626AdapterFactory
         address: []
       - name: ClassicVault
-        address: []
+        address: 
+          - 0x37a8b016ef27fbcf73f73fb9dc1c09c47a5d7e48
+          - 0x5261780fc6e0ae1ffce37682044371932c2e8e97
+          - 0x6ad6c1f5c2fb80e1240d7b8242496b3a4e021c68
+          - 0x7f6fe34c51d5352a0cf375c0fbe03bd19ecd8460
+          - 0x8a198bcbf313a5565c64a7ed61faa413eb4e0931
+          - 0x8f2894459026cae358c4613ed6779e515f1f514e
+          - 0xa338d34c5de06b88197609956a2deaaff7af46c8
+          - 0xa5aae3a55ca356c62b5425aa4bfc212542b17777
+          - 0xba79ac22fa300961a89547955d1363d7896b497d
+          - 0xc8acba0068b0f80f5176b6e14b9c7d1af9b0f9a2
+          - 0xeccb80e860561ca9ffb183a557f32cc90b05d3c3
+          - 0xf68c61e3c2f9c48e53391e1fcd2db1f19998151b
       - name: ClassicBoost
         address: []
       - name: ClassicStrategy
@@ -2232,7 +2279,13 @@ networks:
       - name: Erc4626AdapterFactory
         address: []
       - name: ClassicVault
-        address: []
+        address: 
+          - 0x1618a074c7317308dabdf0c61f1c12c555539f84
+          - 0x4276b678f281434080b2791773c92b17843b4bb7
+          - 0x5d871ab3171daaf1991e9715fbcee5fa34390cfa
+          - 0x714a52cdee18cd074baa87f1f9631b13d302e516
+          - 0xc3821f0b56fa4f4794d5d760f94b812de261361b
+          - 0xd67f4a698ea6a251148f39aa3cf5ddab47e2dd5f
       - name: ClassicBoost
         address: []
       - name: ClassicStrategy
@@ -2275,7 +2328,8 @@ networks:
         address: 
           - 0xDBad28672fD60c4609EE6B26dF2b8cB93DE12afe
       - name: ClassicVault
-        address: []
+        address: 
+          - 0x3d80b49fc4dc9e450efac1bd34cdeb2f303c2e81
       - name: ClassicBoost
         address: []
       - name: ClassicStrategy
@@ -2400,6 +2454,7 @@ networks:
         address: []
       - name: ClassicVault
         address: 
+          - 0x25356aeca4210ef7553140edb9b8026089e49396
           - 0x08175349da602674a255398516187984fedd5738
           - 0x15a318cfc01b50bd77c3a8d0dd560fdf44b5c046
           - 0x15f5169d7fd528f6c8bcfb0a239833d53f454ff2
@@ -2644,8 +2699,7 @@ networks:
           - 0xfd322a316c5968fe04ec54ab33a41571d36dc524
           - 0xffbf83be790e184a57584d3faf40505ea1ecab3f
       - name: ClassicBoost
-        address: 
-          - 0x9fda7ceec4c18008096c2fe2b85f05dc300f94d0
+        address: []
       - name: ClassicStrategy
         address: []
       - name: ClmStrategy
@@ -2846,9 +2900,7 @@ networks:
           - 0xfc7a31e1c5c3846d36e49223fae905e28315c1e0
           - 0xff504594edd93e09309d5eab775e7c35f642931b
       - name: ClassicBoost
-        address: 
-          - 0xcdb4bb51801a1f399d4402c61bc098a72c382e65
-          - 0xfdb794692724153d1488ccdbe0c56c252596735f
+        address: []
       - name: ClassicStrategy
         address: []
       - name: ClmStrategy
@@ -3386,14 +3438,7 @@ networks:
           - 0xfecf784f48125ccb7d8855cdda7c5ed6b5024cb3
       - name: ClassicBoost
         address: 
-          - 0x1d734a02ef1e1f5886e66b0673b71af5b53ffa94
           - 0x2760e46d9bb43dafcbecaad1f64b93207f9f0ed7
-          - 0x3a29cab2e124919d14a6f735b6033a3aad2b260f
-          - 0x4200000000000000000000000000000000000042
-          - 0x4e3decbb3645551b8a19f0ea1678079fcb33fb4c
-          - 0x6ae96cc93331c19148541d4d2f31363684917092
-          - 0x8343091f2499fd4b6174a46d067a920a3b851ff9
-          - 0xadac33f543267c4d59a8c299cf804c303bc3e4ac
           - 0xc3c7d422809852031b44ab29eec9f1eff2a58756
       - name: ClassicStrategy
         address: []
@@ -3704,7 +3749,7 @@ networks:
         address: []
       
   - id: 1101 # zkevm (polygon)
-    start_block: 2492652
+    start_block: 2402652
     rpc: ${ZKEVM_RPC_URL}
     contracts:
       - name: ClassicVaultFactory
@@ -3725,7 +3770,8 @@ networks:
       - name: Erc4626AdapterFactory
         address: []
       - name: ClassicVault
-        address: []
+        address: 
+          - 0xcb25214ec41ea480068638897fcbd6f1206f5521
       - name: ClassicBoost
         address: []
       - name: ClassicStrategy

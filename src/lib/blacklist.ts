@@ -132,6 +132,7 @@ const vaultBlacklist = R.pipe(
         { chainId: 2222, address: '0x18b728d955d4c501433dc793be1647fd3ff5e0a5' },
         { chainId: 2222, address: '0x206caf26262418e1cb6be3092672f7bf4f7aba93' },
         { chainId: 2222, address: '0xa480bc6b2049351e0c029ef4569640266db1b330' },
+        { chainId: 2222, address: '0xc86c7c0efbd6a49b35e8714c5f59d99de09a225b' },
         { chainId: 250, address: '0x012545d8babb689f8d0f3ca701bb2f6f3f0916b1' },
         { chainId: 250, address: '0x233f41ab27f532e48f2b48af8fb06ef97f9f2501' },
         { chainId: 250, address: '0x2d28a9701f0efc7d0b1f7fcf46092d5c2bb71488' },
