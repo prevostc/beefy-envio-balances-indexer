@@ -24,7 +24,7 @@ const main = async () => {
         const networkId: number = AddressBookChainId[network];
         console.log({ network, networkId });
 
-        const [cowVaultsData, mooVaultsData, clmRewardPoolData, [boostData, _vaultRewardPoolData]] = await Promise.all([
+        const [cowVaultsData, mooVaultsData, clmRewardPoolData, [boostData, vaultRewardPoolData]] = await Promise.all([
             fetch(`${BEEFY_COW_VAULT_API}/${network}`)
                 .then((res) => res.json())
                 .then((res) => (res as ApiClmManager[]).filter((vault) => vault.chain === network)),
@@ -69,11 +69,20 @@ const main = async () => {
             dbTokens,
             (configCowVault, dbToken) => dbToken.id.toLowerCase() === toKey(configCowVault.earnContractAddress)
         );
-        const clmRewardPoolConfigsMissingInDb = R.differenceWith(
-            clmRewardPoolData,
+        const rewardPoolConfigsMissingInDb = R.differenceWith(
+            clmRewardPoolData
+                .map((c) => ({
+                    id: c.id,
+                    earnContractAddress: c.earnContractAddress,
+                }))
+                .concat(
+                    vaultRewardPoolData.map((vaultRewardPool) => ({
+                        id: vaultRewardPool.id,
+                        earnContractAddress: vaultRewardPool.earnContractAddress,
+                    }))
+                ),
             dbTokens,
-            (configClmRewardPool, dbToken) =>
-                dbToken.id.toLowerCase() === toKey(configClmRewardPool.earnContractAddress)
+            (configRewardPool, dbToken) => dbToken.id.toLowerCase() === toKey(configRewardPool.earnContractAddress)
         );
 
         // Generate YAML snippets for missing config addresses for this network
@@ -98,7 +107,7 @@ const main = async () => {
               - name: ClmManager
                 address: ${formatYamlArray(cowVaultConfigsMissingInDb.map((cowVault) => cowVault.earnContractAddress))}
               - name: RewardPool
-                address: ${formatYamlArray(clmRewardPoolConfigsMissingInDb.map((clmRewardPool) => clmRewardPool.earnContractAddress))}
+                address: ${formatYamlArray(rewardPoolConfigsMissingInDb.map((rewardPool) => rewardPool.earnContractAddress))}
         `;
 
         console.log(`\n# YAML config snippet for network: ${network} (${networkId})`);

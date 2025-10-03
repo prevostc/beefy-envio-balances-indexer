@@ -148,7 +148,6 @@ export const rawVaultBlacklist =
         { chainId: 250, address: '0xafc532a006f24abb0835b86a23e06595662bb89d' },
         { chainId: 250, address: '0xc3812130b86c2083fdd37aaa9c6bc6c011f95fa7' },
         { chainId: 250, address: '0xce3820daeb2cd11a685f9c5a69d3a2c45b283c12' },
-        { chainId: 30, address: '0x7ab03a37822014f4aba762f0a622bf0cc8a32f47' },
         { chainId: 30, address: '0xd0019d13d2f2eb3ba81bca1650cd45cd2db6526e' },
         { chainId: 34443, address: '0x4ad02bf095b8ffb6e0ac687beee5610ca3ebe6b1' },
         { chainId: 34443, address: '0xde59ca36f43ed1fa7ab67c419fc20be12a868712' },
@@ -323,9 +322,7 @@ export const rawVaultBlacklist =
         { chainId: 8453, address: '0xfc2f20a29697c400577b944c648378cf61cc3748' },
         { chainId: 8453, address: '0xfe3528cd1fe76745886efd655e5ab54859043df1' },
         { chainId: 8453, address: '0xfeb6d8c8571d64b7aa2c4d9b720750b0256d34fe' },
-        { chainId: 999, address: '0x716d2dd531d826eb3fa1f1ffcfdd7102217a3199' },
         { chainId: 999, address: '0x795436fb1ebafb210e4e2976dbdf49df30b0a4d4' },
-        { chainId: 999, address: '0xb400ea86eb0ded6d313b89ee579fd76cb730922a' },
         { chainId: 999, address: '0xcca0a5e330d7640d2599b4f0ac6067d658d46688' },
         { chainId: 999, address: '0xd9bcdf03d03d1f36d2b6daf6b30b9ee6c014f610' },
     ];
