@@ -1490,79 +1490,79 @@ networks:
       - name: Erc4626Adapter
         address: []
       
-  - id: 7700 # canto
-    start_block: 3080011
-    rpc: ${CANTO_RPC_URL}
-    contracts:
-      - name: ClassicVaultFactory
-        address: 
-          - 0x4B5BB994cB7Bd88F064A1f4141a2399000339aCc
-      - name: ClassicStrategyFactory
-        address: []
-      - name: ClassicBoostFactory
-        address: []
-      - name: RewardPoolFactory
-        address: []
-      - name: ClmManagerFactory
-        address: []
-      - name: ClmStrategyFactory
-        address: []
-      - name: ContractFactory
-        address: []
-      - name: Erc4626AdapterFactory
-        address: []
-      - name: ClassicVault
-        address: 
-          - 0x016a77661a44fc1b0bb5d13989e0959b6d74fdd6
-          - 0x09cb6f84e7074860b21e36cd92ee2338e4b75071
-          - 0x0b61b9cdddc4b1ef43bb80dec27c60c72d548339
-          - 0x177619eb8d17b9973351ccdc71fedb1eb7531161
-          - 0x1def224be84cc28aed7c669ad21b8dd5c1c5e571
-          - 0x2696cae3d3b58ddda639fbdede7cbc4ddc6b5f99
-          - 0x27982d4595a5603244e4f40a4c01d38dee5499f6
-          - 0x2cc300ac2401f42951e0a37b6b590293a2659e99
-          - 0x2dda6da9b43fd068b8b0306bde0ceccbbda54f58
-          - 0x2f734362a86d1a1265ad3302cca897302e7ecfe2
-          - 0x36cb35a61437ab76970982ace2ee77b9442f2f26
-          - 0x38f93cc8038f0da637da08a2272fbb7ab04b2c00
-          - 0x45bd5d53979bd1b7b968f178b1155db41d7277be
-          - 0x46551912335360453a2ab7fa35e4f5e3c14f53ef
-          - 0x53be90f5684a5cf0ffe901a4320e6e41c4a6a584
-          - 0x6087deb139fc78312e9613de576185d228b1f892
-          - 0x696cd5af93c3f1ddc0e95ecfc8a48649773bb074
-          - 0x69a78e17146819b293a4bbf6943f4757fea16ec8
-          - 0x6da781c196e5cdf666871b1f06fc736994b42d71
-          - 0x733d8dc2aeb904d7385ed84a2d629d8ec255960d
-          - 0x798c8c08e1b2dd39c1133fe081f26cc0ee9c946e
-          - 0x88de1d1435f5655b733bf5f90640bddea92935b2
-          - 0x8f7e7e3c52fe407006333be9a9d038db86119bf0
-          - 0x91c7353897d0f1d78f7e437a92aa53de0d94f99a
-          - 0xa947dabecf27a8d088a7380cd178969a1c0165d3
-          - 0xac650244d6e838a71a506b3e9605fc0f64afb245
-          - 0xb5bbda17ea76de4afc117998e99b1e826d6ba8d2
-          - 0xb690a29a9ded200698ab4a35b1a4c81f55d7a83c
-          - 0xbf59090023e4f30a0019f6dd4af91bc286ada88f
-          - 0xceabc6d6020180a0a858318e92efea842327fa12
-          - 0xdbf9f587ef81c8b54677a8bd18fb70e61b2306c6
-          - 0xe3fa2f50d3a4d924a77190db770a0178a313fa8f
-          - 0xee00530226d78740a625f3fe0bcf20c6e6d528fc
-          - 0xf3cddaed682a46f8682fbdfe3d594f5bef7160a2
-          - 0x3d817096e66de9b1bc3800735c597b0e47ef8a0b
-          - 0xff0baf077e8035a3da0dd2abececfbd98d8e63be
-      - name: ClassicBoost
-        address: []
-      - name: ClassicStrategy
-        address: []
-      - name: ClmStrategy
-        address: []
-      - name: ClmManager
-        address: []
-      - name: RewardPool
-        address: []
-      - name: LstVault
-        address: []
-      - name: Erc4626Adapter
-        address: []
+  # - id: 7700 # canto
+    #   start_block: 3080011
+    #   rpc: ${CANTO_RPC_URL}
+    #   contracts:
+    #     - name: ClassicVaultFactory
+    #       address: 
+    #         - 0x4B5BB994cB7Bd88F064A1f4141a2399000339aCc
+    #     - name: ClassicStrategyFactory
+    #       address: []
+    #     - name: ClassicBoostFactory
+    #       address: []
+    #     - name: RewardPoolFactory
+    #       address: []
+    #     - name: ClmManagerFactory
+    #       address: []
+    #     - name: ClmStrategyFactory
+    #       address: []
+    #     - name: ContractFactory
+    #       address: []
+    #     - name: Erc4626AdapterFactory
+    #       address: []
+    #     - name: ClassicVault
+    #       address: 
+    #         - 0x016a77661a44fc1b0bb5d13989e0959b6d74fdd6
+    #         - 0x09cb6f84e7074860b21e36cd92ee2338e4b75071
+    #         - 0x0b61b9cdddc4b1ef43bb80dec27c60c72d548339
+    #         - 0x177619eb8d17b9973351ccdc71fedb1eb7531161
+    #         - 0x1def224be84cc28aed7c669ad21b8dd5c1c5e571
+    #         - 0x2696cae3d3b58ddda639fbdede7cbc4ddc6b5f99
+    #         - 0x27982d4595a5603244e4f40a4c01d38dee5499f6
+    #         - 0x2cc300ac2401f42951e0a37b6b590293a2659e99
+    #         - 0x2dda6da9b43fd068b8b0306bde0ceccbbda54f58
+    #         - 0x2f734362a86d1a1265ad3302cca897302e7ecfe2
+    #         - 0x36cb35a61437ab76970982ace2ee77b9442f2f26
+    #         - 0x38f93cc8038f0da637da08a2272fbb7ab04b2c00
+    #         - 0x45bd5d53979bd1b7b968f178b1155db41d7277be
+    #         - 0x46551912335360453a2ab7fa35e4f5e3c14f53ef
+    #         - 0x53be90f5684a5cf0ffe901a4320e6e41c4a6a584
+    #         - 0x6087deb139fc78312e9613de576185d228b1f892
+    #         - 0x696cd5af93c3f1ddc0e95ecfc8a48649773bb074
+    #         - 0x69a78e17146819b293a4bbf6943f4757fea16ec8
+    #         - 0x6da781c196e5cdf666871b1f06fc736994b42d71
+    #         - 0x733d8dc2aeb904d7385ed84a2d629d8ec255960d
+    #         - 0x798c8c08e1b2dd39c1133fe081f26cc0ee9c946e
+    #         - 0x88de1d1435f5655b733bf5f90640bddea92935b2
+    #         - 0x8f7e7e3c52fe407006333be9a9d038db86119bf0
+    #         - 0x91c7353897d0f1d78f7e437a92aa53de0d94f99a
+    #         - 0xa947dabecf27a8d088a7380cd178969a1c0165d3
+    #         - 0xac650244d6e838a71a506b3e9605fc0f64afb245
+    #         - 0xb5bbda17ea76de4afc117998e99b1e826d6ba8d2
+    #         - 0xb690a29a9ded200698ab4a35b1a4c81f55d7a83c
+    #         - 0xbf59090023e4f30a0019f6dd4af91bc286ada88f
+    #         - 0xceabc6d6020180a0a858318e92efea842327fa12
+    #         - 0xdbf9f587ef81c8b54677a8bd18fb70e61b2306c6
+    #         - 0xe3fa2f50d3a4d924a77190db770a0178a313fa8f
+    #         - 0xee00530226d78740a625f3fe0bcf20c6e6d528fc
+    #         - 0xf3cddaed682a46f8682fbdfe3d594f5bef7160a2
+    #         - 0x3d817096e66de9b1bc3800735c597b0e47ef8a0b
+    #         - 0xff0baf077e8035a3da0dd2abececfbd98d8e63be
+    #     - name: ClassicBoost
+    #       address: []
+    #     - name: ClassicStrategy
+    #       address: []
+    #     - name: ClmStrategy
+    #       address: []
+    #     - name: ClmManager
+    #       address: []
+    #     - name: RewardPool
+    #       address: []
+    #     - name: LstVault
+    #       address: []
+    #     - name: Erc4626Adapter
+    #       address: []
 
   - id: 42220 # celo
     start_block: 9442098
