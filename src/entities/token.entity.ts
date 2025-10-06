@@ -67,3 +67,11 @@ export const getOrCreateToken = async ({
         holderCount: 0,
     });
 };
+
+export const getTokenOrThrow = async ({ context, id }: { context: HandlerContext; id: string }): Promise<Token_t> => {
+    const token = await context.Token.get(id);
+    if (!token) {
+        throw new Error(`Token ${id} not found`);
+    }
+    return token;
+};

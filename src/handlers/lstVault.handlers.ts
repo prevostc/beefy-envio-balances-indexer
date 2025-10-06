@@ -4,7 +4,7 @@ import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getLstVaultTokens } from '../effects/lstVault.effects';
 import { createLstVault, getLstVault } from '../entities/lstVault.entity';
-import { getOrCreateToken } from '../entities/token.entity';
+import { getOrCreateToken, getTokenOrThrow } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
 import { handleTokenTransfer } from '../lib/token';
@@ -33,10 +33,12 @@ LstVault.Transfer.handler(async ({ event, context }) => {
     });
     if (!lst) return;
 
+    const shareToken = await getTokenOrThrow({ context, id: lst.shareToken_id });
+
     await handleTokenTransfer({
         context,
         chainId,
-        tokenAddress: lstAddress,
+        token: shareToken,
         senderAddress: event.params.from.toString().toLowerCase() as Hex,
         receiverAddress: event.params.to.toString().toLowerCase() as Hex,
         rawTransferAmount: event.params.value,

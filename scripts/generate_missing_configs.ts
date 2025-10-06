@@ -4,7 +4,7 @@ import * as R from 'remeda';
 import {
     type ApiBoost,
     type ApiClmManager,
-    type ApiClmRewardPool,
+    type ApiClmRewardPoolOrOldGovVaultOrLstVault,
     type ApiVault,
     BEEFY_BOOST_API,
     BEEFY_COW_VAULT_API,
@@ -24,7 +24,12 @@ const main = async () => {
         const networkId: number = AddressBookChainId[network];
         console.log({ network, networkId });
 
-        const [cowVaultsData, mooVaultsData, clmRewardPoolData, [boostData, vaultRewardPoolData]] = await Promise.all([
+        const [
+            cowVaultsData,
+            mooVaultsData,
+            [oldGovVaults, oldLstVaults, clmRewardPoolData],
+            [boostData, vaultRewardPoolData],
+        ] = await Promise.all([
             fetch(`${BEEFY_COW_VAULT_API}/${network}`)
                 .then((res) => res.json())
                 .then((res) => (res as ApiClmManager[]).filter((vault) => vault.chain === network)),
@@ -37,9 +42,17 @@ const main = async () => {
                 ),
             fetch(`${BEEFY_GOV_API}/${network}`)
                 .then((res) => res.json())
-                .then((res) =>
-                    (res as ApiClmRewardPool[]).filter((g) => g.chain === network).filter((g) => g.version === 2)
-                ),
+                .then((res) => [
+                    (res as ApiClmRewardPoolOrOldGovVaultOrLstVault[])
+                        .filter((g) => g.chain === network)
+                        .filter((g) => g.version !== 2 && g.oracleId === 'oldBIFI'),
+                    (res as ApiClmRewardPoolOrOldGovVaultOrLstVault[])
+                        .filter((g) => g.chain === network)
+                        .filter((g) => g.version !== 2 && g.oracleId !== 'oldBIFI'),
+                    (res as ApiClmRewardPoolOrOldGovVaultOrLstVault[])
+                        .filter((g) => g.chain === network)
+                        .filter((g) => g.version === 2),
+                ]),
             fetch(`${BEEFY_BOOST_API}/${network}`)
                 .then((res) => res.json())
                 .then((res) => [
@@ -68,6 +81,16 @@ const main = async () => {
             cowVaultsData,
             dbTokens,
             (configCowVault, dbToken) => dbToken.id.toLowerCase() === toKey(configCowVault.earnContractAddress)
+        );
+        const oldGovVaultConfigsMissingInDb = R.differenceWith(
+            oldGovVaults,
+            dbTokens,
+            (configOldGovVault, dbToken) => dbToken.id.toLowerCase() === toKey(configOldGovVault.earnContractAddress)
+        );
+        const oldLstVaultConfigsMissingInDb = R.differenceWith(
+            oldLstVaults,
+            dbTokens,
+            (configOldLstVault, dbToken) => dbToken.id.toLowerCase() === toKey(configOldLstVault.earnContractAddress)
         );
         const rewardPoolConfigsMissingInDb = R.differenceWith(
             clmRewardPoolData
@@ -103,11 +126,14 @@ const main = async () => {
               - name: ClassicVault
                 address: ${formatYamlArray(vaultConfigsMissingInDb.map((vault) => vault.earnContractAddress))}
               - name: ClassicBoost
-                address: ${formatYamlArray(boostConfigsMissingInDb.map((boost) => boost.earnContractAddress))}
+                address: ${formatYamlArray(boostConfigsMissingInDb.map((boost) => boost.earnContractAddress))}${formatYamlArray(oldGovVaultConfigsMissingInDb.map((oldGovVault) => oldGovVault.earnContractAddress))}
               - name: ClmManager
                 address: ${formatYamlArray(cowVaultConfigsMissingInDb.map((cowVault) => cowVault.earnContractAddress))}
               - name: RewardPool
                 address: ${formatYamlArray(rewardPoolConfigsMissingInDb.map((rewardPool) => rewardPool.earnContractAddress))}
+              - name: LstVault
+                address: ${formatYamlArray(oldLstVaultConfigsMissingInDb.map((oldLstVault) => oldLstVault.earnContractAddress))}
+              
         `;
 
         console.log(`\n# YAML config snippet for network: ${network} (${networkId})`);

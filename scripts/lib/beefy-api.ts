@@ -56,12 +56,13 @@ export type ApiClmManager = {
     tokenProviderId?: string;
 };
 
-export type ApiClmRewardPool = {
+export type ApiClmRewardPoolOrOldGovVaultOrLstVault = {
     id: string;
     status: 'active' | 'eol';
     version: number;
     platformId: ApiPlatformId;
     strategyTypeId?: ApiStrategyTypeId;
+    oracleId?: string;
     chain: string;
     tokenAddress: string; // clm address (want)
     earnContractAddress: string; // reward pool address

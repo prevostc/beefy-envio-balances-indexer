@@ -112,6 +112,28 @@ type TokenBalanceChange {
   balanceAfter: BigDecimal! @config(precision: 100, scale: 24)
 }
 
+type PoolRewardedEvent {
+  "chain - trx hash - log index"
+  id: ID!
+
+  "chain id"
+  chainId: Int! @index
+  "The trx hash"
+  trxHash: Bytes! @index
+  "The log index"
+  logIndex: Int! @index
+
+  "The reward pool address. Can be a reward pool or a boost. Represented by the share token address"
+  poolShareToken: Token! @index
+
+  "The reward token address"
+  rewardToken: Token! @index
+  "The reward amount"
+  rewardAmount: BigDecimal! @config(precision: 100, scale: 24)
+  "The reward linear distribution duration in seconds, set to 0 for immediate distribution"
+  rewardVestingSeconds: Int!
+}
+
 """
 The status of the contract's initialization
 """

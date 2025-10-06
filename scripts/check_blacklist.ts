@@ -7,7 +7,7 @@ import type { ChainId } from '../src/lib/chain';
 import {
     type ApiBoost,
     type ApiClmManager,
-    type ApiClmRewardPool,
+    type ApiClmRewardPoolOrOldGovVaultOrLstVault,
     type ApiVault,
     BEEFY_BOOST_API,
     BEEFY_COW_VAULT_API,
@@ -47,11 +47,11 @@ async function main() {
                         ),
                     fetch(`${BEEFY_GOV_API}/${network}`)
                         .then((res) => res.json())
-                        .then((res) =>
-                            (res as ApiClmRewardPool[])
+                        .then((res) => [
+                            (res as ApiClmRewardPoolOrOldGovVaultOrLstVault[])
                                 .filter((g) => g.chain === network)
-                                .filter((g) => g.version === 2)
-                        ),
+                                .filter((g) => g.version === 2),
+                        ]),
                     fetch(`${BEEFY_BOOST_API}/${network}`)
                         .then((res) => res.json())
                         .then((res) => [

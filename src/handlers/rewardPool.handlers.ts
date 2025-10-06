@@ -3,8 +3,9 @@ import type { RewardPool_t } from 'generated/src/db/Entities.gen';
 import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getRewardPoolTokens } from '../effects/rewardPool.effects';
+import { createPoolRewardedEvent } from '../entities/poolRewarded.event';
 import { createRewardPool, getRewardPool } from '../entities/rewardPool.entity';
-import { getOrCreateToken } from '../entities/token.entity';
+import { getOrCreateToken, getTokenOrThrow } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
 import { handleTokenTransfer } from '../lib/token';
@@ -33,15 +34,48 @@ RewardPool.Transfer.handler(async ({ event, context }) => {
     });
     if (!rewardPool) return;
 
+    const shareToken = await getTokenOrThrow({ context, id: rewardPool.shareToken_id });
+
     await handleTokenTransfer({
         context,
         chainId,
-        tokenAddress: rewardPoolAddress,
+        token: shareToken,
         senderAddress: event.params.from.toString().toLowerCase() as Hex,
         receiverAddress: event.params.to.toString().toLowerCase() as Hex,
         rawTransferAmount: event.params.value,
         block: event.block,
         transaction: event.transaction,
+    });
+});
+
+RewardPool.NotifyReward.handler(async ({ event, context }) => {
+    const chainId = toChainId(event.chainId);
+    const rewardPoolAddress = event.srcAddress.toString().toLowerCase() as Hex;
+    const trxHash = event.transaction.hash.toString().toLowerCase() as Hex;
+    const logIndex = event.logIndex;
+
+    const rewardPool = await initializeRewardPool({
+        context,
+        chainId,
+        rewardPoolAddress,
+        initializedBlock: BigInt(event.block.number),
+    });
+    if (!rewardPool) return;
+
+    const [shareToken, rewardToken] = await Promise.all([
+        getTokenOrThrow({ context, id: rewardPool.shareToken_id }),
+        getTokenOrThrow({ context, id: rewardPool.underlyingToken_id }),
+    ]);
+
+    await createPoolRewardedEvent({
+        context,
+        chainId,
+        trxHash,
+        logIndex,
+        poolShareToken: shareToken,
+        rewardToken: rewardToken,
+        rewardVestingSeconds: Number(event.params.duration),
+        rawRewardAmount: event.params.amount,
     });
 });
 

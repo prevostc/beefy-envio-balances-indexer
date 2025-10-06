@@ -3,7 +3,6 @@ import type { Account_t, Token_t, TokenBalance_t } from 'generated/src/db/Entiti
 import type { Hex } from 'viem';
 import { getOrCreateAccount } from '../entities/account.entity';
 import { getOrCreateTokenBalanceChangeEntity, getOrCreateTokenBalanceEntity } from '../entities/balance.entity';
-import { getOrCreateToken } from '../entities/token.entity';
 import type { ChainId } from './chain';
 import { config } from './config';
 import { BIG_ZERO, interpretAsDecimal } from './decimal';
@@ -11,7 +10,7 @@ import { BIG_ZERO, interpretAsDecimal } from './decimal';
 export const handleTokenTransfer = async ({
     context,
     chainId,
-    tokenAddress,
+    token,
     senderAddress,
     receiverAddress,
     rawTransferAmount,
@@ -20,7 +19,7 @@ export const handleTokenTransfer = async ({
 }: {
     context: HandlerContext;
     chainId: ChainId;
-    tokenAddress: Hex;
+    token: Token_t;
     senderAddress: Hex;
     receiverAddress: Hex;
     rawTransferAmount: bigint;
@@ -32,7 +31,7 @@ export const handleTokenTransfer = async ({
         return;
     }
 
-    const [senderAccount, receiverAccount, token] = await Promise.all([
+    const [senderAccount, receiverAccount] = await Promise.all([
         getOrCreateAccount({
             context,
             chainId,
@@ -43,7 +42,6 @@ export const handleTokenTransfer = async ({
             chainId,
             accountAddress: receiverAddress,
         }),
-        getOrCreateToken({ context, chainId, tokenAddress, virtual: false }),
     ]);
 
     const [senderBalance, receiverBalance] = await Promise.all([

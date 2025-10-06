@@ -4,7 +4,7 @@ import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getErc4626AdapterTokens } from '../effects/erc4626Adapter.effects';
 import { createErc4626Adapter, getErc4626Adapter } from '../entities/classicErc4626Adapter.entity';
-import { getOrCreateToken } from '../entities/token.entity';
+import { getOrCreateToken, getTokenOrThrow } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
 import { handleTokenTransfer } from '../lib/token';
@@ -33,10 +33,12 @@ Erc4626Adapter.Transfer.handler(async ({ event, context }) => {
     });
     if (!adapter) return;
 
+    const shareToken = await getTokenOrThrow({ context, id: adapter.shareToken_id });
+
     await handleTokenTransfer({
         context,
         chainId,
-        tokenAddress: adapterAddress,
+        token: shareToken,
         senderAddress: event.params.from.toString().toLowerCase() as Hex,
         receiverAddress: event.params.to.toString().toLowerCase() as Hex,
         rawTransferAmount: event.params.value,

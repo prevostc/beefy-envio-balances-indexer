@@ -4,7 +4,8 @@ import type { HandlerContext } from 'generated/src/Types';
 import type { Hex } from 'viem';
 import { getClassicBoostTokens } from '../effects/classicBoost.effects';
 import { createClassicBoost, getClassicBoost } from '../entities/classicBoost.entity';
-import { getOrCreateToken } from '../entities/token.entity';
+import { createPoolRewardedEvent } from '../entities/poolRewarded.event';
+import { getOrCreateToken, getTokenOrThrow } from '../entities/token.entity';
 import { logBlacklistStatus } from '../lib/blacklist';
 import { type ChainId, toChainId } from '../lib/chain';
 import { config } from '../lib/config';
@@ -32,10 +33,12 @@ ClassicBoost.Staked.handler(async ({ event, context }) => {
     const boost = await initializeBoost({ context, chainId, boostAddress, initializedBlock });
     if (!boost) return;
 
+    const shareToken = await getTokenOrThrow({ context, id: boost.shareToken_id });
+
     await handleTokenTransfer({
         context,
         chainId,
-        tokenAddress: boostAddress,
+        token: shareToken,
         senderAddress: config.MINT_ADDRESS,
         receiverAddress: event.params.user.toString().toLowerCase() as Hex,
         rawTransferAmount: event.params.amount,
@@ -56,15 +59,49 @@ ClassicBoost.Withdrawn.handler(async ({ event, context }) => {
     });
     if (!boost) return;
 
+    const shareToken = await getTokenOrThrow({ context, id: boost.shareToken_id });
+
     await handleTokenTransfer({
         context,
         chainId,
-        tokenAddress: boostAddress,
+        token: shareToken,
         senderAddress: event.params.user.toString().toLowerCase() as Hex,
         receiverAddress: config.BURN_ADDRESS,
         rawTransferAmount: event.params.amount,
         block: event.block,
         transaction: event.transaction,
+    });
+});
+
+ClassicBoost.RewardAdded.handler(async ({ event, context }) => {
+    const chainId = toChainId(event.chainId);
+    const boostAddress = event.srcAddress.toString().toLowerCase() as Hex;
+
+    const boost = await initializeBoost({
+        context,
+        chainId,
+        boostAddress,
+        initializedBlock: BigInt(event.block.number),
+    });
+    if (!boost) return;
+
+    const trxHash = event.transaction.hash.toString().toLowerCase() as Hex;
+    const logIndex = event.logIndex;
+
+    const [shareToken, rewardToken] = await Promise.all([
+        getTokenOrThrow({ context, id: boost.shareToken_id }),
+        getTokenOrThrow({ context, id: boost.underlyingToken_id }),
+    ]);
+
+    await createPoolRewardedEvent({
+        context,
+        chainId,
+        trxHash,
+        logIndex,
+        poolShareToken: shareToken,
+        rewardToken: rewardToken,
+        rewardVestingSeconds: 0, // boost rewards are immediate
+        rawRewardAmount: event.params.reward,
     });
 });
 
