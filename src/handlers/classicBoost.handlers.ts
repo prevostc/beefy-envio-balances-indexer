@@ -100,7 +100,7 @@ ClassicBoost.RewardAdded.handler(async ({ event, context }) => {
         logIndex,
         poolShareToken: shareToken,
         rewardToken: rewardToken,
-        rewardVestingSeconds: 0, // boost rewards are immediate
+        rewardVestingSeconds: 0n, // boost rewards are immediate
         rawRewardAmount: event.params.reward,
     });
 });

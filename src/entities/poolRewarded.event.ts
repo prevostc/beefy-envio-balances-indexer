@@ -23,7 +23,7 @@ export const createPoolRewardedEvent = async ({
     logIndex: number;
     poolShareToken: Token_t;
     rewardToken: Token_t;
-    rewardVestingSeconds: number;
+    rewardVestingSeconds: bigint;
     rawRewardAmount: bigint;
 }) => {
     const id = poolRewardedEventId({ chainId, trxHash, logIndex });

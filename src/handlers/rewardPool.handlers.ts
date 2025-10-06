@@ -74,7 +74,7 @@ RewardPool.NotifyReward.handler(async ({ event, context }) => {
         logIndex,
         poolShareToken: shareToken,
         rewardToken: rewardToken,
-        rewardVestingSeconds: Number(event.params.duration),
+        rewardVestingSeconds: event.params.duration,
         rawRewardAmount: event.params.amount,
     });
 });
