@@ -102,6 +102,7 @@ ClassicBoost.RewardAdded.handler(async ({ event, context }) => {
         rewardToken: rewardToken,
         rewardVestingSeconds: 0n, // boost rewards are immediate
         rawRewardAmount: event.params.reward,
+        block: event.block,
     });
 });
 

@@ -123,6 +123,11 @@ type PoolRewardedEvent {
   "The log index"
   logIndex: Int! @index
 
+  "Block number of the event"
+  blockNumber: BigInt! @index
+  "Timestamp of the event"
+  blockTimestamp: Timestamp! @index
+
   "The reward pool address. Can be a reward pool or a boost. Represented by the share token address"
   poolShareToken: Token! @index
 

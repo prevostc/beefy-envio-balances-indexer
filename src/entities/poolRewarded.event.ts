@@ -16,6 +16,7 @@ export const createPoolRewardedEvent = async ({
     rewardToken,
     rewardVestingSeconds,
     rawRewardAmount,
+    block,
 }: {
     context: HandlerContext;
     chainId: ChainId;
@@ -25,6 +26,7 @@ export const createPoolRewardedEvent = async ({
     rewardToken: Token_t;
     rewardVestingSeconds: bigint;
     rawRewardAmount: bigint;
+    block: { number: number; timestamp: number };
 }) => {
     const id = poolRewardedEventId({ chainId, trxHash, logIndex });
 
@@ -37,6 +39,8 @@ export const createPoolRewardedEvent = async ({
         rewardToken_id: rewardToken.id,
         rewardAmount: interpretAsDecimal(rawRewardAmount, rewardToken.decimals),
         rewardVestingSeconds,
+        blockNumber: BigInt(block.number),
+        blockTimestamp: new Date(block.timestamp * 1000),
     };
 
     context.log.debug('Creating PoolRewardedEvent', poolRewardedEvent);

@@ -26,6 +26,7 @@ async function main() {
     for (const line of text.split('\n')) {
         if (line.includes('id:')) {
             chainId = parseInt(line.split(':')[1].trim(), 10) as ChainId;
+            // biome-ignore lint/style/noNonNullAssertion: ensured to exist
             const [network] = R.pipe(
                 AddressBookChainId,
                 R.entries(),
