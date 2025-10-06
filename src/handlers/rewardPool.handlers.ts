@@ -18,7 +18,7 @@ RewardPool.Initialized.handler(async ({ event, context }) => {
     const rewardPool = await initializeRewardPool({ context, chainId, rewardPoolAddress, initializedBlock });
     if (!rewardPool) return;
 
-    context.log.info(`ClassicRewardPool ${rewardPoolAddress} initialized successfully`);
+    context.log.info('ClassicRewardPool initialized successfully', { rewardPoolAddress });
 });
 
 RewardPool.Transfer.handler(async ({ event, context }) => {
@@ -90,13 +90,13 @@ const initializeRewardPool = async ({
     rewardPoolAddress: Hex;
     initializedBlock: bigint;
 }): Promise<RewardPool_t | null> => {
-    context.log.info(`Initializing ClassicRewardPool at ${rewardPoolAddress} on chain ${chainId}`);
-
     // Check if the reward pool already exists
     const existingRewardPool = await getRewardPool(context, chainId, rewardPoolAddress);
     if (existingRewardPool) {
         return existingRewardPool;
     }
+
+    context.log.info('Initializing ClassicRewardPool', { rewardPoolAddress, chainId });
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getRewardPoolTokens, {

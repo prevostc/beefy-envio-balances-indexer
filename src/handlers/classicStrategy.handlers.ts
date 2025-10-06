@@ -7,9 +7,7 @@ ClassicStrategy.Initialized.handler(async ({ event, context }) => {
     const strategyAddress = event.srcAddress.toString().toLowerCase() as Hex;
     const initializedBlock = BigInt(event.block.number);
 
-    context.log.info(
-        `Initializing ClassicStrategy at ${strategyAddress} on chain ${chainId} at block ${initializedBlock}`
-    );
+    context.log.info('Initializing ClassicStrategy', { strategyAddress, chainId, initializedBlock });
 
-    context.log.info(`ClassicStrategy ${strategyAddress} initialized successfully`);
+    context.log.info('ClassicStrategy initialized successfully', { strategyAddress });
 });

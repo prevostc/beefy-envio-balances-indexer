@@ -39,6 +39,8 @@ export const createPoolRewardedEvent = async ({
         rewardVestingSeconds,
     };
 
+    context.log.debug('Creating PoolRewardedEvent', poolRewardedEvent);
+
     const evt = await context.PoolRewardedEvent.get(id);
     if (evt) {
         throw new Error(`PoolRewardedEvent ${id} already exists`);

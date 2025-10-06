@@ -19,7 +19,7 @@ ClassicBoost.Initialized.handler(async ({ event, context }) => {
     const boost = await initializeBoost({ context, chainId, boostAddress, initializedBlock });
     if (!boost) return;
 
-    context.log.info(`ClassicBoost ${boostAddress} initialized successfully`);
+    context.log.info('ClassicBoost initialized successfully', { boostAddress });
 });
 
 ClassicBoost.Staked.handler(async ({ event, context }) => {
@@ -116,13 +116,13 @@ const initializeBoost = async ({
     boostAddress: Hex;
     initializedBlock: bigint;
 }): Promise<ClassicBoost_t | null> => {
-    context.log.info(`Initializing ClassicBoost at ${boostAddress} on chain ${chainId}`);
-
     // Check if the boost already exists
     const existingBoost = await getClassicBoost(context, chainId, boostAddress);
     if (existingBoost) {
         return existingBoost;
     }
+
+    context.log.info('Initializing ClassicBoost', { boostAddress, chainId });
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getClassicBoostTokens, {

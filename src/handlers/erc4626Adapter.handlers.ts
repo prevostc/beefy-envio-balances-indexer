@@ -17,7 +17,7 @@ Erc4626Adapter.Initialized.handler(async ({ event, context }) => {
     const adapter = await initializeErc4626Adapter({ context, chainId, adapterAddress, initializedBlock });
     if (!adapter) return;
 
-    context.log.info(`Erc4626Adapter ${adapterAddress} initialized successfully`);
+    context.log.info('Erc4626Adapter initialized successfully', { adapterAddress });
 });
 
 Erc4626Adapter.Transfer.handler(async ({ event, context }) => {
@@ -58,13 +58,13 @@ const initializeErc4626Adapter = async ({
     adapterAddress: Hex;
     initializedBlock: bigint;
 }): Promise<Erc4626Adapter_t | null> => {
-    context.log.info(`Initializing Erc4626Adapter at ${adapterAddress} on chain ${chainId}`);
-
     // Check if the adapter already exists
     const existingAdapter = await getErc4626Adapter(context, chainId, adapterAddress);
     if (existingAdapter) {
         return existingAdapter;
     }
+
+    context.log.info('Initializing Erc4626Adapter', { adapterAddress, chainId });
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(

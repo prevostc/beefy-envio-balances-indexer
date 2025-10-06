@@ -17,7 +17,7 @@ LstVault.Initialized.handler(async ({ event, context }) => {
     const lst = await initializeLstVault({ context, chainId, lstAddress, initializedBlock });
     if (!lst) return;
 
-    context.log.info(`LstVault ${lstAddress} initialized successfully`);
+    context.log.info('LstVault initialized successfully', { lstAddress });
 });
 
 LstVault.Transfer.handler(async ({ event, context }) => {
@@ -58,13 +58,13 @@ const initializeLstVault = async ({
     lstAddress: Hex;
     initializedBlock: bigint;
 }): Promise<LstVault_t | null> => {
-    context.log.info(`Initializing LstVault at ${lstAddress} on chain ${chainId}`);
-
     // Check if the LST vault already exists
     const existingLst = await getLstVault(context, chainId, lstAddress);
     if (existingLst) {
         return existingLst;
     }
+
+    context.log.info('Initializing LstVault', { lstAddress, chainId });
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, blacklistStatus } = await context.effect(getLstVaultTokens, {

@@ -131,7 +131,7 @@ type PoolRewardedEvent {
   "The reward amount"
   rewardAmount: BigDecimal! @config(precision: 100, scale: 24)
   "The reward linear distribution duration in seconds, set to 0 for immediate distribution"
-  rewardVestingSeconds: Int!
+  rewardVestingSeconds: BigInt!
 }
 
 """

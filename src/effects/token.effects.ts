@@ -52,7 +52,7 @@ export const getTokenMetadata = experimental_createEffect(
             ],
         });
 
-        context.log.info(`Got token details for ${tokenAddress}: ${name} (${symbol}) with ${decimals} decimals`);
+        context.log.info('Got token details', { tokenAddress, name, symbol, decimals });
 
         return {
             name,

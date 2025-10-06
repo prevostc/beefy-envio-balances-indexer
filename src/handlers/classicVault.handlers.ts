@@ -17,7 +17,7 @@ ClassicVault.Initialized.handler(async ({ event, context }) => {
     const vault = await initializeClassicVault({ context, chainId, vaultAddress, initializedBlock });
     if (!vault) return;
 
-    context.log.info(`ClassicVault ${vaultAddress} initialized successfully`);
+    context.log.info('ClassicVault initialized successfully', { vaultAddress });
 });
 
 ClassicVault.Transfer.handler(async ({ event, context }) => {
@@ -58,13 +58,13 @@ const initializeClassicVault = async ({
     vaultAddress: Hex;
     initializedBlock: bigint;
 }): Promise<ClassicVault_t | null> => {
-    context.log.info(`Initializing ClassicVault at ${vaultAddress} on chain ${chainId}`);
-
     // Check if the vault already exists
     const existingVault = await getClassicVault(context, chainId, vaultAddress);
     if (existingVault) {
         return existingVault;
     }
+
+    context.log.info('Initializing ClassicVault', { vaultAddress, chainId });
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingTokenAddress, strategyAddress, blacklistStatus } = await context.effect(

@@ -17,7 +17,7 @@ ClmManager.Initialized.handler(async ({ event, context }) => {
     const manager = await initializeClmManager({ context, chainId, managerAddress, initializedBlock });
     if (!manager) return;
 
-    context.log.info(`ClmManager ${managerAddress} initialized successfully`);
+    context.log.info('ClmManager initialized successfully', { managerAddress });
 });
 
 ClmManager.Transfer.handler(async ({ event, context }) => {
@@ -58,13 +58,13 @@ const initializeClmManager = async ({
     managerAddress: Hex;
     initializedBlock: bigint;
 }): Promise<ClmManager_t | null> => {
-    context.log.info(`Initializing ClmManager at ${managerAddress} on chain ${chainId}`);
-
     // Check if the manager already exists
     const existingManager = await getClmManager(context, chainId, managerAddress);
     if (existingManager) {
         return existingManager;
     }
+
+    context.log.info('Initializing ClmManager', { managerAddress, chainId });
 
     // Fetch underlying tokens using effect
     const { shareTokenAddress, underlyingToken0Address, underlyingToken1Address, blacklistStatus } =
